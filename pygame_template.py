@@ -2,8 +2,8 @@
 import pygame
 import random
 
-WIDTH = 360
-HEIGHT = 480
+WIDTH = 800
+HEIGHT = 600
 FPS = 30
 
 # define colors
@@ -19,6 +19,7 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
+allSprites = pygame.sprite.Group()
 
 # Game loop
 running = True
@@ -32,9 +33,11 @@ while running:
             running = False
 
     # Update
+    allSprites.update()
 
     # Draw / render
     screen.fill(BLACK)
+    allSprites.draw(screen)
     # *after* drawing everything, flip the display
     pygame.display.flip()
 
