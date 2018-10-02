@@ -4,16 +4,19 @@
 # Project setup
 
 import pygame as pg
+import os
 
 from template.player import Player
 from template.settings import *
-
 
 class Game:
     def __init__(self):
         '''
         Initializes game window, etc.
         '''
+        # setting Pygame window position
+        os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
+
         pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
