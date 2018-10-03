@@ -39,7 +39,25 @@ class Grid():
                 self.surface.blit(text, (colCoord, 1))
                 pg.draw.rect(self.surface, BLACK, pg.Rect(liCoord, colCoord, CELL_SIZE, CELL_SIZE), 1)
 
-
+    def drawUseLine(self):
+        for li in range(self.lineNb):
+            liCoord = GRID_COORD_MARGIN_SIZE + li * CELL_SIZE
+            if li < 10:
+                ident = '   '
+            else:
+                ident = '  '
+            text = self.font.render(ident + str(li), 1, (0, 0, 0))
+            self.surface.blit(text, (0, liCoord))
+            pg.draw.line(self.surface, BLACK, (GRID_COORD_MARGIN_SIZE, liCoord), (self.surface.get_width(), liCoord))
+        for co in range(self.colNb):
+            colCoord = GRID_COORD_MARGIN_SIZE + co * CELL_SIZE
+            if co < 10:
+                ident = '  '
+            else:
+                ident = ' '
+            text = self.font.render(ident + str(co), 1, (0, 0, 0))
+            self.surface.blit(text, (colCoord, 1))
+            pg.draw.line(self.surface, BLACK, (colCoord, GRID_COORD_MARGIN_SIZE), (colCoord,self.surface.get_height()))
 
 class Game:
     def __init__(self):
@@ -100,7 +118,8 @@ class Game:
         '''
         self.screen.fill(WHITE)
         self.all_sprites.draw(self.screen)
-        self.grid.drawUseRect()
+#        self.grid.drawUseRect()
+        self.grid.drawUseLine()
         # *after* drawing everything, flip the display
         pg.display.flip()
 
