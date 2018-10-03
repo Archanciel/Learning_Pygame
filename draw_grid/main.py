@@ -8,6 +8,7 @@ import pygame as pg
 from draw_grid.player import Player
 from draw_grid.settings import *
 import os
+import time
 
 class Grid():
     def __init__(self, surface, cellSize, initCellValue):
@@ -118,8 +119,12 @@ class Game:
         '''
         self.screen.fill(WHITE)
         self.all_sprites.draw(self.screen)
-#        self.grid.drawUseRect()
+        start = time.time()
+        self.grid.drawUseRect()
+        print("draw using rect: {}".format(time.time() - start))
+        start = time.time()
         self.grid.drawUseLine()
+        print("draw using line: {}".format(time.time() - start))
         # *after* drawing everything, flip the display
         pg.display.flip()
 
