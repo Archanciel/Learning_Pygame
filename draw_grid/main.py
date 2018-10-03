@@ -12,21 +12,32 @@ import os
 class Grid():
     def __init__(self, surface, cellSize, initCellValue):
         self.surface = surface
-        self.columns = surface.get_width() // cellSize
-        self.lines = surface.get_height() // cellSize
+        self.colNb = surface.get_width() // cellSize
+        self.lineNb = surface.get_height() // cellSize
         self.cellSize = cellSize
         self.initCellValue = initCellValue
 #        self.grid = [[initCellValue] * self.columns for i in range(self.lines)]
-        self.grid = [[initCellValue for i in range(self.columns)] for j in range(self.lines)]
-        self.font = pg.font.SysFont('comicsans', 18, False)
+        self.grid = [[initCellValue for i in range(self.colNb)] for j in range(self.lineNb)]
+        self.font = pg.font.SysFont('arial', 12, False)
 
-    def draw(self):
-        for li in range(self.lines):
-            for co in range(self.columns):
-                coCoord = GRID_COORD_MARGIN_SIZE + co * CELL_SIZE
-                text = self.font.render(' ' + str(co), 1, (0, 0, 0))
-                self.surface.blit(text, (coCoord, 1))
-                pg.draw.rect(self.surface, BLACK, pg.Rect(GRID_COORD_MARGIN_SIZE + li * CELL_SIZE, coCoord, CELL_SIZE, CELL_SIZE), 1)
+    def drawUseRect(self):
+        for li in range(self.lineNb):
+            liCoord = GRID_COORD_MARGIN_SIZE + li * CELL_SIZE
+            if li < 10:
+                ident = '   '
+            else:
+                ident = '  '
+            text = self.font.render(ident + str(li), 1, (0, 0, 0))
+            self.surface.blit(text, (0, liCoord))
+            for co in range(self.colNb):
+                colCoord = GRID_COORD_MARGIN_SIZE + co * CELL_SIZE
+                if co < 10:
+                    ident = '  '
+                else:
+                    ident = ' '
+                text = self.font.render(ident + str(co), 1, (0, 0, 0))
+                self.surface.blit(text, (colCoord, 1))
+                pg.draw.rect(self.surface, BLACK, pg.Rect(liCoord, colCoord, CELL_SIZE, CELL_SIZE), 1)
 
 
 
@@ -89,7 +100,7 @@ class Game:
         '''
         self.screen.fill(WHITE)
         self.all_sprites.draw(self.screen)
-        self.grid.draw()
+        self.grid.drawUseRect()
         # *after* drawing everything, flip the display
         pg.display.flip()
 
