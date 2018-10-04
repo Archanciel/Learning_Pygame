@@ -2,8 +2,6 @@ import pygame
 
 from template.settings import GREEN, WIDTH, HEIGHT
 
-WIDTH = 800
-HEIGHT = 600
 FPS = 30
 
 
