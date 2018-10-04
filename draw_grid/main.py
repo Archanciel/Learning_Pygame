@@ -21,26 +21,7 @@ class Grid():
         self.grid = [[initCellValue for i in range(self.colNb)] for j in range(self.lineNb)]
         self.font = pg.font.SysFont('arial', 12, False)
 
-    def drawUseRect(self):
-        for li in range(self.lineNb):
-            liCoord = GRID_COORD_MARGIN_SIZE + li * CELL_SIZE
-            if li < 10:
-                ident = '   '
-            else:
-                ident = '  '
-            text = self.font.render(ident + str(li), 1, (0, 0, 0))
-            self.surface.blit(text, (0, liCoord))
-            for co in range(self.colNb):
-                colCoord = GRID_COORD_MARGIN_SIZE + co * CELL_SIZE
-                if co < 10:
-                    ident = '  '
-                else:
-                    ident = ' '
-                text = self.font.render(ident + str(co), 1, (0, 0, 0))
-                self.surface.blit(text, (colCoord, 1))
-                pg.draw.rect(self.surface, BLACK, pg.Rect(liCoord, colCoord, CELL_SIZE, CELL_SIZE), 1)
-
-    def drawUseLine(self):
+    def draw(self):
         for li in range(self.lineNb):
             liCoord = GRID_COORD_MARGIN_SIZE + li * CELL_SIZE
             if li < 10:
@@ -119,12 +100,8 @@ class Game:
         '''
         self.screen.fill(WHITE)
         self.all_sprites.draw(self.screen)
-        start = time.time()
-        self.grid.drawUseRect()
-        print("draw using rect: {}".format(time.time() - start))
-        start = time.time()
-        self.grid.drawUseLine()
-        print("draw using line: {}".format(time.time() - start))
+        self.grid.draw()
+
         # *after* drawing everything, flip the display
         pg.display.flip()
 
