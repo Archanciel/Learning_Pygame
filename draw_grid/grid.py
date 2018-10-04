@@ -9,7 +9,7 @@ class Grid():
         self.cellSize = cellSize
         self.initCellValue = initCellValue
         self.setGridDimension()
-        self.grid = [[initCellValue for i in range(self.colNb)] for j in range(self.lineNb)]
+        self.cellValueGrid = [[initCellValue for i in range(surface.get_width())] for j in range(surface.get_height())]
         self.font = pg.font.SysFont('arial', 12, False)
         self.drawAxisLabel = True
 
