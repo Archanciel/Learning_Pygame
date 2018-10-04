@@ -54,6 +54,13 @@ class Game:
                     self.playing = False
                 self.running = False
 
+        keys = pg.key.get_pressed()
+
+        if keys[pg.K_LEFT]:
+            self.player.moveL(1)
+        elif keys[pg.K_RIGHT]:
+            self.player.moveR(1)
+
     def update(self):
         '''
         Updates all game objects.
