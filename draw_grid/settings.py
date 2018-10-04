@@ -1,9 +1,8 @@
 # game options/settings
 TITLE = "Draw grid"
 WINDOWS_LOCATION = '100,100'
-WIDTH = 710
-HEIGHT = 710
-FPS = 1
+GRID_SIZE = 710 # grid is always a square !
+FPS = 30
 
 # define colors
 WHITE = (255, 255, 255)

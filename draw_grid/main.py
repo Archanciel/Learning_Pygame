@@ -5,41 +5,10 @@
 
 import pygame as pg
 
-from draw_grid.player import Player
+from draw_grid.grid import Grid
 from draw_grid.settings import *
 import os
-import time
 
-class Grid():
-    def __init__(self, surface, cellSize, initCellValue):
-        self.surface = surface
-        self.colNb = surface.get_width() // cellSize
-        self.lineNb = surface.get_height() // cellSize
-        self.cellSize = cellSize
-        self.initCellValue = initCellValue
-#        self.grid = [[initCellValue] * self.columns for i in range(self.lines)]
-        self.grid = [[initCellValue for i in range(self.colNb)] for j in range(self.lineNb)]
-        self.font = pg.font.SysFont('arial', 12, False)
-
-    def draw(self):
-        for li in range(self.lineNb):
-            liCoord = GRID_COORD_MARGIN_SIZE + li * CELL_SIZE
-            if li < 10:
-                ident = '   '
-            else:
-                ident = '  '
-            text = self.font.render(ident + str(li), 1, (0, 0, 0))
-            self.surface.blit(text, (0, liCoord))
-            pg.draw.line(self.surface, BLACK, (GRID_COORD_MARGIN_SIZE, liCoord), (self.surface.get_width(), liCoord))
-        for co in range(self.colNb):
-            colCoord = GRID_COORD_MARGIN_SIZE + co * CELL_SIZE
-            if co < 10:
-                ident = '  '
-            else:
-                ident = ' '
-            text = self.font.render(ident + str(co), 1, (0, 0, 0))
-            self.surface.blit(text, (colCoord, 1))
-            pg.draw.line(self.surface, BLACK, (colCoord, GRID_COORD_MARGIN_SIZE), (colCoord,self.surface.get_height()))
 
 class Game:
     def __init__(self):
@@ -50,7 +19,7 @@ class Game:
         os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
         pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pg.display.set_mode((GRID_SIZE, GRID_SIZE))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.running = True
@@ -87,6 +56,13 @@ class Game:
                 if self.playing:
                     self.playing = False
                 self.running = False
+
+        keys = pg.key.get_pressed()
+
+        if keys[pg.K_UP]:
+            self.grid.zoomIn()
+        elif keys[pg.K_DOWN]:
+            self.grid.zoomOut()
 
     def update(self):
         '''
