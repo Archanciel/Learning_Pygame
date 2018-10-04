@@ -24,7 +24,7 @@ class Game:
         self.clock = pg.time.Clock()
         self.running = True
 
-        self.grid = Grid(self.screen, CELL_SIZE, 0)
+        self.grid = Grid(self.screen, DEFAULT_CELL_SIZE, 0)
 
     def new(self):
         '''
