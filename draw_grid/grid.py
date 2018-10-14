@@ -1,6 +1,6 @@
 import pygame as pg
 
-from draw_grid.settings import GRID_COORD_MARGIN_SIZE, BLACK
+from draw_grid.settings import GRID_COORD_MARGIN_SIZE, BLACK, GREEN
 
 
 class Grid():
@@ -16,8 +16,31 @@ class Grid():
         is 1 px, 2 cells will require
         '''
         self.cellValueGrid = [[initCellValue for i in range(surface.get_width() // 2)] for j in range(surface.get_height() // 2)]
-        self.font = pg.font.SysFont('arial', GRID_COORD_MARGIN_SIZE / 20 * 12, False)
+        self.setStartPattern()
+        self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
         self.drawAxisLabel = True
+
+    def setStartPattern(self):
+        for i in range(0,300,10):
+            self.cellValueGrid[i][0] = True
+        for i in range(0,300,10):
+            self.cellValueGrid[i][100] = True
+        for i in range(0,300,10):
+            self.cellValueGrid[i][300] = True
+
+        for i in range(0, 300, 10):
+            self.cellValueGrid[i][0] = True
+        for i in range(0, 300, 10):
+            self.cellValueGrid[i][15] = True
+        for i in range(0, 300, 10):
+            self.cellValueGrid[i][30] = True
+
+        for i in range(0, 300, 10):
+            self.cellValueGrid[i][0] = True
+        for i in range(0, 300, 10):
+            self.cellValueGrid[i][15] = True
+        for i in range(0, 300, 10):
+            self.cellValueGrid[i][30] = True
 
     def setGridDimension(self):
         self.colNb = self.surface.get_width() // self.cellSize
@@ -53,6 +76,18 @@ class Grid():
                 self.surface.blit(text, (colCoord, 1))
 
             pg.draw.line(self.surface, BLACK, (colCoord, gridCoordMargin), (colCoord,self.surface.get_height()))
+
+        #drawing active cells
+
+        for row in range(len(self.cellValueGrid)):
+            for col in range(len(self.cellValueGrid[0])):
+                if self.cellValueGrid[row][col]:
+                    pg.draw.rect(self.surface,
+                                     GREEN,
+                                     [gridCoordMargin + ((1 + self.cellSize) * col) + 1,
+                                      gridCoordMargin + ((self.cellSize) * row) + 1,
+                                      self.cellSize - 1,
+                                      self.cellSize - 1])
 
     def zoomIn(self):
         delta = self.cellSize // 10
