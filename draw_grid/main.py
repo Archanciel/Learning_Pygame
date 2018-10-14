@@ -25,6 +25,11 @@ class Game:
         self.running = True
 
         self.grid = Grid(self.screen, DEFAULT_CELL_SIZE, 0)
+        self.dragging = False
+        self.mouse_x_beg = 0
+        self.mouse_y_beg = 0
+        self.mouse_x_end = 0
+        self.mouse_y_end = 0
 
     def new(self):
         '''
@@ -55,7 +60,17 @@ class Game:
             if event.type == pg.QUIT:
                 if self.playing:
                     self.playing = False
-                self.running = False
+                    self.running = False
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                if event.button == 1:            
+                    self.dragging = True
+                    self.mouse_x_beg, self.mouse_y_beg = event.pos
+            elif event.type == pg.MOUSEBUTTONUP:
+                if event.button == 1:            
+                    self.dragging = False
+            elif event.type == pg.MOUSEMOTION:
+                if self.dragging:
+                    self.mouse_x_end, self.mouse_y_end = event.pos
 
         keys = pg.key.get_pressed()
 
@@ -63,6 +78,8 @@ class Game:
             self.grid.zoomIn()
         elif keys[pg.K_DOWN]:
             self.grid.zoomOut()
+            
+        print('x {}, y {} offset'.format(self.mouse_x_end - self.mouse_x_beg, self.mouse_y_end - self.mouse_y_beg))   
 
     def update(self):
         '''
