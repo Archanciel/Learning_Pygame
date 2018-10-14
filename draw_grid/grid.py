@@ -16,7 +16,7 @@ class Grid():
         is 1 px, 2 cells will require
         '''
         self.cellValueGrid = [[initCellValue for i in range(surface.get_width() // 2)] for j in range(surface.get_height() // 2)]
-        self.font = pg.font.SysFont('arial', 12, False)
+        self.font = pg.font.SysFont('arial', GRID_COORD_MARGIN_SIZE / 20 * 12, False)
         self.drawAxisLabel = True
 
     def setGridDimension(self):
