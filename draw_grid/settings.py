@@ -13,5 +13,6 @@ BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
 
 # grid constants
+GRID_LINE_WIDTH = 1
 DEFAULT_CELL_SIZE = 15 #15 #15 Windows, 35 Android
 GRID_COORD_MARGIN_SIZE = 20 #20 Windows, 40 Android

@@ -1,7 +1,6 @@
 import pygame as pg
 
-from draw_grid.settings import GRID_COORD_MARGIN_SIZE, BLACK, GREEN
-
+from draw_grid.settings import GRID_COORD_MARGIN_SIZE, GRID_LINE_WIDTH, BLACK, GREEN
 
 class Grid():
     def __init__(self, surface, cellSize, initCellValue):
@@ -45,8 +44,8 @@ class Grid():
             self.cellValueGrid[i][30] = True
 
     def setGridDimension(self):
-        self.colNb = (self.surface.get_width() - 1) // (self.cellSize + 1)
-        self.lineNb = (self.surface.get_height() - 1) // (self.cellSize + 1)
+        self.colNb = (self.surface.get_width() - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
+        self.lineNb = (self.surface.get_height() - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
 
     def draw(self):
         if self.drawAxisLabel:
@@ -55,7 +54,7 @@ class Grid():
             gridCoordMargin = 0
 
         for li in range(self.lineNb + 1): #+1 since the bottom most margin needs to be drawn !
-            liCoord = gridCoordMargin + li * (self.cellSize + 1)
+            liCoord = gridCoordMargin + li * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
                 if li < 10:
@@ -65,9 +64,9 @@ class Grid():
                 text = self.font.render(ident + str(li), 1, (0, 0, 0))
                 self.surface.blit(text, (0, liCoord))
 
-            pg.draw.line(self.surface, BLACK, (gridCoordMargin, liCoord), (self.surface.get_width(), liCoord))
+            pg.draw.line(self.surface, BLACK, (gridCoordMargin, liCoord), (self.surface.get_width(), liCoord), GRID_LINE_WIDTH)
         for co in range(self.colNb + 1): #+1 since the right most margin needs to be drawn !
-            colCoord = gridCoordMargin + co * (self.cellSize + 1)
+            colCoord = gridCoordMargin + co * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
                 if co < 10:
@@ -77,17 +76,18 @@ class Grid():
                 text = self.font.render(ident + str(co), 1, (0, 0, 0))
                 self.surface.blit(text, (colCoord, 1))
 
-            pg.draw.line(self.surface, BLACK, (colCoord, gridCoordMargin), (colCoord,self.surface.get_height()))
+            pg.draw.line(self.surface, BLACK, (colCoord, gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
 
         #drawing active cells
+        # // 2 + 1 below is required to handle correctly GRID_LINE_WIDTH > 1 !
 
         for row in range(len(self.cellValueGrid)):
             for col in range(len(self.cellValueGrid[0])):
                 if self.cellValueGrid[row][col]:
                     pg.draw.rect(self.surface,
                                      GREEN,
-                                     [gridCoordMargin + 1 + ((1 + self.cellSize) * col),
-                                      gridCoordMargin + 1 + ((1 + self.cellSize) * row),
+                                     [gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + ((GRID_LINE_WIDTH + self.cellSize) * col),
+                                      gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + ((GRID_LINE_WIDTH + self.cellSize) * row),
                                       self.cellSize,
                                       self.cellSize])
 
@@ -105,7 +105,7 @@ class Grid():
             self.drawAxisLabel = True
 
         self.setGridDimension()
-        print('zoom in: cellsize {}, delta {}, col nb {}'.format(self.cellSize, delta, self.colNb))
+#        print('zoom in: cellsize {}, delta {}, col nb {}'.format(self.cellSize, delta, self.colNb))
 
     def zoomOut(self):
         delta = self.cellSize // 10
@@ -117,6 +117,6 @@ class Grid():
             self.cellSize -= delta
             if self.cellSize <= 11:
                 self.drawAxisLabel = False
-        print('zoom out: cellsize {}, delta {}, colnb {}'.format(self.cellSize, delta, self.colNb))
 
         self.setGridDimension()
+#        print('zoom out: cellsize {}, delta {}, colnb {}'.format(self.cellSize, delta, self.colNb))
