@@ -90,6 +90,19 @@ class Grid():
                                       gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + ((GRID_LINE_WIDTH + self.cellSize) * row),
                                       self.cellSize,
                                       self.cellSize])
+                    # code below not working !!!
+                    # pg.draw.rect(self.surface,
+                    #                  GREEN,
+                    #                  [gridCoordMargin + GRID_LINE_WIDTH + ((self.cellSize + GRID_LINE_WIDTH) * col),
+                    #                   gridCoordMargin + GRID_LINE_WIDTH + ((self.cellSize + GRID_LINE_WIDTH) * row),
+                    #                   self.cellSize,
+                    #                   self.cellSize])
+                    # pg.draw.rect(self.surface,
+                    #                  GREEN,
+                    #                  [gridCoordMargin + GRID_LINE_WIDTH - 1 + ((self.cellSize + GRID_LINE_WIDTH) * col),
+                    #                   gridCoordMargin + GRID_LINE_WIDTH - 1 + ((self.cellSize + GRID_LINE_WIDTH) * row),
+                    #                   self.cellSize,
+                    #                   self.cellSize])
 
     def zoomIn(self):
         delta = self.cellSize // 10
