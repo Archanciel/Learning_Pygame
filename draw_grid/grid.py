@@ -1,6 +1,6 @@
 import pygame as pg
 
-from draw_grid.settings import GRID_COORD_MARGIN_SIZE, GRID_LINE_WIDTH, BLACK, GREEN
+from draw_grid.settings import *
 
 class Grid():
     def __init__(self, surface, cellSize, initCellValue):
@@ -20,6 +20,8 @@ class Grid():
         self.setStartPattern()
         self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
         self.drawAxisLabel = True
+        self.gridOffsetX = 0
+        self.gridOffsetY = 0
 
     def setStartPattern(self):
         for i in range(0,300,10):
@@ -54,7 +56,7 @@ class Grid():
             gridCoordMargin = 0
 
         for li in range(self.lineNb + 1): #+1 since the bottom most margin needs to be drawn !
-            liCoord = gridCoordMargin + li * (self.cellSize + GRID_LINE_WIDTH)
+            liCoord = gridCoordMargin + self.gridOffsetY + li * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
                 if li < 10:
@@ -62,11 +64,17 @@ class Grid():
                 else:
                     ident = '  '
                 text = self.font.render(ident + str(li), 1, (0, 0, 0))
-                self.surface.blit(text, (0, liCoord))
+                if liCoord < gridCoordMargin // 2:
+                    pass
+                else:
+                    self.surface.blit(text, (0, liCoord))
 
-            pg.draw.line(self.surface, BLACK, (gridCoordMargin, liCoord), (self.surface.get_width(), liCoord), GRID_LINE_WIDTH)
+            if liCoord < gridCoordMargin:
+                continue
+            else:
+                pg.draw.line(self.surface, BLACK, (gridCoordMargin, liCoord), (self.surface.get_width(), liCoord), GRID_LINE_WIDTH)
         for co in range(self.colNb + 1): #+1 since the right most margin needs to be drawn !
-            colCoord = gridCoordMargin + co * (self.cellSize + GRID_LINE_WIDTH)
+            colCoord = gridCoordMargin + self.gridOffsetX + co * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
                 if co < 10:
@@ -74,9 +82,16 @@ class Grid():
                 else:
                     ident = ' '
                 text = self.font.render(ident + str(co), 1, (0, 0, 0))
-                self.surface.blit(text, (colCoord, 1))
+                if colCoord < gridCoordMargin // 2:
+                    pass
+                else:
+                    self.surface.blit(text, (colCoord, 1))
 
-            pg.draw.line(self.surface, BLACK, (colCoord, gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
+            if colCoord < gridCoordMargin:
+                # we do not draw the column line if its x coordinate is < margin size
+                continue
+            else:
+                pg.draw.line(self.surface, BLACK, (colCoord, gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
 
         #drawing active cells
         # // 2 + 1 below is required to handle correctly GRID_LINE_WIDTH > 1 !
@@ -133,3 +148,21 @@ class Grid():
 
         self.setGridDimension()
 #        print('zoom out: cellsize {}, delta {}, colnb {}'.format(self.cellSize, delta, self.colNb))
+
+    def moveUp(self, pixels):
+        self.gridOffsetY -= pixels
+
+    def moveDown(self, pixels):
+        self.gridOffsetY += pixels
+
+        if self.gridOffsetY > 0:
+            self.gridOffsetY = 0
+
+    def moveLeft(self, pixels):
+        self.gridOffsetX -= pixels
+
+    def moveRight(self, pixels):
+        self.gridOffsetX += pixels
+
+        if self.gridOffsetX > 0:
+            self.gridOffsetX = 0

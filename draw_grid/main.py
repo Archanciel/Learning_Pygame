@@ -9,6 +9,8 @@ from draw_grid.grid import Grid
 from draw_grid.settings import *
 import os
 
+I = 1
+
 
 class Game:
     def __init__(self):
@@ -62,11 +64,11 @@ class Game:
                     self.playing = False
                     self.running = False
             elif event.type == pg.MOUSEBUTTONDOWN:
-                if event.button == 1:            
+                if event.button == I:
                     self.dragging = True
                     self.mouse_x_beg, self.mouse_y_beg = event.pos
             elif event.type == pg.MOUSEBUTTONUP:
-                if event.button == 1:            
+                if event.button == I:
                     self.dragging = False
                     print('x {}, y {} offset'.format(self.mouse_x_end - self.mouse_x_beg,
                                                      self.mouse_y_end - self.mouse_y_beg))
@@ -74,12 +76,26 @@ class Game:
                 if self.dragging:
                     self.mouse_x_end, self.mouse_y_end = event.pos
 
+            # technique used to allow moving grid only 1 unit at a time
+            # elif event.type == pg.KEYDOWN:
+            #     if event.key == pg.K_RIGHT:
+            #         self.grid.moveRight(1)
+            #     elif event.key == pg.K_LEFT:
+            #         self.grid.moveLeft(1)
+
+        # technique used to enable move grid more than 1 unit at a time
         keys = pg.key.get_pressed()
 
         if keys[pg.K_UP]:
-            self.grid.zoomIn()
-        elif keys[pg.K_DOWN]:
-            self.grid.zoomOut()
+#            self.grid.zoomIn()
+            self.grid.moveUp(GRID_MOVE_INCREMENT)
+        if keys[pg.K_DOWN]:
+#            self.grid.zoomOut()
+            self.grid.moveDown(GRID_MOVE_INCREMENT)
+        if keys[pg.K_LEFT]:
+            self.grid.moveLeft(GRID_MOVE_INCREMENT)
+        if keys[pg.K_RIGHT]:
+            self.grid.moveRight(GRID_MOVE_INCREMENT)
 
     def update(self):
         '''
