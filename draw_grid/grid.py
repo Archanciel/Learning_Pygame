@@ -11,10 +11,10 @@ class Grid():
 
 
         #Dimensioning the internal value grid to the max displayable cell number.
-        #Since one cell can occupy a minuimum of 1 px and the grid line width
+        #Since one cell can occupy a minimum of 1 px and the grid line width
         #is 1 px, 2 cells will require 1 + 1 + 1 + 1 + 1 = 5 px.
         #3 cells require 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
-        #n cells require (n * 2) + 1 px
+        #n cells require 1 + (n * 2) px
         self.cellValueGrid = [[initCellValue for i in range((surface.get_width() - 1) // 2)] for j in range((surface.get_height() - 1) // 2)]
 
         self.setStartPattern()
