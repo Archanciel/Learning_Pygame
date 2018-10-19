@@ -2,7 +2,7 @@
 TITLE = "Draw grid"
 WINDOWS_LOCATION = '100,20'
 GRID_SIZE = 791 # grid is always a square !
-FPS = 30
+FPS = 20
 
 # define colors
 WHITE = (255, 255, 255)

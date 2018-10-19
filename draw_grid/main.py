@@ -87,10 +87,8 @@ class Game:
         keys = pg.key.get_pressed()
 
         if keys[pg.K_UP]:
-#            self.grid.zoomIn()
             self.grid.moveUp(GRID_MOVE_INCREMENT)
         if keys[pg.K_DOWN]:
-#            self.grid.zoomOut()
             self.grid.moveDown(GRID_MOVE_INCREMENT)
         if keys[pg.K_LEFT]:
             self.grid.moveLeft(GRID_MOVE_INCREMENT)

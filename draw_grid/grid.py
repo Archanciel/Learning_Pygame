@@ -55,7 +55,10 @@ class Grid():
         else:
             gridCoordMargin = 0
 
-        for li in range(self.lineNb + 1): #+1 since the bottom most margin needs to be drawn !
+        maxDrawnedLineNumber = self.lineNb + 1
+        li = 0
+
+        while li < maxDrawnedLineNumber:
             liCoord = gridCoordMargin + self.gridOffsetY + li * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
@@ -69,11 +72,18 @@ class Grid():
                 else:
                     self.surface.blit(text, (0, liCoord))
 
+            li += 1
+
             if liCoord < gridCoordMargin:
+                maxDrawnedLineNumber += 1
                 continue
             else:
                 pg.draw.line(self.surface, BLACK, (gridCoordMargin, liCoord), (self.surface.get_width(), liCoord), GRID_LINE_WIDTH)
-        for co in range(self.colNb + 1): #+1 since the right most margin needs to be drawn !
+
+        maxDrawnedColNumber = self.lineNb + 1
+        co = 0
+
+        while co < maxDrawnedColNumber:
             colCoord = gridCoordMargin + self.gridOffsetX + co * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
@@ -87,8 +97,11 @@ class Grid():
                 else:
                     self.surface.blit(text, (colCoord, 1))
 
+            co += 1
+
             if colCoord < gridCoordMargin:
                 # we do not draw the column line if its x coordinate is < margin size
+                maxDrawnedColNumber += 1
                 continue
             else:
                 pg.draw.line(self.surface, BLACK, (colCoord, gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
