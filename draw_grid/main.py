@@ -86,6 +86,12 @@ class Game:
         # technique used to enable move grid more than 1 unit at a time
         keys = pg.key.get_pressed()
 
+        if pg.key.get_mods() & pg.KMOD_CTRL: #CTRL key pressed
+            if keys[pg.K_UP]:
+                self.grid.zoomIn()
+            if keys[pg.K_DOWN]:
+                self.grid.zoomOut()
+
         if keys[pg.K_UP]:
             self.grid.moveUp(GRID_MOVE_INCREMENT)
         if keys[pg.K_DOWN]:
