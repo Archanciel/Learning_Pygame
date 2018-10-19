@@ -75,6 +75,10 @@ class Grid():
             li += 1
 
             if liCoord < gridCoordMargin:
+                # We do not draw the line if its y coordinate is less than the grid
+                # coordinates margin size.
+                # Since the line was skipped, it must be replaced by a supplementary
+                # line at the bottom of the grid
                 maxDrawnedLineNumber += 1
                 continue
             else:
@@ -100,7 +104,10 @@ class Grid():
             co += 1
 
             if colCoord < gridCoordMargin:
-                # we do not draw the column line if its x coordinate is < margin size
+                # We do not draw the column line if its x coordinate is less than the grid
+                # coordinates margin size.
+                # Since the column was skipped, it must be replaced by a supplementary
+                # column at the very right of the grid
                 maxDrawnedColNumber += 1
                 continue
             else:
