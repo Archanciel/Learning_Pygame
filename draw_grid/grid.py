@@ -9,13 +9,14 @@ class Grid():
         self.initCellValue = initCellValue
         self.setGridDimension()
 
-
         #Dimensioning the internal value grid to the max displayable cell number.
         #Since one cell can occupy a minimum of 1 px and the grid line width
         #is 1 px, 2 cells will require 1 + 1 + 1 + 1 + 1 = 5 px.
         #3 cells require 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
         #n cells require 1 + (n * 2) px
-        self.cellValueGrid = [[initCellValue for i in range((surface.get_width() - 1) // 2)] for j in range((surface.get_height() - 1) // 2)]
+        self.xMaxCellNumber = (surface.get_width() - 1) // 2
+        self.yMaxCellNumber = (surface.get_height() - 1) // 2
+        self.cellValueGrid = [[initCellValue for i in range(self.xMaxCellNumber)] for j in range(self.yMaxCellNumber)]
 
         self.setStartPattern()
         self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
@@ -24,26 +25,9 @@ class Grid():
         self.gridOffsetY = 0
 
     def setStartPattern(self):
-        for i in range(0,300,10):
-            self.cellValueGrid[i][0] = True
-        for i in range(0,300,10):
-            self.cellValueGrid[i][100] = True
-        for i in range(0,300,10):
-            self.cellValueGrid[i][300] = True
-
-        for i in range(0, 300, 10):
-            self.cellValueGrid[i][0] = True
-        for i in range(0, 300, 10):
-            self.cellValueGrid[i][15] = True
-        for i in range(0, 300, 10):
-            self.cellValueGrid[i][30] = True
-
-        for i in range(0, 300, 10):
-            self.cellValueGrid[i][0] = True
-        for i in range(0, 300, 10):
-            self.cellValueGrid[i][15] = True
-        for i in range(0, 300, 10):
-            self.cellValueGrid[i][30] = True
+        for i in range(0,self.xMaxCellNumber,10):
+            for j in range(0,self.yMaxCellNumber,10):
+                self.cellValueGrid[i][j] = True
 
     def setGridDimension(self):
         self.colNb = (self.surface.get_width() - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
@@ -54,6 +38,8 @@ class Grid():
             gridCoordMargin = GRID_COORD_MARGIN_SIZE
         else:
             gridCoordMargin = 0
+
+        # drawing lines
 
         maxDrawnedLineNumber = self.lineNb + 1
         li = 0
@@ -84,6 +70,8 @@ class Grid():
             else:
                 pg.draw.line(self.surface, BLACK, (gridCoordMargin, liCoord), (self.surface.get_width(), liCoord), GRID_LINE_WIDTH)
 
+        # drawing columns
+
         maxDrawnedColNumber = self.lineNb + 1
         co = 0
 
@@ -113,17 +101,45 @@ class Grid():
             else:
                 pg.draw.line(self.surface, BLACK, (colCoord, gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
 
-        #drawing active cells
+        # drawing active cells
+
         # // 2 + 1 below is required to handle correctly GRID_LINE_WIDTH > 1 !
 
         for row in range(len(self.cellValueGrid)):
             for col in range(len(self.cellValueGrid[0])):
                 if self.cellValueGrid[row][col]:
+                    activeCellXCoordPx = gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + self.gridOffsetX + (
+                                (GRID_LINE_WIDTH + self.cellSize) * col)
+                    if activeCellXCoordPx > 0:
+                        activeCellLeftOffsetX = gridCoordMargin - activeCellXCoordPx
+                        if activeCellLeftOffsetX > 0 and activeCellLeftOffsetX < gridCoordMargin:
+                            xCellSize = self.cellSize - activeCellLeftOffsetX
+#                            print('offsetX={} activeCellXCoordPx={} xCellSize={}'.format(self.gridOffsetX,
+#                                                                                         activeCellXCoordPx, xCellSize))
+                            activeCellXCoordPx = gridCoordMargin
+                        else:
+                            xCellSize = self.cellSize
+                    else:
+                        activeCellLeftOffsetX = gridCoordMargin + activeCellXCoordPx
+                        if activeCellLeftOffsetX >= 0 and activeCellLeftOffsetX < gridCoordMargin:
+                            xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
+                            print('OOOoffsetX={} activeCellLeftOffsetX={} xCellSize={}'.format(self.gridOffsetX,
+                                                                                            activeCellLeftOffsetX, xCellSize))
+                            activeCellXCoordPx = gridCoordMargin
+                        elif activeCellLeftOffsetX < 0 and activeCellLeftOffsetX >= -gridCoordMargin:
+                            xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
+                            print('offsetX={} activeCellLeftOffsetX={} xCellSize={}'.format(self.gridOffsetX,
+                                                                                            activeCellLeftOffsetX, xCellSize))
+                            activeCellXCoordPx = gridCoordMargin
+                        else:
+                            xCellSize = 0
+                    activeCellYCoordPx = gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + self.gridOffsetY + (
+                                (GRID_LINE_WIDTH + self.cellSize) * row)
                     pg.draw.rect(self.surface,
                                      GREEN,
-                                     [gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + ((GRID_LINE_WIDTH + self.cellSize) * col),
-                                      gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + ((GRID_LINE_WIDTH + self.cellSize) * row),
-                                      self.cellSize,
+                                     [activeCellXCoordPx,
+                                      activeCellYCoordPx,
+                                      xCellSize,
                                       self.cellSize])
                     # code below not working !!!
                     # pg.draw.rect(self.surface,
