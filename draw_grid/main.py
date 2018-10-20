@@ -91,15 +91,15 @@ class Game:
                 self.grid.zoomIn()
             if keys[pg.K_DOWN]:
                 self.grid.zoomOut()
-
-        if keys[pg.K_UP]:
-            self.grid.moveUp(GRID_MOVE_INCREMENT)
-        if keys[pg.K_DOWN]:
-            self.grid.moveDown(GRID_MOVE_INCREMENT)
-        if keys[pg.K_LEFT]:
-            self.grid.moveLeft(GRID_MOVE_INCREMENT)
-        if keys[pg.K_RIGHT]:
-            self.grid.moveRight(GRID_MOVE_INCREMENT)
+        else:
+            if keys[pg.K_UP]:
+                self.grid.moveUp(GRID_MOVE_INCREMENT)
+            if keys[pg.K_DOWN]:
+                self.grid.moveDown(GRID_MOVE_INCREMENT)
+            if keys[pg.K_LEFT]:
+                self.grid.moveLeft(GRID_MOVE_INCREMENT)
+            if keys[pg.K_RIGHT]:
+                self.grid.moveRight(GRID_MOVE_INCREMENT)
 
     def update(self):
         '''
