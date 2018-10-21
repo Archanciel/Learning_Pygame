@@ -175,7 +175,7 @@ class Grid():
                     #                   gridCoordMargin + GRID_LINE_WIDTH - 1 + ((self.cellSize + GRID_LINE_WIDTH) * row),
                     #                   self.cellSize,
                     #                   self.cellSize])
-
+ 
     def zoomIn(self):
         delta = self.cellSize // 10
         if delta <= 0:
