@@ -14,6 +14,6 @@ YELLOW = (255, 255, 0)
 
 # grid constants
 GRID_LINE_WIDTH = 2
-DEFAULT_CELL_SIZE = 15 #15 #15 Windows, 35 Android
+DEFAULT_CELL_SIZE = 15 #15 Windows, 35 Android
 GRID_COORD_MARGIN_SIZE = 20 #20 Windows, 40 Android
 GRID_MOVE_INCREMENT = 5
