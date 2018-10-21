@@ -70,8 +70,6 @@ class Game:
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == I:
                     self.dragging = False
-                    print('x {}, y {} offset'.format(self.mouse_x_end - self.mouse_x_beg,
-                                                     self.mouse_y_end - self.mouse_y_beg))
             elif event.type == pg.MOUSEMOTION:
                 if self.dragging:
                     self.mouse_x_end, self.mouse_y_end = event.pos
