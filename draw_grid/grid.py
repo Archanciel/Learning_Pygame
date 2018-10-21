@@ -123,23 +123,18 @@ class Grid():
                         activeCellLeftOffsetX = gridCoordMargin + activeCellXCoordPx
                         if activeCellLeftOffsetX >= 0 and activeCellLeftOffsetX < gridCoordMargin:
                             xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
-                            print('OOOoffsetX={} activeCellLeftOffsetX={} xCellSize={} activeCellXCoordPx={}'.format(self.gridOffsetX,
-                                                                                            activeCellLeftOffsetX, xCellSize,
-                                                                                            activeCellXCoordPx))
                             activeCellXCoordPx = gridCoordMargin
                         elif activeCellLeftOffsetX < 0:
                             if abs(activeCellLeftOffsetX) <= gridCoordMargin:
                                 xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
-                                print('offsetX={} activeCellLeftOffsetX={} xCellSize={} activeCellXCoordPx={}'.format(self.gridOffsetX,
-                                                                                                activeCellLeftOffsetX, xCellSize,
-                                                                                                activeCellXCoordPx))
-                                activeCellXCoordPx = gridCoordMargin
-                            elif (self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1) >= 0:
-                                xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
                                 activeCellXCoordPx = gridCoordMargin
                             else:
-                                xCellSize = 0
-                                activeCellXCoordPx = gridCoordMargin
+                                cellwidth = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
+                                if (cellwidth) > 0:
+                                    xCellSize = cellwidth
+                                    activeCellXCoordPx = gridCoordMargin
+                                else:
+                                    continue # we do not draw a cell which size would be 0 !
                     activeCellYCoordPx = gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + self.gridOffsetY + (
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
                     pg.draw.rect(self.surface,
