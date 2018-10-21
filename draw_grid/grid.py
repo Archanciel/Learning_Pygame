@@ -108,38 +108,57 @@ class Grid():
         for row in range(len(self.cellValueGrid)):
             for col in range(len(self.cellValueGrid[0])):
                 if self.cellValueGrid[row][col]:
-                    activeCellXCoordPx = gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + self.gridOffsetX + (
+                    activeCellXCoord = gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + self.gridOffsetX + (
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
-                    if activeCellXCoordPx > 0:
-                        activeCellLeftOffsetX = gridCoordMargin - activeCellXCoordPx
+                    if activeCellXCoord > 0:
+                        # here, the current active cell x coordinate is greater than the left grid limit and so must be
+                        # drawn entirely
+                        activeCellLeftOffsetX = gridCoordMargin - activeCellXCoord
                         if activeCellLeftOffsetX > 0 and activeCellLeftOffsetX < gridCoordMargin:
+                            # here, we moved the grid to the left to a point where the current active cell is partially
+                            # at the left of the col margin (grid coord margin where the row/col numbers are displayed)
                             xCellSize = self.cellSize - activeCellLeftOffsetX
-#                            print('offsetX={} activeCellXCoordPx={} xCellSize={}'.format(self.gridOffsetX,
-#                                                                                         activeCellXCoordPx, xCellSize))
-                            activeCellXCoordPx = gridCoordMargin
+                            activeCellXCoord = gridCoordMargin
                         else:
+                            # here, the current active cell is behond the grid coord margin and is drawn fully
                             xCellSize = self.cellSize
                     else:
-                        activeCellLeftOffsetX = gridCoordMargin + activeCellXCoordPx
+                        # here, the current active cell x coord is at the left of the left grid limit
+                        activeCellLeftOffsetX = gridCoordMargin + activeCellXCoord # activeCellXCoord is negative here !
                         if activeCellLeftOffsetX >= 0 and activeCellLeftOffsetX < gridCoordMargin:
-                            xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
-                            activeCellXCoordPx = gridCoordMargin
+                            # here, the current active cell x coord is at the left of the left grid limit. But part
+                            # of the cell has to be drawn for the part which is still at the right of the grid coord
+                            # margin
+
+                            # the move offset must account for the number of columns already moved to the left ...
+                            offsetX = self.gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
+
+                            xCellSize = self.cellSize + offsetX + GRID_LINE_WIDTH // 2 + 1
+                            activeCellXCoord = gridCoordMargin
                         elif activeCellLeftOffsetX < 0:
                             if abs(activeCellLeftOffsetX) <= gridCoordMargin:
-                                xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
-                                activeCellXCoordPx = gridCoordMargin
+
+                                # the move offset must account for the number of columns already moved to the left ...
+                                offsetX = self.gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
+
+                                xCellSize = self.cellSize + offsetX + GRID_LINE_WIDTH // 2 + 1
+                                activeCellXCoord = gridCoordMargin
                             else:
-                                cellwidth = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
+
+                                # the move offset must account for the number of columns already moved to the left ...
+                                offsetX = self.gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
+
+                                cellwidth = self.cellSize + offsetX + GRID_LINE_WIDTH // 2 + 1
                                 if (cellwidth) > 0:
                                     xCellSize = cellwidth
-                                    activeCellXCoordPx = gridCoordMargin
+                                    activeCellXCoord = gridCoordMargin
                                 else:
                                     continue # we do not draw a cell which size would be 0 !
                     activeCellYCoordPx = gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + self.gridOffsetY + (
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
                     pg.draw.rect(self.surface,
                                      GREEN,
-                                     [activeCellXCoordPx,
+                                     [activeCellXCoord,
                                       activeCellYCoordPx,
                                       xCellSize,
                                       self.cellSize])
