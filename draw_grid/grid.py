@@ -120,17 +120,12 @@ class Grid():
                         else:
                             xCellSize = self.cellSize
                     else:
-                        activeCellLeftOffsetX = gridCoordMargin + activeCellXCoordPx
-                        if activeCellLeftOffsetX >= 0 and activeCellLeftOffsetX < gridCoordMargin:
-                            xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
+                        activeCellLeftOffsetX = gridCoordMargin - activeCellXCoordPx
+                        if activeCellLeftOffsetX >= 0:
+                            xCellSize = self.cellSize - activeCellLeftOffset
                             print('OOOoffsetX={} activeCellLeftOffsetX={} xCellSize={}'.format(self.gridOffsetX,
                                                                                             activeCellLeftOffsetX, xCellSize))
-                            activeCellXCoordPx = gridCoordMargin
-                        elif activeCellLeftOffsetX < 0 and activeCellLeftOffsetX >= -gridCoordMargin:
-                            xCellSize = self.cellSize + self.gridOffsetX + GRID_LINE_WIDTH // 2 + 1
-                            print('offsetX={} activeCellLeftOffsetX={} xCellSize={}'.format(self.gridOffsetX,
-                                                                                            activeCellLeftOffsetX, xCellSize))
-                            activeCellXCoordPx = gridCoordMargin
+                            activeCellXCoordPx = gridCoordMargin                        
                         else:
                             xCellSize = 0
                     activeCellYCoordPx = gridCoordMargin + GRID_LINE_WIDTH // 2 + 1 + self.gridOffsetY + (
@@ -154,7 +149,7 @@ class Grid():
                     #                   gridCoordMargin + GRID_LINE_WIDTH - 1 + ((self.cellSize + GRID_LINE_WIDTH) * row),
                     #                   self.cellSize,
                     #                   self.cellSize])
-
+ 
     def zoomIn(self):
         delta = self.cellSize // 10
         if delta <= 0:
