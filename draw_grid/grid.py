@@ -160,7 +160,6 @@ class Grid():
                             # value
                         elif activeCellLeftOffsetX < 0:
                             if abs(activeCellLeftOffsetX) <= gridCoordMargin:
-
                                 # the move offset must account for the number of columns already moved to the left ...
                                 offsetX = self.gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
 
@@ -171,12 +170,11 @@ class Grid():
                                     continue
                                 activeCellXCoord = gridCoordMargin
                             else:
-
                                 # the move offset must account for the number of columns already moved to the left ...
                                 offsetX = self.gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
 
                                 cellwidth = self.cellSize + offsetX + (GRID_LINE_WIDTH // 2 + 1)
-                                if (cellwidth) > 0:
+                                if cellwidth > 0:
                                     xCellSize = cellwidth
                                     activeCellXCoord = gridCoordMargin
                                 else:
