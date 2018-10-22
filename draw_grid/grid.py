@@ -156,6 +156,8 @@ class Grid():
                                     # level and the value of the GRID_MOVE_INCREMENT constant
                                     continue
                                 activeCellXCoord = gridCoordMargin
+                            # else: this case is not possible since activeCellLeftOffsetX = gridCoordMargin + negative
+                            # value
                         elif activeCellLeftOffsetX < 0:
                             if abs(activeCellLeftOffsetX) <= gridCoordMargin:
 
