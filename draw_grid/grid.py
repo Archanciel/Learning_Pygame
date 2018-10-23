@@ -117,7 +117,7 @@ class Grid():
         for row in range(len(self.cellValueGrid)):
             for col in range(len(self.cellValueGrid[0])):
                 if self.cellValueGrid[row][col]:
-                    activeCellXCoord = gridCoordMargin + (GRID_LINE_WIDTH // 2 + 1) + self.gridOffsetX + (
+                    activeCellXCoord = gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetX + (
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
                     if activeCellXCoord > 0:
                         # here, the current active cell x coordinate is greater than the left grid limit and so must be
@@ -150,7 +150,7 @@ class Grid():
                                 # the move offset must account for the number of columns already moved to the left ...
                                 offsetX = self.gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
 
-                                xCellSize = self.cellSize + offsetX + (GRID_LINE_WIDTH // 2 + 1)
+                                xCellSize = self.cellSize + offsetX + GRID_LINE_WIDTH
                                 if xCellSize <= 0:
                                     # this happens depending on the combination of the cell size set by the zoom
                                     # level and the value of the GRID_MOVE_INCREMENT constant
@@ -163,7 +163,7 @@ class Grid():
                                 # the move offset must account for the number of columns already moved to the left ...
                                 offsetX = self.gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
 
-                                xCellSize = self.cellSize + offsetX + (GRID_LINE_WIDTH // 2 + 1)
+                                xCellSize = self.cellSize + offsetX + GRID_LINE_WIDTH
                                 if xCellSize <= 0:
                                     # this happens depending on the combination of the cell size set by the zoom
                                     # level and the value of the GRID_MOVE_INCREMENT constant
@@ -173,14 +173,14 @@ class Grid():
                                 # the move offset must account for the number of columns already moved to the left ...
                                 offsetX = self.gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
 
-                                cellwidth = self.cellSize + offsetX + (GRID_LINE_WIDTH // 2 + 1)
+                                cellwidth = self.cellSize + offsetX + GRID_LINE_WIDTH
                                 if cellwidth > 0:
                                     xCellSize = cellwidth
                                     activeCellXCoord = gridCoordMargin
                                 else:
                                     continue # we do not draw a cell which size would be 0 !
 
-                    activeCellYCoordPx = gridCoordMargin + (GRID_LINE_WIDTH // 2 + 1) + self.gridOffsetY + (
+                    activeCellYCoordPx = gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetY + (
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
 
                     pg.draw.rect(self.surface,
