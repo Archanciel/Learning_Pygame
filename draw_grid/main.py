@@ -73,6 +73,13 @@ class Game:
             elif event.type == pg.MOUSEMOTION:
                 if self.dragging:
                     self.mouse_x_end, self.mouse_y_end = event.pos
+                    xOffset = self.mouse_x_beg - self.mouse_x_end
+                    yOffset = self.mouse_y_beg - self.mouse_y_end
+
+                    self.grid.move(xOffset, yOffset)
+
+                    self.mouse_x_beg = self.mouse_x_end
+                    self.mouse_y_beg = self.mouse_y_end
 
             # technique used to allow moving grid only 1 unit at a time
             # elif event.type == pg.KEYDOWN:

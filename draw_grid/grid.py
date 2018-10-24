@@ -250,6 +250,17 @@ class Grid():
 
         self.setGridDimension()
 
+    def move(self, xOffset, yOffset):
+        if xOffset > 0:
+            self.moveLeft(xOffset)
+        elif xOffset < 0:
+            self.moveRight(-xOffset)
+
+        if yOffset > 0:
+            self.moveUp(yOffset)
+        elif yOffset < 0:
+            self.moveDown(-yOffset)
+
     def moveUp(self, pixels):
         self.gridOffsetY -= pixels
 
