@@ -236,7 +236,6 @@ class Grid():
             self.drawAxisLabel = True
 
         self.setGridDimension()
-#        print('zoom in: cellsize {}, delta {}, col nb {}'.format(self.cellSize, delta, self.colNb))
 
     def zoomOut(self):
         delta = self.cellSize // 10
@@ -250,7 +249,6 @@ class Grid():
                 self.drawAxisLabel = False
 
         self.setGridDimension()
-#        print('zoom out: cellsize {}, delta {}, colnb {}'.format(self.cellSize, delta, self.colNb))
 
     def moveUp(self, pixels):
         self.gridOffsetY -= pixels
