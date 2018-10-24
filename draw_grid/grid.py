@@ -121,6 +121,7 @@ class Grid():
                     drawnedActiveCellXCoord, cellWidth = self.computeCellCoordAndSize(self.gridOffsetX, activeCellXCoord, col, gridCoordMargin)
 
                     if drawnedActiveCellXCoord == None:
+                        # cell out of display area
                         continue
 
                     activeCellYCoord = gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetY + (
@@ -128,6 +129,7 @@ class Grid():
                     drawnedActiveCellYCoord, cellHeight = self.computeCellCoordAndSize(self.gridOffsetY, activeCellYCoord, row, gridCoordMargin)
 
                     if drawnedActiveCellYCoord == None:
+                        # cell out of display area
                         continue
 
                     pg.draw.rect(self.surface,
@@ -142,6 +144,9 @@ class Grid():
         Computes the active cell top left x or y coordinate aswell as the active cell size. Used to redraw active
         cells, accounting for their modified coordinates due to horizontal or/and vertical moves combined with
         ooming in or out.
+
+        Note that the code of this method is commented for handling an horizontal move. In order to keep comments
+        readable, their adaption to handling a vertical move is left to the reader !
 
         :param gridMoveOffset: x or y grid move offset
         :param activeCellCoord: active cell x or y coord
