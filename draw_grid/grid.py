@@ -118,91 +118,104 @@ class Grid():
                 if self.cellValueGrid[row][col]:
                     activeCellXCoord = gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetX + (
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
-                    activeCellXCoord, cellWidth = self.computeCellCoordAndSize(self.gridOffsetX, activeCellXCoord, col, gridCoordMargin)
+                    drawnedActiveCellXCoord, cellWidth = self.computeCellCoordAndSize(self.gridOffsetX, activeCellXCoord, col, gridCoordMargin)
 
-                    if activeCellXCoord == None:
+                    if drawnedActiveCellXCoord == None:
                         continue
 
                     activeCellYCoord = gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetY + (
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
-                    activeCellYCoord, cellHeight = self.computeCellCoordAndSize(self.gridOffsetY, activeCellYCoord, row, gridCoordMargin)
+                    drawnedActiveCellYCoord, cellHeight = self.computeCellCoordAndSize(self.gridOffsetY, activeCellYCoord, row, gridCoordMargin)
 
-                    if activeCellYCoord == None:
+                    if drawnedActiveCellYCoord == None:
                         continue
 
                     pg.draw.rect(self.surface,
                                      GREEN,
-                                     [activeCellXCoord,
-                                      activeCellYCoord,
+                                     [drawnedActiveCellXCoord,
+                                      drawnedActiveCellYCoord,
                                       cellWidth,
                                       cellHeight])
 
-    def computeCellCoordAndSize(self, gridOffsetX, activeCellXCoord, col, gridCoordMargin):
-        xCellSize = 0
+    def computeCellCoordAndSize(self, gridMoveOffset, activeCellCoord, rowOrColIndex, gridCoordMargin):
+        '''
+        Computes the active cell top left x or y coordinate aswell as the active cell size. Used to redraw active
+        cells, accounting for their modified coordinates due to horizontal or/and vertical moves combined with
+        ooming in or out.
 
-        if activeCellXCoord > 0:
+        :param gridMoveOffset: x or y grid move offset
+        :param activeCellCoord: active cell x or y coord
+        :param rowOrColIndex: index of current active cell row or col
+        :param gridCoordMargin: size of the grid coordinate margin
+
+        :return: activeCellCoord - current cell top left x or y coordinate
+                 cellEdgeSize - size of current cell (square in fact)
+        '''
+        cellEdgeSize = 0
+
+        if activeCellCoord > 0:
             # here, the current active cell x coordinate is greater than the left grid limit and so must be
             # drawn entirely or partially ...
-            activeCellLeftOffsetX = gridCoordMargin - activeCellXCoord
-            if activeCellLeftOffsetX > 0:
-                if activeCellLeftOffsetX < gridCoordMargin:
+            activeCellCoordOffset = gridCoordMargin - activeCellCoord
+            if activeCellCoordOffset > 0:
+                if activeCellCoordOffset < gridCoordMargin:
                     # here, we moved the grid to the left to a point where the current active cell is partially
                     # at the left of the col margin (grid coord margin where the row/col numbers are displayed)
-                    xCellSize = self.cellSize - activeCellLeftOffsetX
-                    if xCellSize <= 0:
+                    cellEdgeSize = self.cellSize - activeCellCoordOffset
+                    if cellEdgeSize <= 0:
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    activeCellXCoord = gridCoordMargin
+                    activeCellCoord = gridCoordMargin
                 else:
                     # here, the current active cell is behond the grid coord margin and is drawn entirely
-                    xCellSize = self.cellSize
+                    cellEdgeSize = self.cellSize
             else:
-                xCellSize = self.cellSize
+                cellEdgeSize = self.cellSize
         else:
             # here, the current active cell x coord is at the left of the left grid limit
-            activeCellLeftOffsetX = gridCoordMargin + activeCellXCoord  # activeCellXCoord is negative here !
-            if activeCellLeftOffsetX >= 0:
-                if activeCellLeftOffsetX <= gridCoordMargin:
+            activeCellCoordOffset = gridCoordMargin + activeCellCoord  # activeCellXCoord is negative here !
+            if activeCellCoordOffset >= 0:
+                if activeCellCoordOffset <= gridCoordMargin:
                     # here, the current active cell x coord is at the left of the left grid limit. But part
                     # of the cell has to be drawn for the part which is still at the right of the grid coord
                     # margin
 
                     # the move offset must account for the number of columns already moved to the left ...
-                    offsetX = gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
+                    offset = gridMoveOffset + (GRID_LINE_WIDTH + self.cellSize) * rowOrColIndex
 
-                    xCellSize = self.cellSize + offsetX + GRID_LINE_WIDTH
-                    if xCellSize <= 0:
+                    cellEdgeSize = self.cellSize + offset + GRID_LINE_WIDTH
+                    if cellEdgeSize <= 0:
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    activeCellXCoord = gridCoordMargin
+                    activeCellCoord = gridCoordMargin
                 # else: this case is not possible since activeCellLeftOffsetX = gridCoordMargin + negative
                 # value
-            elif activeCellLeftOffsetX < 0:
-                if abs(activeCellLeftOffsetX) <= gridCoordMargin:
+            elif activeCellCoordOffset < 0:
+                if abs(activeCellCoordOffset) <= gridCoordMargin:
                     # the move offset must account for the number of columns already moved to the left ...
-                    offsetX = gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
+                    offset = gridMoveOffset + (GRID_LINE_WIDTH + self.cellSize) * rowOrColIndex
 
-                    xCellSize = self.cellSize + offsetX + GRID_LINE_WIDTH
-                    if xCellSize <= 0:
+                    cellEdgeSize = self.cellSize + offset + GRID_LINE_WIDTH
+                    if cellEdgeSize <= 0:
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    activeCellXCoord = gridCoordMargin
+                    activeCellCoord = gridCoordMargin
                 else:
                     # the move offset must account for the number of columns already moved to the left ...
-                    offsetX = gridOffsetX + (GRID_LINE_WIDTH + self.cellSize) * col
+                    offset = gridMoveOffset + (GRID_LINE_WIDTH + self.cellSize) * rowOrColIndex
 
-                    cellwidth = self.cellSize + offsetX + GRID_LINE_WIDTH
+                    cellwidth = self.cellSize + offset + GRID_LINE_WIDTH
                     if cellwidth > 0:
-                        xCellSize = cellwidth
-                        activeCellXCoord = gridCoordMargin
+                        cellEdgeSize = cellwidth
+                        activeCellCoord = gridCoordMargin
                     else:
                         # we do not draw a cell which size would be 0 !
                         return None, None
 
-        return activeCellXCoord, xCellSize
+        return activeCellCoord, cellEdgeSize
 
     def zoomIn(self):
         delta = self.cellSize // 10
