@@ -24,14 +24,18 @@ class Grid():
         self.gridOffsetX = 0
         self.gridOffsetY = 0
 
+        self.startDrawLineIndex = 0
+        self.startDrawColIndex = 0
+
     def setStartPattern(self):
         for i in range(0,self.xMaxCellNumber,10):
             for j in range(0,self.yMaxCellNumber,10):
                 self.cellValueGrid[i][j] = True
 
     def setGridDimension(self):
-        self.colNb = (self.surface.get_width() - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
-        self.lineNb = (self.surface.get_height() - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
+        self.colNb = (self.surface.get_width() - GRID_LINE_WIDTH - GRID_COORD_MARGIN_SIZE) // (self.cellSize + GRID_LINE_WIDTH) + 1
+        self.lineNb = (self.surface.get_height() - GRID_LINE_WIDTH - GRID_COORD_MARGIN_SIZE) // (self.cellSize + GRID_LINE_WIDTH) + 1
+#        print('colNb {} lineNb {}'.format(self.colNb, self.lineNb))
 
     def draw(self):
         if self.drawAxisLabel:
@@ -263,6 +267,7 @@ class Grid():
 
     def moveUp(self, pixels):
         self.gridOffsetY -= pixels
+        self.updateStartDrawLineIndex()
 
     def moveDown(self, pixels):
         self.gridOffsetY += pixels
@@ -270,11 +275,24 @@ class Grid():
         if self.gridOffsetY > 0:
             self.gridOffsetY = 0
 
+        self.updateStartDrawLineIndex()
+
     def moveLeft(self, pixels):
         self.gridOffsetX -= pixels
+        self.updateStartDrawColIndex()
 
     def moveRight(self, pixels):
         self.gridOffsetX += pixels
 
         if self.gridOffsetX > 0:
             self.gridOffsetX = 0
+
+        self.updateStartDrawColIndex()
+
+    def updateStartDrawColIndex(self):
+        self.startDrawLineIndex = (-self.gridOffsetX - 1) // self.cellSize
+#        print('offsetX {}, anchorX {}'.format(self.gridOffsetX, self.startDrawLineIndex))
+
+    def updateStartDrawLineIndex(self):
+        self.startDrawLineIndex = (-self.gridOffsetY - 1) // self.cellSize
+#        print('offsetY {}, anchorY {}'.format(self.gridOffsetY, self.startDrawLineIndex))
