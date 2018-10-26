@@ -7,6 +7,7 @@ class Grid():
         self.surface = surface
         self.cellSize = cellSize
         self.initCellValue = initCellValue
+        self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
         self.setGridDimension()
 
         #Dimensioning the internal value grid to the max displayable cell number.
@@ -24,24 +25,20 @@ class Grid():
         self.gridOffsetX = 0
         self.gridOffsetY = 0
 
-        self.startDrawLineIndex = 0
-        self.startDrawColIndex = 0
-
     def setStartPattern(self):
         for i in range(0,self.xMaxCellNumber,10):
             for j in range(0,self.yMaxCellNumber,10):
                 self.cellValueGrid[i][j] = True
 
     def setGridDimension(self):
-        self.colNb = (self.surface.get_width() - GRID_LINE_WIDTH - GRID_COORD_MARGIN_SIZE) // (self.cellSize + GRID_LINE_WIDTH) + 1
-        self.lineNb = (self.surface.get_height() - GRID_LINE_WIDTH - GRID_COORD_MARGIN_SIZE) // (self.cellSize + GRID_LINE_WIDTH) + 1
-#        print('colNb {} lineNb {}'.format(self.colNb, self.lineNb))
+        self.colNb = (self.surface.get_width() - GRID_LINE_WIDTH - self.gridCoordMargin) // (self.cellSize + GRID_LINE_WIDTH)
+        self.lineNb = (self.surface.get_height() - GRID_LINE_WIDTH - self.gridCoordMargin) // (self.cellSize + GRID_LINE_WIDTH)
 
     def draw(self):
         if self.drawAxisLabel:
-            gridCoordMargin = GRID_COORD_MARGIN_SIZE
+            self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
         else:
-            gridCoordMargin = 0
+            self.gridCoordMargin = 0
 
         # drawing lines
 
@@ -49,7 +46,7 @@ class Grid():
         li = 0
 
         while li < maxDrawnedLineNumber:
-            liCoord = gridCoordMargin + self.gridOffsetY + li * (self.cellSize + GRID_LINE_WIDTH)
+            liCoord = self.gridCoordMargin + self.gridOffsetY + li * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
                 if li < 10:
@@ -57,14 +54,14 @@ class Grid():
                 else:
                     ident = '  '
                 text = self.font.render(ident + str(li), 1, (0, 0, 0))
-                if liCoord < gridCoordMargin // 2:
+                if liCoord < self.gridCoordMargin // 2:
                     pass
                 else:
                     self.surface.blit(text, (0, liCoord))
 
             li += 1
 
-            if liCoord < gridCoordMargin:
+            if liCoord < self.gridCoordMargin:
                 # We do not draw the line if its y coordinate is less than the grid
                 # coordinates margin size.
                 # Since the line was skipped, it must be replaced by a supplementary
@@ -72,7 +69,7 @@ class Grid():
                 maxDrawnedLineNumber += 1
                 continue
             else:
-                pg.draw.line(self.surface, BLACK, (gridCoordMargin, liCoord), (self.surface.get_width(), liCoord), GRID_LINE_WIDTH)
+                pg.draw.line(self.surface, BLACK, (self.gridCoordMargin, liCoord), (self.surface.get_width(), liCoord), GRID_LINE_WIDTH)
 
         # drawing columns
 
@@ -80,7 +77,7 @@ class Grid():
         co = 0
 
         while co < maxDrawnedColNumber:
-            colCoord = gridCoordMargin + self.gridOffsetX + co * (self.cellSize + GRID_LINE_WIDTH)
+            colCoord = self.gridCoordMargin + self.gridOffsetX + co * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
                 if co < 10:
@@ -88,14 +85,14 @@ class Grid():
                 else:
                     ident = ' '
                 text = self.font.render(ident + str(co), 1, (0, 0, 0))
-                if colCoord < gridCoordMargin // 2:
+                if colCoord < self.gridCoordMargin // 2:
                     pass
                 else:
                     self.surface.blit(text, (colCoord, 1))
 
             co += 1
 
-            if colCoord < gridCoordMargin:
+            if colCoord < self.gridCoordMargin:
                 # We do not draw the column line if its x coordinate is less than the grid
                 # coordinates margin size.
                 # Since the column was skipped, it must be replaced by a supplementary
@@ -103,7 +100,7 @@ class Grid():
                 maxDrawnedColNumber += 1
                 continue
             else:
-                pg.draw.line(self.surface, BLACK, (colCoord, gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
+                pg.draw.line(self.surface, BLACK, (colCoord, self.gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
 
         # drawing active cells
 
@@ -120,17 +117,17 @@ class Grid():
         for row in range(len(self.cellValueGrid)):
             for col in range(len(self.cellValueGrid[0])):
                 if self.cellValueGrid[row][col]:
-                    activeCellXCoord = gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetX + (
+                    activeCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetX + (
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
-                    drawnedActiveCellXCoord, cellWidth = self.computeCellCoordAndSize(self.gridOffsetX, activeCellXCoord, col, gridCoordMargin)
+                    drawnedActiveCellXCoord, cellWidth = self.computeCellCoordAndSize(self.gridOffsetX, activeCellXCoord, col)
 
                     if drawnedActiveCellXCoord == None:
                         # cell out of display area
                         continue
 
-                    activeCellYCoord = gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetY + (
+                    activeCellYCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetY + (
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
-                    drawnedActiveCellYCoord, cellHeight = self.computeCellCoordAndSize(self.gridOffsetY, activeCellYCoord, row, gridCoordMargin)
+                    drawnedActiveCellYCoord, cellHeight = self.computeCellCoordAndSize(self.gridOffsetY, activeCellYCoord, row)
 
                     if drawnedActiveCellYCoord == None:
                         # cell out of display area
@@ -143,7 +140,7 @@ class Grid():
                                       cellWidth,
                                       cellHeight])
 
-    def computeCellCoordAndSize(self, gridMoveOffset, activeCellCoord, rowOrColIndex, gridCoordMargin):
+    def computeCellCoordAndSize(self, gridMoveOffset, activeCellCoord, rowOrColIndex):
         '''
         Computes the active cell top left x or y coordinate aswell as the active cell size. Used to redraw active
         cells, accounting for their modified coordinates due to horizontal or/and vertical moves combined with
@@ -155,7 +152,6 @@ class Grid():
         :param gridMoveOffset: x or y grid move offset
         :param activeCellCoord: active cell x or y coord
         :param rowOrColIndex: index of current active cell row or col
-        :param gridCoordMargin: size of the grid coordinate margin
 
         :return: activeCellCoord - current cell top left x or y coordinate
                  cellEdgeSize - size of current cell (square in fact)
@@ -165,9 +161,9 @@ class Grid():
         if activeCellCoord > 0:
             # here, the current active cell x coordinate is greater than the left grid limit and so must be
             # drawn entirely or partially ...
-            activeCellCoordOffset = gridCoordMargin - activeCellCoord
+            activeCellCoordOffset = self.gridCoordMargin - activeCellCoord
             if activeCellCoordOffset > 0:
-                if activeCellCoordOffset < gridCoordMargin:
+                if activeCellCoordOffset < self.gridCoordMargin:
                     # here, we moved the grid to the left to a point where the current active cell is partially
                     # at the left of the col margin (grid coord margin where the row/col numbers are displayed)
                     cellEdgeSize = self.cellSize - activeCellCoordOffset
@@ -175,7 +171,7 @@ class Grid():
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    activeCellCoord = gridCoordMargin
+                    activeCellCoord = self.gridCoordMargin
                 else:
                     # here, the current active cell is behond the grid coord margin and is drawn entirely
                     cellEdgeSize = self.cellSize
@@ -183,9 +179,9 @@ class Grid():
                 cellEdgeSize = self.cellSize
         else:
             # here, the current active cell x coord is at the left of the left grid limit
-            activeCellCoordOffset = gridCoordMargin + activeCellCoord  # activeCellXCoord is negative here !
+            activeCellCoordOffset = self.gridCoordMargin + activeCellCoord  # activeCellXCoord is negative here !
             if activeCellCoordOffset >= 0:
-                if activeCellCoordOffset <= gridCoordMargin:
+                if activeCellCoordOffset <= self.gridCoordMargin:
                     # here, the current active cell x coord is at the left of the left grid limit. But part
                     # of the cell has to be drawn for the part which is still at the right of the grid coord
                     # margin
@@ -198,11 +194,11 @@ class Grid():
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    activeCellCoord = gridCoordMargin
-                # else: this case is not possible since activeCellLeftOffsetX = gridCoordMargin + negative
+                    activeCellCoord = self.gridCoordMargin
+                # else: this case is not possible since activeCellLeftOffsetX = self.gridCoordMargin + negative
                 # value
             elif activeCellCoordOffset < 0:
-                if abs(activeCellCoordOffset) <= gridCoordMargin:
+                if abs(activeCellCoordOffset) <= self.gridCoordMargin:
                     # the move offset must account for the number of columns already moved to the left ...
                     offset = gridMoveOffset + (GRID_LINE_WIDTH + self.cellSize) * rowOrColIndex
 
@@ -211,7 +207,7 @@ class Grid():
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    activeCellCoord = gridCoordMargin
+                    activeCellCoord = self.gridCoordMargin
                 else:
                     # the move offset must account for the number of columns already moved to the left ...
                     offset = gridMoveOffset + (GRID_LINE_WIDTH + self.cellSize) * rowOrColIndex
@@ -219,7 +215,7 @@ class Grid():
                     cellwidth = self.cellSize + offset + GRID_LINE_WIDTH
                     if cellwidth > 0:
                         cellEdgeSize = cellwidth
-                        activeCellCoord = gridCoordMargin
+                        activeCellCoord = self.gridCoordMargin
                     else:
                         # we do not draw a cell which size would be 0 !
                         return None, None
@@ -267,7 +263,6 @@ class Grid():
 
     def moveUp(self, pixels):
         self.gridOffsetY -= pixels
-        self.updateStartDrawLineIndex()
 
     def moveDown(self, pixels):
         self.gridOffsetY += pixels
@@ -275,24 +270,11 @@ class Grid():
         if self.gridOffsetY > 0:
             self.gridOffsetY = 0
 
-        self.updateStartDrawLineIndex()
-
     def moveLeft(self, pixels):
         self.gridOffsetX -= pixels
-        self.updateStartDrawColIndex()
 
     def moveRight(self, pixels):
         self.gridOffsetX += pixels
 
         if self.gridOffsetX > 0:
             self.gridOffsetX = 0
-
-        self.updateStartDrawColIndex()
-
-    def updateStartDrawColIndex(self):
-        self.startDrawLineIndex = (-self.gridOffsetX - 1) // self.cellSize
-#        print('offsetX {}, anchorX {}'.format(self.gridOffsetX, self.startDrawLineIndex))
-
-    def updateStartDrawLineIndex(self):
-        self.startDrawLineIndex = (-self.gridOffsetY - 1) // self.cellSize
-#        print('offsetY {}, anchorY {}'.format(self.gridOffsetY, self.startDrawLineIndex))
