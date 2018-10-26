@@ -25,14 +25,17 @@ class Grid():
         self.gridOffsetX = 0
         self.gridOffsetY = 0
 
+        self.startDrawRowIndex = 0
+        self.startDrawColIndex = 0
+
     def setStartPattern(self):
         for i in range(0,self.xMaxCellNumber,10):
             for j in range(0,self.yMaxCellNumber,10):
                 self.cellValueGrid[i][j] = True
 
     def setGridDimension(self):
-        self.colNb = (self.surface.get_width() - GRID_LINE_WIDTH - self.gridCoordMargin) // (self.cellSize + GRID_LINE_WIDTH)
-        self.lineNb = (self.surface.get_height() - GRID_LINE_WIDTH - self.gridCoordMargin) // (self.cellSize + GRID_LINE_WIDTH)
+        self.drawnedColNb = (self.surface.get_width() - GRID_LINE_WIDTH - self.gridCoordMargin) // (self.cellSize + GRID_LINE_WIDTH)
+        self.drawnedRowNb = (self.surface.get_height() - GRID_LINE_WIDTH - self.gridCoordMargin) // (self.cellSize + GRID_LINE_WIDTH)
 
     def draw(self):
         if self.drawAxisLabel:
@@ -42,7 +45,7 @@ class Grid():
 
         # drawing lines
 
-        maxDrawnedLineNumber = self.lineNb + 1
+        maxDrawnedLineNumber = self.drawnedRowNb + 1
         li = 0
 
         while li < maxDrawnedLineNumber:
@@ -73,7 +76,7 @@ class Grid():
 
         # drawing columns
 
-        maxDrawnedColNumber = self.lineNb + 1
+        maxDrawnedColNumber = self.drawnedRowNb + 1
         co = 0
 
         while co < maxDrawnedColNumber:
@@ -114,6 +117,10 @@ class Grid():
                                   # coord margin or at its left, i.e between the left grid limit
                                   # and the grid coord margin
 
+#The two commented line below cause active cell drawîng problems when an active cell is to be drawned partially.
+#This happens in normal display and after zoomong in or out
+        # for row in range(self.startDrawRowIndex, self.drawnedRowNb + self.startDrawRowIndex):
+        #     for col in range(self.startDrawColIndex, self.drawnedColNb + self.startDrawColIndex):
         for row in range(len(self.cellValueGrid)):
             for col in range(len(self.cellValueGrid[0])):
                 if self.cellValueGrid[row][col]:
@@ -263,6 +270,7 @@ class Grid():
 
     def moveUp(self, pixels):
         self.gridOffsetY -= pixels
+        self.updateStartDrawRowIndex()
 
     def moveDown(self, pixels):
         self.gridOffsetY += pixels
@@ -270,11 +278,24 @@ class Grid():
         if self.gridOffsetY > 0:
             self.gridOffsetY = 0
 
+        self.updateStartDrawRowIndex()
+
     def moveLeft(self, pixels):
         self.gridOffsetX -= pixels
+        self.updateStartDrawColIndex()
 
     def moveRight(self, pixels):
         self.gridOffsetX += pixels
 
         if self.gridOffsetX > 0:
             self.gridOffsetX = 0
+
+        self.updateStartDrawColIndex()
+
+    def updateStartDrawColIndex(self):
+        self.startDrawColIndex = (-self.gridOffsetX - 1) // self.cellSize
+#        print('offsetX {}, anchorX {}'.format(self.gridOffsetX, self.startDrawLineIndex))
+
+    def updateStartDrawRowIndex(self):
+        self.startDrawRowIndex = (-self.gridOffsetY - 1) // self.cellSize
+#        print('offsetY {}, anchorY {}'.format(self.gridOffsetY, self.startDrawLineIndex))

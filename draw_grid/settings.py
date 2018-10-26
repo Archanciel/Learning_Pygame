@@ -17,4 +17,4 @@ GRID_LINE_WIDTH = 1 #must be 1, otherwise when moving cell to left or up, white 
                     #solved this small problem !
 DEFAULT_CELL_SIZE = 15 #15 Windows, 35 Android
 GRID_COORD_MARGIN_SIZE = 20 #20 Windows, 40 Android
-GRID_MOVE_INCREMENT = 5
+GRID_MOVE_INCREMENT = 1
