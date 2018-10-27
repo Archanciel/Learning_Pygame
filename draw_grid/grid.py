@@ -34,8 +34,8 @@ class Grid():
                 self.cellValueGrid[i][j] = True
 
     def setGridDimension(self):
-        self.drawnedColNb = (self.surface.get_width() - GRID_LINE_WIDTH - self.gridCoordMargin) // (self.cellSize + GRID_LINE_WIDTH)
-        self.drawnedRowNb = (self.surface.get_height() - GRID_LINE_WIDTH - self.gridCoordMargin) // (self.cellSize + GRID_LINE_WIDTH)
+        self.drawnedColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
+        self.drawnedRowNb = (self.surface.get_height() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
 
     def draw(self):
         if self.drawAxisLabel:
@@ -117,12 +117,8 @@ class Grid():
                                   # coord margin or at its left, i.e between the left grid limit
                                   # and the grid coord margin
 
-#The two commented line below cause active cell drawîng problems when an active cell is to be drawned partially.
-#This happens in normal display and after zoomong in or out
-        # for row in range(self.startDrawRowIndex, self.drawnedRowNb + self.startDrawRowIndex):
-        #     for col in range(self.startDrawColIndex, self.drawnedColNb + self.startDrawColIndex):
-        for row in range(len(self.cellValueGrid)):
-            for col in range(len(self.cellValueGrid[0])):
+        for row in range(self.startDrawRowIndex, self.drawnedRowNb + self.startDrawRowIndex + 2):
+            for col in range(self.startDrawColIndex, self.startDrawColIndex + self.drawnedColNb + 2):
                 if self.cellValueGrid[row][col]:
                     activeCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetX + (
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
@@ -293,9 +289,9 @@ class Grid():
         self.updateStartDrawColIndex()
 
     def updateStartDrawColIndex(self):
-        self.startDrawColIndex = (-self.gridOffsetX - 1) // self.cellSize
-#        print('offsetX {}, anchorX {}'.format(self.gridOffsetX, self.startDrawLineIndex))
+        self.startDrawColIndex = -self.gridOffsetX // (self.cellSize + GRID_LINE_WIDTH)
+#        print('gridOffsetX {}, startDrawColIndex {}'.format(self.gridOffsetX, self.startDrawColIndex))
 
     def updateStartDrawRowIndex(self):
-        self.startDrawRowIndex = (-self.gridOffsetY - 1) // self.cellSize
-#        print('offsetY {}, anchorY {}'.format(self.gridOffsetY, self.startDrawLineIndex))
+        self.startDrawRowIndex = -self.gridOffsetY // (self.cellSize + GRID_LINE_WIDTH)
+#        print('gridOffsetY {}, anchorY {}'.format(self.gridOffsetY, self.startDrawRowIndex))
