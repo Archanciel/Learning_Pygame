@@ -117,8 +117,8 @@ class Grid():
                                   # coord margin or at its left, i.e between the left grid limit
                                   # and the grid coord margin
 
-        for row in range(self.startDrawRowIndex, self.drawnedRowNb + self.startDrawRowIndex + 2):
-            for col in range(self.startDrawColIndex, self.startDrawColIndex + self.drawnedColNb + 2):
+        for row in range(self.startDrawRowIndex, min(self.yMaxCellNumber, self.drawnedRowNb + self.startDrawRowIndex + 2)):
+            for col in range(self.startDrawColIndex, min(self.xMaxCellNumber, self.startDrawColIndex + self.drawnedColNb + 2)):
                 if self.cellValueGrid[row][col]:
                     activeCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetX + (
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
