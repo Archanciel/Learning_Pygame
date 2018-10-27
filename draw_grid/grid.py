@@ -239,6 +239,8 @@ class Grid():
             self.drawAxisLabel = True
 
         self.setGridDimension()
+        self.updateStartDrawRowIndex()
+        self.updateStartDrawColIndex()
 
     def zoomOut(self):
         delta = self.cellSize // 10
@@ -252,6 +254,8 @@ class Grid():
                 self.drawAxisLabel = False
 
         self.setGridDimension()
+        self.updateStartDrawRowIndex()
+        self.updateStartDrawColIndex()
 
     def move(self, xOffset, yOffset):
         if xOffset > 0:
