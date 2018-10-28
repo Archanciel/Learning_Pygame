@@ -3,7 +3,9 @@ import pygame as pg
 from draw_grid.settings import *
 
 class Grid():
+
     def __init__(self, surface, cellSize, initCellValue):
+        self.changed = True
         self.surface = surface
         self.cellSize = cellSize
         self.initCellValue = initCellValue
@@ -12,9 +14,9 @@ class Grid():
 
         #Dimensioning the internal value grid to the max displayable cell number.
         #Since one cell can occupy a minimum of 1 px and the grid line width
-        #is 1 px, 2 cells will require 1 + 1 + 1 + 1 + 1 = 5 px.
-        #3 cells require 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
-        #n cells require 1 + (n * 2) px
+        #is 1 px at the minimum, 2 cells will require at leastb1 + 1 + 1 + 1 + 1 = 5 px.
+        #3 cells require at leastv1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
+        #n cells require at least 1 + (n * 2) px
         self.xMaxCellNumber = (surface.get_width() - 1) // 2
         self.yMaxCellNumber = (surface.get_height() - 1) // 2
         self.cellValueGrid = [[initCellValue for i in range(self.xMaxCellNumber)] for j in range(self.yMaxCellNumber)]
@@ -107,16 +109,6 @@ class Grid():
 
         # drawing active cells
 
-        # // 2 + 1 below is required to handle correctly GRID_LINE_WIDTH > 1 !
-
-        activeCellLeftOffsetX = 0 # contains the active cell x offset from the left grid limit
-                                  # (which has value 0). If its value is negative, this means
-                                  # cell was moved further to the left of the left grid limit. If
-                                  # its value is positive, the cell will be drawned entirely or not
-                                  # depending if its x coord is positioned at the right of the grid
-                                  # coord margin or at its left, i.e between the left grid limit
-                                  # and the grid coord margin
-
         maxDrawnedRowIndex = min(self.yMaxCellNumber, self.drawnedRowNb + self.startDrawRowIndex + 2)
         maxDrawnedColIndex = min(self.xMaxCellNumber, self.startDrawColIndex + self.drawnedColNb + 2)
 
@@ -141,10 +133,12 @@ class Grid():
 
                     pg.draw.rect(self.surface,
                                      GREEN,
-                                     [drawnedActiveCellXCoord,
-                                      drawnedActiveCellYCoord,
+                                     [drawnedActiveCellXCoord - CELL_SIZE_OFFSET,
+                                      drawnedActiveCellYCoord - CELL_SIZE_OFFSET,
                                       cellWidth,
                                       cellHeight])
+
+        self.changed = False
 
     def computeCellCoordAndSize(self, gridMoveOffset, activeCellCoord, rowOrColIndex):
         '''
@@ -201,7 +195,7 @@ class Grid():
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
                     activeCellCoord = self.gridCoordMargin
-                # else: this case is not possible since activeCellLeftOffsetX = self.gridCoordMargin + negative
+                # else: this case is not possible since activeCellCoordOffset = self.gridCoordMargin + negative
                 # value
             elif activeCellCoordOffset < 0:
                 if abs(activeCellCoordOffset) <= self.gridCoordMargin:
@@ -244,6 +238,7 @@ class Grid():
         self.setGridDimension()
         self.updateStartDrawRowIndex()
         self.updateStartDrawColIndex()
+        self.changed = True
 
     def zoomOut(self):
         delta = self.cellSize // 10
@@ -259,6 +254,7 @@ class Grid():
         self.setGridDimension()
         self.updateStartDrawRowIndex()
         self.updateStartDrawColIndex()
+        self.changed = True
 
     def move(self, xOffset, yOffset):
         if xOffset > 0:
@@ -274,6 +270,7 @@ class Grid():
     def moveUp(self, pixels):
         self.gridOffsetY -= pixels
         self.updateStartDrawRowIndex()
+        self.changed = True
 
     def moveDown(self, pixels):
         self.gridOffsetY += pixels
@@ -282,10 +279,12 @@ class Grid():
             self.gridOffsetY = 0
 
         self.updateStartDrawRowIndex()
+        self.changed = True
 
     def moveLeft(self, pixels):
         self.gridOffsetX -= pixels
         self.updateStartDrawColIndex()
+        self.changed = True
 
     def moveRight(self, pixels):
         self.gridOffsetX += pixels
@@ -294,11 +293,10 @@ class Grid():
             self.gridOffsetX = 0
 
         self.updateStartDrawColIndex()
+        self.changed = True
 
     def updateStartDrawColIndex(self):
         self.startDrawColIndex = -self.gridOffsetX // (self.cellSize + GRID_LINE_WIDTH)
-#        print('gridOffsetX {}, startDrawColIndex {}'.format(self.gridOffsetX, self.startDrawColIndex))
 
     def updateStartDrawRowIndex(self):
         self.startDrawRowIndex = -self.gridOffsetY // (self.cellSize + GRID_LINE_WIDTH)
-#        print('gridOffsetY {}, anchorY {}'.format(self.gridOffsetY, self.startDrawRowIndex))

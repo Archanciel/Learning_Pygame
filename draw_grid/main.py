@@ -37,9 +37,7 @@ class Game:
         '''
         Starts a new game.
         '''
-        self.all_sprites = pg.sprite.Group()
-#        self.player = Player()
-#        self.all_sprites.add(self.player)
+        pass
 
     def run(self):
         '''
@@ -63,6 +61,8 @@ class Game:
                 if self.playing:
                     self.playing = False
                     self.running = False
+
+            # handling mouse grid move
             elif event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == I:
                     self.dragging = True
@@ -110,18 +110,19 @@ class Game:
         '''
         Updates all game objects.
         '''
-        self.all_sprites.update()
+        pass
 
     def draw(self):
         '''
         Redraws all game objects.
         '''
-        self.screen.fill(WHITE)
-        self.all_sprites.draw(self.screen)
-        self.grid.draw()
+        if self.grid.changed:
+            # optimization: the grid is only drawned if something changed on it
+            self.screen.fill(WHITE)
+            self.grid.draw()
 
-        # *after* drawing everything, flip the display
-        pg.display.flip()
+            # *after* drawing everything, flip the display
+            pg.display.flip()
 
     def show_start_screen(self):
         '''
