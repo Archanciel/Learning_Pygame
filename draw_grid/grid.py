@@ -33,7 +33,7 @@ class Grid():
     def setStartPattern(self):
         for i in range(0,self.xMaxCellNumber,10):
             for j in range(0,self.yMaxCellNumber,10):
-                self.cellValueGrid[i][j] = True
+                self.cellValueGrid[i][j] = 1
 
     def setGridDimension(self):
         self.drawnedColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
@@ -307,8 +307,8 @@ class Grid():
         row = (y - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetY) // (GRID_LINE_WIDTH + self.cellSize)
 
         if self.cellValueGrid[row][col]:
-            self.cellValueGrid[row][col] = False
+            self.cellValueGrid[row][col] = 0
         else:
-            self.cellValueGrid[row][col] = True
+            self.cellValueGrid[row][col] = 1
 
         self.changed = True
