@@ -300,3 +300,15 @@ class Grid():
 
     def updateStartDrawRowIndex(self):
         self.startDrawRowIndex = -self.gridOffsetY // (self.cellSize + GRID_LINE_WIDTH)
+
+    def toggleCell(self, xyMousePosTuple):
+        x, y = xyMousePosTuple
+        col = (x - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetX) // (GRID_LINE_WIDTH + self.cellSize)
+        row = (y - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetY) // (GRID_LINE_WIDTH + self.cellSize)
+
+        if self.cellValueGrid[row][col]:
+            self.cellValueGrid[row][col] = False
+        else:
+            self.cellValueGrid[row][col] = True
+
+        self.changed = True

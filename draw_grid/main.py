@@ -70,6 +70,9 @@ class Game:
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == I:
                     self.dragging = False
+                    if (self.mouse_x_beg, self.mouse_y_beg) == event.pos:
+                        # here, we just clicked on a cell to activate or deactivate it
+                        self.grid.toggleCell(event.pos)
             elif event.type == pg.MOUSEMOTION:
                 if self.dragging:
                     self.mouse_x_end, self.mouse_y_end = event.pos
