@@ -1,6 +1,6 @@
 # game options/settings
 TITLE = "Draw grid"
-WINDOWS_LOCATION = '100,20'
+WINDOWS_LOCATION = '400,20'
 GRID_SIZE = 791 # grid is always a square !
 FPS = 20
 
