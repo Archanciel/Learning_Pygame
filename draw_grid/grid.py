@@ -11,7 +11,6 @@ class Grid():
         self.cellSize = cellSize
         self.initCellValue = initCellValue
         self.gridDataMgr = GridDataManager(gridDataFileName)
-        self.gridDataMgr.readGridData()
         self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
         self.setGridDimension()
 
