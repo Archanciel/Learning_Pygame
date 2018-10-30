@@ -22,9 +22,15 @@ class TestGridDataManager(unittest.TestCase):#
 
         with open(csvFileName, 'r') as csvFile:
             csvReader = csv.reader(csvFile)
-            self.assertEqual(['0\t1\t2\t3\t4'], next(csvReader))
-            self.assertEqual(['0\t1\t1\t0\t0'], next(csvReader))
-            self.assertEqual(['0\t1\t0\t1\t1'], next(csvReader))
+
+            #checking header
+            self.assertEqual(['\t0\t1\t2\t3\t4'], next(csvReader))
+
+            #checking line 0
+            self.assertEqual(['0\t0\t1\t1\t0\t0'], next(csvReader))
+
+            #checking line 1
+            self.assertEqual(['1\t0\t1\t0\t1\t1'], next(csvReader))
 
         os.remove(csvFileName)
 

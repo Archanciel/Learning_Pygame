@@ -13,11 +13,12 @@ class GridDataManager():
             writer = csv.writer(file, delimiter = '\t')
 
             # write col header row
-            csvFileHeader = [i for i in range(0, len(gridData[0]))]
+            csvFileHeader = [''] + [i for i in range(0, len(gridData[0]))]
             writer.writerow(csvFileHeader)
 
-            # write grid data
-            writer.writerows(gridData)
+            for li in range(0, len(gridData)):
+                line = [li] + gridData[li]
+                writer.writerow(line)
 
     def readGridData(self):
         twoDIntLst = []
@@ -30,6 +31,6 @@ class GridDataManager():
 
             for row in reader:
                 intLst = [int(s) for s in row] # converting the row which contains strings into integers
-                twoDIntLst.append(intLst)
+                twoDIntLst.append(intLst[1:])
 
         return twoDIntLst
