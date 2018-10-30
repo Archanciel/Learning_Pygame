@@ -30,6 +30,7 @@ class Game:
         self.running = True
 
         self.grid = Grid(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, initCellValue=0, gridDataFileName='gridData.csv')
+        self.buttonDownPressed = False
         self.dragging = False
         self.mouse_x_beg = 0
         self.mouse_y_beg = 0
@@ -71,16 +72,20 @@ class Game:
             # handling mouse grid move
             elif event.type == pg.MOUSEBUTTONDOWN:
                 if event.button == I:
-                    self.dragging = True
+                    self.buttonDownPressed = True
                     self.mouse_x_beg, self.mouse_y_beg = event.pos
             elif event.type == pg.MOUSEBUTTONUP:
                 if event.button == I:
-                    self.dragging = False
-                    if (self.mouse_x_beg, self.mouse_y_beg) == event.pos:
-                        # here, we just clicked on a cell to activate or deactivate it
-                        self.grid.toggleCell(event.pos)
+                    self.buttonDownPressed = False
+                    if self.dragging:
+                        self.dragging = False
+                    else:
+                        if (self.mouse_x_beg, self.mouse_y_beg) == event.pos:
+                            # here, we just clicked on a cell to activate or deactivate it
+                            self.grid.toggleCell(event.pos)
             elif event.type == pg.MOUSEMOTION:
-                if self.dragging:
+                if self.buttonDownPressed:
+                    self.dragging = True
                     self.mouse_x_end, self.mouse_y_end = event.pos
                     xOffset = self.mouse_x_beg - self.mouse_x_end
                     yOffset = self.mouse_y_beg - self.mouse_y_end

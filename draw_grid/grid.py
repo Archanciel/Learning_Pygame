@@ -34,7 +34,7 @@ class Grid():
         self.startDrawColIndex = 0
 
     def setStartPattern(self):
-        self.cellValueGrid = self.gridDataMgr.readGridData()
+        pass
 
     def setGridDimension(self):
         self.drawnedColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
@@ -79,7 +79,7 @@ class Grid():
 
         # drawing columns
 
-        maxDrawnedColNumber = self.drawnedRowNb + 1
+        maxDrawnedColNumber = self.drawnedColNb + 1
         co = 0
 
         while co < maxDrawnedColNumber:
@@ -316,3 +316,6 @@ class Grid():
 
     def saveGridData(self):
         self.gridDataMgr.writeGridData(self.cellValueGrid)
+
+    def loadGridData(self):
+        self.cellValueGrid = self.gridDataMgr.readGridData()
