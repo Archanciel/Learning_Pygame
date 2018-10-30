@@ -5,6 +5,9 @@
 
 import pygame as pg
 
+from tkinter import *
+from tkinter import messagebox
+
 from draw_grid.grid import Grid
 from draw_grid.settings import *
 import os
@@ -26,7 +29,7 @@ class Game:
         self.clock = pg.time.Clock()
         self.running = True
 
-        self.grid = Grid(self.screen, DEFAULT_CELL_SIZE, False)
+        self.grid = Grid(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, initCellValue=0, gridDataFileName='gridData.csv')
         self.dragging = False
         self.mouse_x_beg = 0
         self.mouse_y_beg = 0
@@ -61,6 +64,9 @@ class Game:
                 if self.playing:
                     self.playing = False
                     self.running = False
+                    Tk().wm_withdraw()  # to hide the main window
+                    if messagebox.askquestion(None,'Do you want to save grid data ?') == 'yes':
+                        self.grid.saveGridData()
 
             # handling mouse grid move
             elif event.type == pg.MOUSEBUTTONDOWN:

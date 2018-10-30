@@ -1,14 +1,17 @@
 import pygame as pg
 
 from draw_grid.settings import *
+from draw_grid.griddatamanager import GridDataManager
 
 class Grid():
 
-    def __init__(self, surface, cellSize, initCellValue):
+    def __init__(self, surface, cellSize, initCellValue, gridDataFileName):
         self.changed = True
         self.surface = surface
         self.cellSize = cellSize
         self.initCellValue = initCellValue
+        self.gridDataMgr = GridDataManager(gridDataFileName)
+        self.gridDataMgr.readGridData()
         self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
         self.setGridDimension()
 
@@ -31,9 +34,7 @@ class Grid():
         self.startDrawColIndex = 0
 
     def setStartPattern(self):
-        for i in range(0,self.xMaxCellNumber,10):
-            for j in range(0,self.yMaxCellNumber,10):
-                self.cellValueGrid[i][j] = 1
+        self.cellValueGrid = self.gridDataMgr.readGridData()
 
     def setGridDimension(self):
         self.drawnedColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
@@ -312,3 +313,6 @@ class Grid():
             self.cellValueGrid[row][col] = 1
 
         self.changed = True
+
+    def saveGridData(self):
+        self.gridDataMgr.writeGridData(self.cellValueGrid)
