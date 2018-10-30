@@ -24,7 +24,7 @@ class Game:
         os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
         pg.init()
-        self.screen = pg.display.set_mode((GRID_SIZE, GRID_SIZE))
+        self.screen = pg.display.set_mode((GRID_WIDTH, GRID_HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.running = True
@@ -142,7 +142,9 @@ class Game:
         '''
         Shows game splash/start screen.
         '''
-        pass
+        Tk().wm_withdraw()  # to hide the main window
+        if messagebox.askquestion(None, 'Do you want to load existing grid data ?') == 'yes':
+            self.grid.loadGridData()
 
     def show_go_screen(self):
         '''
