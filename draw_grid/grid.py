@@ -1,4 +1,5 @@
 import pygame as pg
+import math
 
 from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
@@ -24,8 +25,8 @@ class Grid():
         self.setStartPattern()
         self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
         self.drawAxisLabel = True
-        self.gridOffsetX = 0
-        self.gridOffsetY = 0
+        self.gridOffsetXPx = 0
+        self.gridOffsetYPx = 0
 
         self.startDrawRowIndex = 0
         self.startDrawColIndex = 0
@@ -49,7 +50,7 @@ class Grid():
         li = 0
 
         while li < maxDrawnedLineNumber:
-            liCoord = self.gridCoordMargin + self.gridOffsetY + li * (self.cellSize + GRID_LINE_WIDTH)
+            liCoord = self.gridCoordMargin + self.gridOffsetYPx + li * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
                 if li < 10:
@@ -80,7 +81,7 @@ class Grid():
         co = 0
 
         while co < maxDrawnedColNumber:
-            colCoord = self.gridCoordMargin + self.gridOffsetX + co * (self.cellSize + GRID_LINE_WIDTH)
+            colCoord = self.gridCoordMargin + self.gridOffsetXPx + co * (self.cellSize + GRID_LINE_WIDTH)
 
             if self.drawAxisLabel:
                 if co < 10:
@@ -113,17 +114,17 @@ class Grid():
         for row in range(self.startDrawRowIndex, maxDrawnedRowIndex):
             for col in range(self.startDrawColIndex, maxDrawnedColIndex):
                 if self.cellValueGrid[row][col]:
-                    activeCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetX + (
+                    activeCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetXPx + (
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
-                    drawnedActiveCellXCoord, cellWidth = self.computeCellCoordAndSize(self.gridOffsetX, activeCellXCoord, col)
+                    drawnedActiveCellXCoord, cellWidth = self.computeCellCoordAndSize(self.gridOffsetXPx, activeCellXCoord, col)
 
                     if drawnedActiveCellXCoord == None:
                         # cell out of display area
                         continue
 
-                    activeCellYCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetY + (
+                    activeCellYCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetYPx + (
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
-                    drawnedActiveCellYCoord, cellHeight = self.computeCellCoordAndSize(self.gridOffsetY, activeCellYCoord, row)
+                    drawnedActiveCellYCoord, cellHeight = self.computeCellCoordAndSize(self.gridOffsetYPx, activeCellYCoord, row)
 
                     if drawnedActiveCellYCoord == None:
                         # cell out of display area
@@ -266,49 +267,63 @@ class Grid():
             self.moveDown(-yOffset)
 
     def moveUp(self, pixels):
-        self.gridOffsetY -= pixels
+        newGridOffset = self.gridOffsetYPx - pixels
+
+        if -newGridOffset > self.yMaxCellNumber:
+            #preventing from moving behond grid height. This avoids changing a cell value
+            #for a cell outside of the internal cell value grid
+            return
+
+        self.gridOffsetYPx -= pixels
         self.updateStartDrawRowIndex()
         self.changed = True
 
     def moveDown(self, pixels):
-        self.gridOffsetY += pixels
+        self.gridOffsetYPx += pixels
 
-        if self.gridOffsetY > 0:
-            self.gridOffsetY = 0
+        if self.gridOffsetYPx > 0:
+            self.gridOffsetYPx = 0
 
         self.updateStartDrawRowIndex()
         self.changed = True
 
     def moveLeft(self, pixels):
-        newGridOffset = self.gridOffsetX - pixels
+        newGridXOffsetPx = self.gridOffsetXPx - pixels
+        cellPlusSideWidthPxNumber = self.cellSize + GRID_LINE_WIDTH
+        displayableCellNumber = round((self.surface.get_width() - GRID_LINE_WIDTH) / cellPlusSideWidthPxNumber)
+        maxAllowedXOffsetPx = ((self.xMaxCellNumber - displayableCellNumber) * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
+        print(maxAllowedXOffsetPx)
+        if -newGridXOffsetPx >= maxAllowedXOffsetPx:
+            #preventing from moving behond grid height. This avoids changing a cell value
+            #for a cell outside of the internal cell value grid
+            print('return', newGridXOffsetPx, self.gridOffsetXPx, self.cellSize)
+            return
 
-        if -newGridOffset >= self.surface.get_width():
-            #preventing from moving behond grid width
-            newGridOffset = -self.surface.get_width()
+        print('ok', newGridXOffsetPx, self.gridOffsetXPx, self.cellSize)
 
-        self.gridOffsetX = newGridOffset
+        self.gridOffsetXPx = newGridXOffsetPx
         self.updateStartDrawColIndex()
         self.changed = True
 
     def moveRight(self, pixels):
-        self.gridOffsetX += pixels
+        self.gridOffsetXPx += pixels
 
-        if self.gridOffsetX > 0:
-            self.gridOffsetX = 0
+        if self.gridOffsetXPx > 0:
+            self.gridOffsetXPx = 0
 
         self.updateStartDrawColIndex()
         self.changed = True
 
     def updateStartDrawColIndex(self):
-        self.startDrawColIndex = -self.gridOffsetX // (self.cellSize + GRID_LINE_WIDTH)
+        self.startDrawColIndex = -self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
 
     def updateStartDrawRowIndex(self):
-        self.startDrawRowIndex = -self.gridOffsetY // (self.cellSize + GRID_LINE_WIDTH)
+        self.startDrawRowIndex = -self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
 
     def toggleCell(self, xyMousePosTuple):
         x, y = xyMousePosTuple
-        col = (x - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetX) // (GRID_LINE_WIDTH + self.cellSize)
-        row = (y - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetY) // (GRID_LINE_WIDTH + self.cellSize)
+        col = (x - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetXPx) // (GRID_LINE_WIDTH + self.cellSize)
+        row = (y - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetYPx) // (GRID_LINE_WIDTH + self.cellSize)
 
         if self.cellValueGrid[row][col]:
             self.cellValueGrid[row][col] = 0

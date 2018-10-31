@@ -1,7 +1,7 @@
 # game options/settings
 TITLE = "Draw grid"
 WINDOWS_LOCATION = '100,20'
-GRID_WIDTH = 1000 # grid is always a square !
+GRID_WIDTH = 791 # grid is always a square !
 GRID_HEIGHT = 791 # grid is always a square !
 FPS = 20
 
@@ -31,4 +31,4 @@ CELL_SIZE_OFFSET = GRID_LINE_WIDTH_TUPLE[1] #constant used when drawing an activ
 
 DEFAULT_CELL_SIZE = 15 #15 Windows, 35 Android
 GRID_COORD_MARGIN_SIZE = 20 #20 Windows, 40 Android
-GRID_MOVE_INCREMENT = 5
+GRID_MOVE_INCREMENT = 1
