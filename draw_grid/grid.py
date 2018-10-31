@@ -9,7 +9,6 @@ class Grid():
         self.changed = True
         self.surface = surface
         self.cellSize = cellSize
-        self.initCellValue = initCellValue
         self.gridDataMgr = GridDataManager(gridDataFileName)
         self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
         self.setGridDimension()
@@ -21,7 +20,6 @@ class Grid():
         #n cells require at least 1 + (n * 2) px
         self.xMaxCellNumber = (surface.get_width() - 1) // 2
         self.yMaxCellNumber = (surface.get_height() - 1) // 2
-        self.cellValueGrid = [[initCellValue for i in range(self.xMaxCellNumber)] for j in range(self.yMaxCellNumber)]
 
         self.setStartPattern()
         self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
@@ -282,7 +280,13 @@ class Grid():
         self.changed = True
 
     def moveLeft(self, pixels):
-        self.gridOffsetX -= pixels
+        newGridOffset = self.gridOffsetX - pixels
+
+        if -newGridOffset >= self.surface.get_width():
+            #preventing from moving behond grid width
+            newGridOffset = -self.surface.get_width()
+
+        self.gridOffsetX = newGridOffset
         self.updateStartDrawColIndex()
         self.changed = True
 
@@ -318,3 +322,13 @@ class Grid():
 
     def loadGridData(self):
         self.cellValueGrid = self.gridDataMgr.readGridData()
+
+    def initialiseCellsToValue(self, value=0):
+        '''
+        Sets all cells of the internal cell value grid to the initial value defined at GFrid
+        construction.
+        :param value: must be 0 (dead) or 1 (alive)
+        '''
+        self.initCellValue = value
+        self.cellValueGrid = [[value for i in range(self.xMaxCellNumber)] for j in range(self.yMaxCellNumber)]
+

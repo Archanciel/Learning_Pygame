@@ -29,7 +29,7 @@ class Game:
         self.clock = pg.time.Clock()
         self.running = True
 
-        self.grid = Grid(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, initCellValue=0, gridDataFileName='gridData.csv')
+        self.grid = Grid(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, initCellValue=1, gridDataFileName='gridData.csv')
         self.buttonDownPressed = False
         self.dragging = False
         self.mouse_x_beg = 0
@@ -145,6 +145,8 @@ class Game:
         Tk().wm_withdraw()  # to hide the main window
         if messagebox.askquestion(None, 'Do you want to load existing grid data ?') == 'yes':
             self.grid.loadGridData()
+        else:
+            self.grid.initialiseCellsToValue(1)
 
     def show_go_screen(self):
         '''
