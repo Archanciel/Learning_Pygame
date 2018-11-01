@@ -1,5 +1,4 @@
 import pygame as pg
-import math
 
 from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
@@ -21,8 +20,8 @@ class Grid():
         #n cells require at least 1 + (n * 2) px
         self.xMaxCellNumber = (surface.get_width() - 1) // 2
         self.yMaxCellNumber = (surface.get_height() - 1) // 2
+        self.cellValueGrid = None
 
-        self.setStartPattern()
         self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
         self.drawAxisLabel = True
         self.gridOffsetXPx = 0
@@ -250,6 +249,14 @@ class Grid():
             if self.cellSize <= 11:
                 self.drawAxisLabel = False
 
+        # repositionning the display horizontaly so that only editable cells (cells in
+        # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
+        # which does not exists, which would cause an IndexOutOfRange exception.
+        maxAllowedXOffsetPx = self.computeMaxAllowedOffsetPx()
+
+        if -self.gridOffsetXPx > maxAllowedXOffsetPx:
+            self.gridOffsetXPx = - (maxAllowedXOffsetPx - 1)
+
         self.setGridDimension()
         self.updateStartDrawRowIndex()
         self.updateStartDrawColIndex()
@@ -289,9 +296,7 @@ class Grid():
 
     def moveLeft(self, pixels):
         newGridXOffsetPx = self.gridOffsetXPx - pixels
-        cellPlusSideWidthPxNumber = self.cellSize + GRID_LINE_WIDTH
-        displayableCellNumber = round((self.surface.get_width() - GRID_LINE_WIDTH) / cellPlusSideWidthPxNumber)
-        maxAllowedXOffsetPx = ((self.xMaxCellNumber - displayableCellNumber) * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
+        maxAllowedXOffsetPx = self.computeMaxAllowedOffsetPx()
         print(maxAllowedXOffsetPx)
         if -newGridXOffsetPx >= maxAllowedXOffsetPx:
             #preventing from moving behond grid height. This avoids changing a cell value
@@ -304,6 +309,13 @@ class Grid():
         self.gridOffsetXPx = newGridXOffsetPx
         self.updateStartDrawColIndex()
         self.changed = True
+
+    def computeMaxAllowedOffsetPx(self):
+        cellPlusSideWidthPxNumber = self.cellSize + GRID_LINE_WIDTH
+        displayableCellNumber = round((self.surface.get_width() - GRID_LINE_WIDTH) / cellPlusSideWidthPxNumber)
+        maxAllowedXOffsetPx = ((
+                                           self.xMaxCellNumber - displayableCellNumber) * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
+        return maxAllowedXOffsetPx
 
     def moveRight(self, pixels):
         self.gridOffsetXPx += pixels
