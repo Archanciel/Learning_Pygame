@@ -311,10 +311,11 @@ class Grid():
         self.changed = True
 
     def computeMaxAllowedOffsetPx(self):
+        maxDrawnedColIndex = min(self.xMaxCellNumber, self.startDrawColIndex + self.drawnedColNb + 2)
         cellPlusSideWidthPxNumber = self.cellSize + GRID_LINE_WIDTH
-        displayableCellNumber = round((self.surface.get_width() - GRID_LINE_WIDTH) / cellPlusSideWidthPxNumber)
-        maxAllowedXOffsetPx = ((
-                                           self.xMaxCellNumber - displayableCellNumber) * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
+        maxAllowedXOffsetPx = (maxDrawnedColIndex * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
+#        displayableCellNumber = round((self.surface.get_width() - GRID_LINE_WIDTH) / cellPlusSideWidthPxNumber)
+#        maxAllowedXOffsetPx = ((                                           self.xMaxCellNumber - displayableCellNumber) * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
         return maxAllowedXOffsetPx
 
     def moveRight(self, pixels):
