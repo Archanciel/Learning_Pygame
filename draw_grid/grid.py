@@ -3,6 +3,13 @@ import pygame as pg
 from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
 
+# Since one cell can occupy a minimum of 1 px and the grid line width
+# is 1 px at the minimum, 2 cells will require at least 1 + 1 + 1 + 1 + 1 = 5 px.
+# 3 cells require at least 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
+# n cells require at least 1 + (n * 2) px. This explains that the smallest possible
+# cell constant SMALLEST_CELL_REQUIRED_PX_NUMBER is 2 pixels.
+SMALLEST_CELL_REQUIRED_PX_NUMBER = 2
+
 class Grid():
 
     def __init__(self, surface, cellSize, initCellValue, gridDataFileName):
@@ -13,17 +20,25 @@ class Grid():
         self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
         self.setGridDimension()
 
-        #Dimensioning the internal value grid to the max displayable cell number.
-        #Since one cell can occupy a minimum of 1 px and the grid line width
-        #is 1 px at the minimum, 2 cells will require at leastb1 + 1 + 1 + 1 + 1 = 5 px.
-        #3 cells require at leastv1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
-        #n cells require at least 1 + (n * 2) px
-        self.xMaxCellNumber = (surface.get_width() - 1) // 2
-        self.yMaxCellNumber = (surface.get_height() - 1) // 2
+        # Dimensioning the internal value grid to the max displayable cell number.
+        # Since one cell can occupy a minimum of 1 px and the grid line width
+        # is 1 px at the minimum, 2 cells will require at least 1 + 1 + 1 + 1 + 1 = 5 px.
+        # 3 cells require at least 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
+        # n cells require at least 1 + (n * 2) px. 2 is the constant
+        # SMALLEST_CELL_REQUIRED_PX_NUMBER.
+        self.horizontalMaxManagedCellNumber = (surface.get_width() - 1) // SMALLEST_CELL_REQUIRED_PX_NUMBER
+        self.verticalMaxManagedCellNumber = (surface.get_height() - 1) // SMALLEST_CELL_REQUIRED_PX_NUMBER
         self.cellValueGrid = None
 
         self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
         self.drawAxisLabel = True
+
+        # when opening the grid windows, the visible part of the cells is set at the very
+        # left and very top. This means that the self.gridOffsetXPx and self.gridOffsetYPx
+        # have a value of 0 pixel. When clicking on the left arrow, the self.gridOffsetXPx
+        # will be subtracted the number of pixels set in the GRID_MOVE_INCREMENT constant.
+        # On the contrary, pressing the right arrow will increment the self.gridOffsetXPx,
+        # this up to 0. Same behavior for the up and down keys, respectively.
         self.gridOffsetXPx = 0
         self.gridOffsetYPx = 0
 
@@ -107,8 +122,8 @@ class Grid():
 
         # drawing active cells
 
-        maxDrawnedRowIndex = min(self.yMaxCellNumber, self.drawnedRowNb + self.startDrawRowIndex + 2)
-        maxDrawnedColIndex = min(self.xMaxCellNumber, self.startDrawColIndex + self.drawnedColNb + 2)
+        maxDrawnedRowIndex = min(self.verticalMaxManagedCellNumber, self.drawnedRowNb + self.startDrawRowIndex + 2)
+        maxDrawnedColIndex = min(self.horizontalMaxManagedCellNumber, self.startDrawColIndex + self.drawnedColNb + 2)
 
         for row in range(self.startDrawRowIndex, maxDrawnedRowIndex):
             for col in range(self.startDrawColIndex, maxDrawnedColIndex):
@@ -244,7 +259,7 @@ class Grid():
         if delta <= 0:
             delta = 1
 
-        if self.cellSize > 2:
+        if self.cellSize > MINIMUM_CELL_SIZE:
             self.cellSize -= delta
             if self.cellSize <= 11:
                 self.drawAxisLabel = False
@@ -276,7 +291,7 @@ class Grid():
     def moveUp(self, pixels):
         newGridOffset = self.gridOffsetYPx - pixels
 
-        if -newGridOffset > self.yMaxCellNumber:
+        if -newGridOffset > self.verticalMaxManagedCellNumber:
             #preventing from moving behond grid height. This avoids changing a cell value
             #for a cell outside of the internal cell value grid
             return
@@ -297,26 +312,29 @@ class Grid():
     def moveLeft(self, pixels):
         newGridXOffsetPx = self.gridOffsetXPx - pixels
         maxAllowedXOffsetPx = self.computeMaxAllowedOffsetPx()
-        print(maxAllowedXOffsetPx)
         if -newGridXOffsetPx >= maxAllowedXOffsetPx:
             #preventing from moving behond grid height. This avoids changing a cell value
             #for a cell outside of the internal cell value grid
-            print('return', newGridXOffsetPx, self.gridOffsetXPx, self.cellSize)
             return
-
-        print('ok', newGridXOffsetPx, self.gridOffsetXPx, self.cellSize)
 
         self.gridOffsetXPx = newGridXOffsetPx
         self.updateStartDrawColIndex()
         self.changed = True
 
     def computeMaxAllowedOffsetPx(self):
-        maxDrawnedColIndex = min(self.xMaxCellNumber, self.startDrawColIndex + self.drawnedColNb + 2)
+        # calculate the pixel number required to draw a cell plus one grid line
         cellPlusSideWidthPxNumber = self.cellSize + GRID_LINE_WIDTH
-        maxAllowedXOffsetPx = (maxDrawnedColIndex * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
-#        displayableCellNumber = round((self.surface.get_width() - GRID_LINE_WIDTH) / cellPlusSideWidthPxNumber)
-#        maxAllowedXOffsetPx = ((                                           self.xMaxCellNumber - displayableCellNumber) * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
-        return maxAllowedXOffsetPx
+
+        # calculate how many cells can be drawned in the cell display zone
+        displayableCellNumber = (self.surface.get_width() - GRID_LINE_WIDTH - self.gridCoordMargin) / cellPlusSideWidthPxNumber
+
+        # determine the max allowed horizontal offset in pixels according to how many cells
+        # are available in the internal cell table for drawing. If we try to draw more cells,
+        # we will get an out of range exception when we try to access a cell in the internal
+        # cell table which does not exist (is beyhond the maximal available horizontal cell number)
+        maxAllowedXOffsetPx = ((self.horizontalMaxManagedCellNumber - displayableCellNumber) * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
+
+        return int(maxAllowedXOffsetPx)
 
     def moveRight(self, pixels):
         self.gridOffsetXPx += pixels
@@ -328,9 +346,27 @@ class Grid():
         self.changed = True
 
     def updateStartDrawColIndex(self):
+        '''
+        Updates the index of the first drawned column. When the grid window is started,
+        self.gridOffsetXPx has value 0. This means that the left most drawned cell obtained
+        from the internal self.cellValueGrid two dimensional table has an x index value of 0.
+
+        When moving the displayed cell portion to the left, the left most displayed cell
+        column x index will become 1, then 2, etc, i.e. the positive value of the
+        self.gridOffsetXPx integer divided by the current cell width + grid line width.
+        '''
         self.startDrawColIndex = -self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
 
     def updateStartDrawRowIndex(self):
+        '''
+        Updates the index of the first drawned row. When the grid window is started,
+        self.gridOffsetXYx has value 0. This means that the top most drawned cell obtained
+        from the internal self.cellValueGrid two dimensional table has a y index value of 0.
+
+        When moving up the displayed cell portion, the top most displayed cell
+        row y index will become 1, then 2, etc, i.e. the positive value of the
+        self.gridOffsetYPx integer divided by the current cell height + grid line width.
+        '''
         self.startDrawRowIndex = -self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
 
     def toggleCell(self, xyMousePosTuple):
@@ -358,5 +394,5 @@ class Grid():
         :param value: must be 0 (dead) or 1 (alive)
         '''
         self.initCellValue = value
-        self.cellValueGrid = [[value for i in range(self.xMaxCellNumber)] for j in range(self.yMaxCellNumber)]
+        self.cellValueGrid = [[value for i in range(self.horizontalMaxManagedCellNumber)] for j in range(self.verticalMaxManagedCellNumber)]
 
