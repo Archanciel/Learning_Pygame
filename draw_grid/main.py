@@ -108,9 +108,13 @@ class Game:
         if pg.key.get_mods() & pg.KMOD_SHIFT: #SHIFT key pressed
             if keys[pg.K_UP]:
                 self.grid.zoomIn()
-            if keys[pg.K_DOWN]:
+            elif keys[pg.K_DOWN]: # using elif: since either zoom in or out, not both together, makes sense
                 self.grid.zoomOut()
         elif pg.key.get_mods() & pg.KMOD_CTRL:  # CTRL key pressed
+            if keys[pg.K_UP]:
+                self.grid.moveToTop()
+            if keys[pg.K_DOWN]:
+                self.grid.moveToBottom()
             if keys[pg.K_LEFT]:
                 self.grid.moveToLeftHome()
             if keys[pg.K_RIGHT]:

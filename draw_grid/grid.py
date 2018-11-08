@@ -267,10 +267,18 @@ class Grid():
         # repositionning the display horizontaly so that only editable cells (cells in
         # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
         # which does not exists, which would cause an IndexOutOfRange exception.
-        maxAllowedXOffsetPx = self.computeMaxAllowedOffsetPx()
+        maxAllowedXOffsetPx = self.computeMaxAllowedHorizontalOffsetPx()
 
         if -self.gridOffsetXPx > maxAllowedXOffsetPx:
             self.gridOffsetXPx = - (maxAllowedXOffsetPx - 1)
+
+        # repositionning the display vertically so that only editable cells (cells in
+        # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
+        # which does not exists, which would cause an IndexOutOfRange exception.
+        maxAllowedYOffsetPx = self.computeMaxAllowedVerticalOffsetPx()
+
+        if -self.gridOffsetYPx > maxAllowedYOffsetPx:
+            self.gridOffsetYPx = - (maxAllowedYOffsetPx - 1)
 
         self.setGridDimension()
         self.updateStartDrawRowIndex()
@@ -289,14 +297,23 @@ class Grid():
             self.moveDown(-yOffset)
 
     def moveUp(self, pixels):
-        newGridOffset = self.gridOffsetYPx - pixels
+        newGridYOffset = self.gridOffsetYPx - pixels
+        maxAllowedYOffsetPx = self.computeMaxAllowedVerticalOffsetPx()
 
-        if -newGridOffset > self.verticalMaxManagedCellNumber:
+        if -newGridYOffset >= maxAllowedYOffsetPx:
             #preventing from moving behond grid height. This avoids changing a cell value
             #for a cell outside of the internal cell value grid
             return
 
-        self.gridOffsetYPx -= pixels
+        self.gridOffsetYPx = newGridYOffset
+        self.updateStartDrawRowIndex()
+        self.changed = True
+
+    def moveToTop(self):
+        '''
+        Resets to the top most (0) row.
+        '''
+        self.gridOffsetYPx = 0
         self.updateStartDrawRowIndex()
         self.changed = True
 
@@ -309,11 +326,20 @@ class Grid():
         self.updateStartDrawRowIndex()
         self.changed = True
 
+    def moveToBottom(self):
+        '''
+        Sets the display to the right most or end column.
+        '''
+        maxAllowedYOffsetPx = self.computeMaxAllowedVerticalOffsetPx()
+        self.gridOffsetYPx = -maxAllowedYOffsetPx + 1
+        self.updateStartDrawRowIndex()
+        self.changed = True
+
     def moveLeft(self, pixels):
         newGridXOffsetPx = self.gridOffsetXPx - pixels
-        maxAllowedXOffsetPx = self.computeMaxAllowedOffsetPx()
+        maxAllowedXOffsetPx = self.computeMaxAllowedHorizontalOffsetPx()
         if -newGridXOffsetPx >= maxAllowedXOffsetPx:
-            #preventing from moving behond grid height. This avoids changing a cell value
+            #preventing from moving behond grid width. This avoids changing a cell value
             #for a cell outside of the internal cell value grid
             return
 
@@ -325,25 +351,56 @@ class Grid():
         '''
         Sets the display to the right most or end column.
         '''
-        maxAllowedXOffsetPx = self.computeMaxAllowedOffsetPx()
+        maxAllowedXOffsetPx = self.computeMaxAllowedHorizontalOffsetPx()
         self.gridOffsetXPx = -maxAllowedXOffsetPx + 1
         self.updateStartDrawColIndex()
         self.changed = True
 
-    def computeMaxAllowedOffsetPx(self):
+    def computeMaxAllowedHorizontalOffsetPx(self):
+        '''
+        Calculates the maximum possible horizontal offset in pixels so that only columns which exist in the internal
+        2 dimensions cell grid table are displayed.
+
+        :return: maximum possible horizontal offset in px
+        '''
         # calculate the pixel number required to draw a cell plus one grid line
         cellPlusSideWidthPxNumber = self.cellSize + GRID_LINE_WIDTH
 
         # calculate how many cells can be drawned in the cell display zone
-        displayableCellNumber = (self.surface.get_width() - GRID_LINE_WIDTH - self.gridCoordMargin) / cellPlusSideWidthPxNumber
+        displayableCellNumber = (self.surface.get_width() - GRID_LINE_WIDTH - self.gridCoordMargin) / \
+                                cellPlusSideWidthPxNumber
 
         # determine the max allowed horizontal offset in pixels according to how many cells
         # are available in the internal cell table for drawing. If we try to draw more cells,
         # we will get an out of range exception when we try to access a cell in the internal
-        # cell table which does not exist (is beyhond the maximal available horizontal cell number)
-        maxAllowedXOffsetPx = ((self.horizontalMaxManagedCellNumber - displayableCellNumber) * cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
+        # cell table which does not exist (is beyhond the maximal available horizontal (x) cell number)
+        maxAllowedHorizontalOffsetPx = ((self.horizontalMaxManagedCellNumber - displayableCellNumber) *
+                                        cellPlusSideWidthPxNumber) - GRID_LINE_WIDTH
 
-        return int(maxAllowedXOffsetPx)
+        return int(maxAllowedHorizontalOffsetPx)
+
+    def computeMaxAllowedVerticalOffsetPx(self):
+        '''
+        Calculates the maximum possible vertical offset in pixels so that only rows which exist in the internal
+        2 dimensions cell grid table are displayed.
+
+        :return: maximum possible vertical offset in px
+        '''
+        # calculate the pixel number required to draw a cell plus one grid line
+        cellPlusSideHeightPxNumber = self.cellSize + GRID_LINE_WIDTH
+
+        # calculate how many cells can be drawned in the cell display zone
+        displayableCellNumber = (self.surface.get_height() - GRID_LINE_WIDTH - self.gridCoordMargin) / \
+                                cellPlusSideHeightPxNumber
+
+        # determine the max allowed vertical offset in pixels according to how many cells
+        # are available in the internal cell table for drawing. If we try to draw more cells,
+        # we will get an out of range exception when we try to access a cell in the internal
+        # cell table which does not exist (is beyhond the maximal available vertical (y) cell number)
+        maxAllowedVerticalOffsetPx = ((self.verticalMaxManagedCellNumber - displayableCellNumber) *
+                                        cellPlusSideHeightPxNumber) - GRID_LINE_WIDTH
+
+        return int(maxAllowedVerticalOffsetPx)
 
     def moveRight(self, pixels):
         self.gridOffsetXPx += pixels
