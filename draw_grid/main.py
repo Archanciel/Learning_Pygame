@@ -110,6 +110,11 @@ class Game:
                 self.grid.zoomIn()
             if keys[pg.K_DOWN]:
                 self.grid.zoomOut()
+        elif pg.key.get_mods() & pg.KMOD_CTRL:  # CTRL key pressed
+            if keys[pg.K_LEFT]:
+                self.grid.moveToLeftHome()
+            if keys[pg.K_RIGHT]:
+                self.grid.moveToRightEnd()
         else:
             if keys[pg.K_UP]:
                 self.grid.moveUp(GRID_MOVE_INCREMENT)

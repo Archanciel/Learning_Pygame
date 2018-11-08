@@ -321,6 +321,15 @@ class Grid():
         self.updateStartDrawColIndex()
         self.changed = True
 
+    def moveToRightEnd(self):
+        '''
+        Sets the display to the right most or end column.
+        '''
+        maxAllowedXOffsetPx = self.computeMaxAllowedOffsetPx()
+        self.gridOffsetXPx = -maxAllowedXOffsetPx + 1
+        self.updateStartDrawColIndex()
+        self.changed = True
+
     def computeMaxAllowedOffsetPx(self):
         # calculate the pixel number required to draw a cell plus one grid line
         cellPlusSideWidthPxNumber = self.cellSize + GRID_LINE_WIDTH
@@ -342,6 +351,14 @@ class Grid():
         if self.gridOffsetXPx > 0:
             self.gridOffsetXPx = 0
 
+        self.updateStartDrawColIndex()
+        self.changed = True
+
+    def moveToLeftHome(self):
+        '''
+        Resets to the left most (0) column.
+        '''
+        self.gridOffsetXPx = 0
         self.updateStartDrawColIndex()
         self.changed = True
 
