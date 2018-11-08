@@ -144,7 +144,10 @@ class Game:
         '''
         Tk().wm_withdraw()  # to hide the main window
         if messagebox.askquestion(None, 'Do you want to load existing grid data ?') == 'yes':
-            self.grid.loadGridData()
+            fileNotFoundName = self.grid.loadGridData()
+            if fileNotFoundName:
+                messagebox.showerror(None, fileNotFoundName + ' not found. Grid initialized with neutral data !')
+                self.grid.initialiseCellsToValue(1)
         else:
             self.grid.initialiseCellsToValue(1)
 

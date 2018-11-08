@@ -385,7 +385,18 @@ class Grid():
         self.gridDataMgr.writeGridData(self.cellValueGrid)
 
     def loadGridData(self):
-        self.cellValueGrid = self.gridDataMgr.readGridData()
+        '''
+        Loads the grid data. If load successful, returns None. If the file was not found, returns the missing
+        file name.
+
+        :return: None if ok, missing file name if not.
+        '''
+        gridTable, fileNotFoundName = self.gridDataMgr.readGridData()
+
+        if gridTable:
+            self.cellValueGrid = gridTable
+
+        return fileNotFoundName
 
     def initialiseCellsToValue(self, value=0):
         '''

@@ -21,16 +21,27 @@ class GridDataManager():
                 writer.writerow(line)
 
     def readGridData(self):
+        '''
+        Loads the grid data stored in self.filename.
+
+        :return: 2 elements tuple: first element is the 2 dimensional grid table or None if fileName not found.
+                 Second element is None or the name of the missing file if fileName not found.
+        '''
         twoDIntLst = []
+        fileNotFoundName = None
 
-        with open(self.filename, 'r') as file:
-            reader = csv.reader(file, delimiter='\t')
+        try:
+            with open(self.filename, 'r') as file:
+                reader = csv.reader(file, delimiter='\t')
 
-            # read the header line
-            next(reader)
+                # read the header line
+                next(reader)
 
-            for row in reader:
-                intLst = [int(s) for s in row] # converting the row which contains strings into integers
-                twoDIntLst.append(intLst[1:])
+                for row in reader:
+                    intLst = [int(s) for s in row] # converting the row which contains strings into integers
+                    twoDIntLst.append(intLst[1:])
+        except FileNotFoundError as e:
+            fileNotFoundName = e.filename
+            return None, fileNotFoundName
 
-        return twoDIntLst
+        return twoDIntLst, fileNotFoundName
