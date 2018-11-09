@@ -1,3 +1,9 @@
+DECADE_LIMIT = 10 # 10 or 9
+START_ROW_COL_NUMBER = 0 # 0 or 1
+#DECADE_LIMIT = 9 # 10 or 9
+#START_ROW_COL_NUMBER = 1 # 0 or 1
+
+
 class World:
     '''
     This class manages the 2 dimentional representation of life game world.
@@ -58,16 +64,17 @@ class World:
         
         for li in self.matrix:
             if l > 0 and l % 10 == 0:
-                tenth = str(int(l / 10))
+                # here, l is a multiple of 10
+                decade = str(int(l / 10))
             else:
-                tenth = " "
-            if l < 9:
-                line_nb = tenth + str(l % 9 + 1)
+                decade = " "
+            if l < DECADE_LIMIT:
+                line_nb = decade + str(l % DECADE_LIMIT + START_ROW_COL_NUMBER)
             elif l == 9:
                 l += 1
-                line_nb = tenth + "0"
+                line_nb = decade + "0"
             else:
-                line_nb = tenth + str(l % 10)
+                line_nb = decade + str(l % 10)
             print("{}".format(line_nb), end='')
             self._printLine(li)
             l += 1
@@ -78,9 +85,10 @@ class World:
         '''
         
     def _printXAxis(self):
+        # printing the decade line
         for i in range(1, int(self.cols / 10) + 1):
             if i == 1:
-                print("                    {}".format(i), end='')
+                print("                      {}".format(i), end='')
             else:
                 print("                   {}".format(i), end='')
             
@@ -89,9 +97,7 @@ class World:
         
         for j in range(self.lines):
             if j < 9:
-                j = j % 9 + 1
-            elif j == 9:
-                continue
+                j = j % 9 + START_ROW_COL_NUMBER
             else:
                 j = j % 10
             print("{} ".format(j), end='')
