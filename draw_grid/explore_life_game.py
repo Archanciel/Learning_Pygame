@@ -1,7 +1,10 @@
-DECADE_LIMIT = 10 # 10 or 9
-START_ROW_COL_NUMBER = 0 # 0 or 1
-#DECADE_LIMIT = 9 # 10 or 9
-#START_ROW_COL_NUMBER = 1 # 0 or 1
+#DECADE_LIMIT = 10 # 10 or 9
+#START_ROW_COL_NUMBER = 0 # 0 or 1
+#X_AXIS_FIRST_DECADE_OFFSET = "  "
+DECADE_LIMIT = 9 # 10 or 9
+START_ROW_COL_NUMBER = 1 # 0 or 1
+X_AXIS_FIRST_DECADE_OFFSET = ""
+
 
 
 class World:
@@ -89,7 +92,7 @@ class World:
         # printing the decade line
         for i in range(1, int(self.cols / 10) + 1):
             if i == 1:
-                print("                      {}".format(i), end='')
+                print(X_AXIS_FIRST_DECADE_OFFSET + "                    {}".format(i), end='')
             else:
                 print("                   {}".format(i), end='')
             
@@ -99,6 +102,8 @@ class World:
         for j in range(self.lines):
             if j < 9:
                 j = j % 9 + START_ROW_COL_NUMBER
+            elif START_ROW_COL_NUMBER == 1 and j == 9:
+                continue
             else:
                 j = j % 10
             print("{} ".format(j), end='')
