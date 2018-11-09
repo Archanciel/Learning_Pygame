@@ -72,7 +72,8 @@ class World:
                 line_nb = decade + str(l % DECADE_LIMIT + START_ROW_COL_NUMBER)
             elif l == 9:
                 l += 1
-                line_nb = decade + "0"
+#                line_nb = decade + "0"
+                line_nb = "10"
             else:
                 line_nb = decade + str(l % 10)
             print("{}".format(line_nb), end='')
