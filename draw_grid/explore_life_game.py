@@ -105,9 +105,12 @@ class World:
             else:
                 j = j % 10
             print("{} ".format(j), end='')
-            
-        print("0")
-            
+
+        if START_ROW_COL_NUMBER:
+            print("0")
+        else:
+            print("9")
+
     def _printLine(self, line):
         for cell in line:
             print("{} ".format(cell), end='')
