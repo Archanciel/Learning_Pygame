@@ -1,6 +1,6 @@
 AXIS_PARM_TUPLE_0_BASED = (0, 10, "  ")
 AXIS_PARM_TUPLE_1_BASED = (1, 9, "")
-AXIS_PARM_TUPLE = AXIS_PARM_TUPLE_1_BASED
+AXIS_PARM_TUPLE = AXIS_PARM_TUPLE_0_BASED
 START_ROW_COL_NUMBER = AXIS_PARM_TUPLE[0]
 DECADE_LIMIT = AXIS_PARM_TUPLE[1]
 X_AXIS_FIRST_DECADE_OFFSET = AXIS_PARM_TUPLE[2]
@@ -73,7 +73,6 @@ class World:
                 line_nb = decade + str(l % DECADE_LIMIT + START_ROW_COL_NUMBER)
             elif l == 9:
                 l += 1
-#                line_nb = decade + "0"
                 line_nb = "10"
             else:
                 line_nb = decade + str(l % 10)
