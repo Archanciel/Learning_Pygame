@@ -93,7 +93,8 @@ class World:
                 print(X_AXIS_FIRST_DECADE_OFFSET + "                    {}".format(i + 1), end='')
             else:
                 print("                   {}".format(i + 1), end='')
-            
+
+        # printing the unit line 
         print()
         print("  ", end='')
         
@@ -101,11 +102,14 @@ class World:
             if j < 9:
                 j = j % 9 + START_ROW_COL_NUMBER
             elif START_ROW_COL_NUMBER == 1 and j == 9:
+                # here, 9 was already printed when j was equal to 8. We
+                # don't want to print it twice !
                 continue
             else:
                 j = j % 10
             print("{} ".format(j), end='')
 
+        # printing the very last unit number
         if START_ROW_COL_NUMBER:
             print("0")
         else:
