@@ -1,6 +1,6 @@
 AXIS_PARM_TUPLE_0_BASED = (0, 10, "  ")
 AXIS_PARM_TUPLE_1_BASED = (1, 9, "")
-AXIS_PARM_TUPLE = AXIS_PARM_TUPLE_0_BASED
+AXIS_PARM_TUPLE = AXIS_PARM_TUPLE_1_BASED
 START_ROW_COL_NUMBER = AXIS_PARM_TUPLE[0]
 DECADE_LIMIT = AXIS_PARM_TUPLE[1]
 X_AXIS_FIRST_DECADE_OFFSET = AXIS_PARM_TUPLE[2]
@@ -14,8 +14,8 @@ class World:
         Initializes a World with a size_x x size_y matrix initialized with 0's
         (dead cells).
         '''
-        self.lines = size_x
-        self.cols = size_y
+        self.cols = size_x
+        self.lines = size_y
         self.matrix = [['.' for _ in range(self.lines)] for _ in range(self.cols)]
 
     def seed(self, liveCellList):
@@ -88,16 +88,16 @@ class World:
         
     def _printXAxis(self):
         # printing the decade line
-        for i in range(1, int(self.cols / 10) + 1):
-            if i == 1:
-                print(X_AXIS_FIRST_DECADE_OFFSET + "                    {}".format(i), end='')
+        for i in range(0, int((self.cols - 1 + START_ROW_COL_NUMBER) / 10)):
+            if i == 0:
+                print(X_AXIS_FIRST_DECADE_OFFSET + "                    {}".format(i + 1), end='')
             else:
-                print("                   {}".format(i), end='')
+                print("                   {}".format(i + 1), end='')
             
         print()
         print("  ", end='')
         
-        for j in range(self.lines):
+        for j in range(self.cols - 1 + START_ROW_COL_NUMBER):
             if j < 9:
                 j = j % 9 + START_ROW_COL_NUMBER
             elif START_ROW_COL_NUMBER == 1 and j == 9:
