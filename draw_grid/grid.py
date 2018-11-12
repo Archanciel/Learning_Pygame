@@ -254,18 +254,18 @@ class Grid():
         # repositionning the display horizontaly so that only editable cells (cells in
         # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
         # which does not exists, which would cause an IndexOutOfRange exception.
-        maxAllowedXOffsetPx = self.computeMaxAllowedHorizontalOffsetPx()
+        maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
 
-        if -self.gridOffsetXPx > maxAllowedXOffsetPx:
-            self.gridOffsetXPx = - (maxAllowedXOffsetPx - 1)
+        if -self.gridOffsetXPx > maxAllowedOffsetXPx:
+            self.gridOffsetXPx = - (maxAllowedOffsetXPx - 1)
 
         # repositionning the display vertically so that only editable cells (cells in
         # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
         # which does not exists, which would cause an IndexOutOfRange exception.
-        maxAllowedYOffsetPx = self.computeMaxAllowedVerticalOffsetPx()
+        maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
 
-        if -self.gridOffsetYPx > maxAllowedYOffsetPx:
-            self.gridOffsetYPx = - (maxAllowedYOffsetPx - 1)
+        if -self.gridOffsetYPx > maxAllowedOffsetYPx:
+            self.gridOffsetYPx = - (maxAllowedOffsetYPx - 1)
 
         self.setGridDimension()
         self.updateStartDrawRowIndex()
@@ -285,9 +285,9 @@ class Grid():
 
     def moveViewUp(self, pixels):
         newGridYOffset = self.gridOffsetYPx - pixels
-        maxAllowedYOffsetPx = self.computeMaxAllowedVerticalOffsetPx()
+        maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
 
-        if -newGridYOffset >= maxAllowedYOffsetPx:
+        if -newGridYOffset >= maxAllowedOffsetYPx:
             #preventing from moving behond grid height. This avoids changing a cell value
             #for a cell outside of the internal cell value grid
             return
@@ -317,15 +317,15 @@ class Grid():
         '''
         Sets the display to the right most or end column.
         '''
-        maxAllowedYOffsetPx = self.computeMaxAllowedVerticalOffsetPx()
-        self.gridOffsetYPx = -maxAllowedYOffsetPx + 1
+        maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
+        self.gridOffsetYPx = -maxAllowedOffsetYPx + 1
         self.updateStartDrawRowIndex()
         self.changed = True
 
     def moveViewLeft(self, pixels):
         newGridXOffsetPx = self.gridOffsetXPx - pixels
-        maxAllowedXOffsetPx = self.computeMaxAllowedHorizontalOffsetPx()
-        if -newGridXOffsetPx >= maxAllowedXOffsetPx:
+        maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
+        if -newGridXOffsetPx >= maxAllowedOffsetXPx:
             #preventing from moving behond grid width. This avoids changing a cell value
             #for a cell outside of the internal cell value grid
             return
@@ -338,8 +338,8 @@ class Grid():
         '''
         Sets the display to the right most or end column.
         '''
-        maxAllowedXOffsetPx = self.computeMaxAllowedHorizontalOffsetPx()
-        self.gridOffsetXPx = -maxAllowedXOffsetPx + 1
+        maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
+        self.gridOffsetXPx = -maxAllowedOffsetXPx + 1
         self.updateStartDrawColIndex()
         self.changed = True
 
