@@ -3,13 +3,6 @@ import pygame as pg
 from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
 
-# Since one cell can occupy a minimum of 1 px and the grid line width
-# is 1 px at the minimum, 2 cells will require at least 1 + 1 + 1 + 1 + 1 = 5 px.
-# 3 cells require at least 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
-# n cells require at least 1 + (n * 2) px. This explains that the smallest possible
-# cell constant SMALLEST_CELL_REQUIRED_PX_NUMBER is 2 pixels.
-SMALLEST_CELL_REQUIRED_PX_NUMBER = 2
-
 class Grid():
 
     def __init__(self, surface, cellSize, initCellValue, gridDataFileName):
@@ -20,12 +13,6 @@ class Grid():
         self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
         self.setGridDimension()
 
-        # Dimensioning the internal value grid to the max displayable cell number.
-        # Since one cell can occupy a minimum of 1 px and the grid line width
-        # is 1 px at the minimum, 2 cells will require at least 1 + 1 + 1 + 1 + 1 = 5 px.
-        # 3 cells require at least 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
-        # n cells require at least 1 + (n * 2) px. 2 is the constant
-        # SMALLEST_CELL_REQUIRED_PX_NUMBER.
         self.horizontalMaxManagedCellNumber = (surface.get_width() - 1) // SMALLEST_CELL_REQUIRED_PX_NUMBER
         self.verticalMaxManagedCellNumber = (surface.get_height() - 1) // SMALLEST_CELL_REQUIRED_PX_NUMBER
         self.cellValueGrid = None
@@ -245,7 +232,7 @@ class Grid():
         if self.cellSize >= self.surface.get_height():
             self.cellSize -= delta
 
-        if self.cellSize > 11:
+        if self.cellSize > AXIS_HIDE_CELL_SIZE_LIMIT:
             self.drawAxisLabel = True
 
         self.setGridDimension()
@@ -259,9 +246,9 @@ class Grid():
         if delta <= 0:
             delta = 1
 
-        if self.cellSize > MINIMUM_CELL_SIZE:
+        if self.cellSize > SMALLEST_CELL_REQUIRED_PX_NUMBER:
             self.cellSize -= delta
-            if self.cellSize <= 11:
+            if self.cellSize <= AXIS_HIDE_CELL_SIZE_LIMIT:
                 self.drawAxisLabel = False
 
         # repositionning the display horizontaly so that only editable cells (cells in

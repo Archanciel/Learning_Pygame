@@ -30,7 +30,17 @@ CELL_SIZE_OFFSET = GRID_LINE_WIDTH_TUPLE[1] # constant used when drawing an acti
                                             # rectangle when the grid line width is bigger than 2 !
 
 DEFAULT_CELL_SIZE = 15 # 15 Windows, 35 Android
-MINIMUM_CELL_SIZE = 2
+
+# Since one cell can occupy a minimum of 1 px and the grid line width
+# is 1 px at the minimum, 2 cells will require at least 1 + 1 + 1 + 1 + 1 = 5 px.
+# 3 cells require at least 1 + 1 + 1 + 1 + 1 + 1 + 1 = 7 px.
+# n cells require at least 1 + (n * 2) px. This explains that the smallest possible
+# cell constant SMALLEST_CELL_REQUIRED_PX_NUMBER is 2 pixels.
+SMALLEST_CELL_REQUIRED_PX_NUMBER = 2
+
+# Cell size under which the grid axis label zone is no longer displayed
+AXIS_HIDE_CELL_SIZE_LIMIT = 11
+
 
 GRID_COORD_MARGIN_SIZE = 20 #20 Windows, 40 Android
 GRID_MOVE_INCREMENT = 1
