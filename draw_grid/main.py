@@ -112,22 +112,22 @@ class Game:
                 self.grid.zoomOut()
         elif pg.key.get_mods() & pg.KMOD_CTRL:  # CTRL key pressed
             if keys[pg.K_UP]:
-                self.grid.moveToTop()
+                self.grid.moveViewToTop()
             if keys[pg.K_DOWN]:
-                self.grid.moveToBottom()
+                self.grid.moveViewToBottom()
             if keys[pg.K_LEFT]:
-                self.grid.moveToLeftHome()
+                self.grid.moveViewToLeftHome()
             if keys[pg.K_RIGHT]:
-                self.grid.moveToRightEnd()
+                self.grid.moveViewToRightEnd()
         else:
-            if keys[pg.K_UP]:
-                self.grid.moveUp(GRID_MOVE_INCREMENT)
             if keys[pg.K_DOWN]:
-                self.grid.moveDown(GRID_MOVE_INCREMENT)
-            if keys[pg.K_LEFT]:
-                self.grid.moveLeft(GRID_MOVE_INCREMENT)
+                self.grid.moveViewUp(GRID_MOVE_INCREMENT)
+            if keys[pg.K_UP]:
+                self.grid.moveViewDown(GRID_MOVE_INCREMENT)
             if keys[pg.K_RIGHT]:
-                self.grid.moveRight(GRID_MOVE_INCREMENT)
+                self.grid.moveViewLeft(GRID_MOVE_INCREMENT)
+            if keys[pg.K_LEFT]:
+                self.grid.moveViewRight(GRID_MOVE_INCREMENT)
 
     def update(self):
         '''
@@ -156,9 +156,9 @@ class Game:
             fileNotFoundName = self.grid.loadGridData()
             if fileNotFoundName:
                 messagebox.showerror(None, fileNotFoundName + ' not found. Grid initialized with neutral data !')
-                self.grid.initialiseCellsToValue(1)
+                self.grid.initialiseCellsToValue(0)
         else:
-            self.grid.initialiseCellsToValue(1)
+            self.grid.initialiseCellsToValue(0)
 
     def show_go_screen(self):
         '''

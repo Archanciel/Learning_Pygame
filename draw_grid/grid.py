@@ -287,16 +287,16 @@ class Grid():
 
     def move(self, xOffset, yOffset):
         if xOffset > 0:
-            self.moveLeft(xOffset)
+            self.moveViewLeft(xOffset)
         elif xOffset < 0:
-            self.moveRight(-xOffset)
+            self.moveViewRight(-xOffset)
 
         if yOffset > 0:
-            self.moveUp(yOffset)
+            self.moveViewUp(yOffset)
         elif yOffset < 0:
-            self.moveDown(-yOffset)
+            self.moveViewDown(-yOffset)
 
-    def moveUp(self, pixels):
+    def moveViewUp(self, pixels):
         newGridYOffset = self.gridOffsetYPx - pixels
         maxAllowedYOffsetPx = self.computeMaxAllowedVerticalOffsetPx()
 
@@ -309,7 +309,7 @@ class Grid():
         self.updateStartDrawRowIndex()
         self.changed = True
 
-    def moveToTop(self):
+    def moveViewToTop(self):
         '''
         Resets to the top most (0) row.
         '''
@@ -317,7 +317,7 @@ class Grid():
         self.updateStartDrawRowIndex()
         self.changed = True
 
-    def moveDown(self, pixels):
+    def moveViewDown(self, pixels):
         self.gridOffsetYPx += pixels
 
         if self.gridOffsetYPx > 0:
@@ -326,7 +326,7 @@ class Grid():
         self.updateStartDrawRowIndex()
         self.changed = True
 
-    def moveToBottom(self):
+    def moveViewToBottom(self):
         '''
         Sets the display to the right most or end column.
         '''
@@ -335,7 +335,7 @@ class Grid():
         self.updateStartDrawRowIndex()
         self.changed = True
 
-    def moveLeft(self, pixels):
+    def moveViewLeft(self, pixels):
         newGridXOffsetPx = self.gridOffsetXPx - pixels
         maxAllowedXOffsetPx = self.computeMaxAllowedHorizontalOffsetPx()
         if -newGridXOffsetPx >= maxAllowedXOffsetPx:
@@ -347,7 +347,7 @@ class Grid():
         self.updateStartDrawColIndex()
         self.changed = True
 
-    def moveToRightEnd(self):
+    def moveViewToRightEnd(self):
         '''
         Sets the display to the right most or end column.
         '''
@@ -402,7 +402,7 @@ class Grid():
 
         return int(maxAllowedVerticalOffsetPx)
 
-    def moveRight(self, pixels):
+    def moveViewRight(self, pixels):
         self.gridOffsetXPx += pixels
 
         if self.gridOffsetXPx > 0:
@@ -411,7 +411,7 @@ class Grid():
         self.updateStartDrawColIndex()
         self.changed = True
 
-    def moveToLeftHome(self):
+    def moveViewToLeftHome(self):
         '''
         Resets to the left most (0) column.
         '''
