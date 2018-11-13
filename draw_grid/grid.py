@@ -3,10 +3,11 @@ import pygame as pg
 from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
 
-olass MidCell():
+class MidCell():
     def __init__(self, grid, row, col):
         self.row = row
         self.col = col
+        self.grid = grid
         
         cellXCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetXPx + (
                                 (GRID_LINE_WIDTH + grid.cellSize) * col)
@@ -17,14 +18,14 @@ olass MidCell():
         self.topLeftYCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetYPx, cellYCoord, row)
 
     def computeXYOffsetAfterZoom(self):        
-        cellXCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetXPx + (
-                                (GRID_LINE_WIDTH + cellSizePx) * self.col)
-        newTopLeftXCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetXPx, cellXCoord, self.col)
+        cellXCoord = self.grid.gridCoordMargin + GRID_LINE_WIDTH + self.grid.gridOffsetXPx + (
+                                (GRID_LINE_WIDTH + self.grid.cellSizePx) * self.col)
+        newTopLeftXCoord, _ = self.grid.computeCellCoordAndSize(self.grid.gridOffsetXPx, cellXCoord, self.col)
         zoomXOffset = self.topLeftXCoordinate - newTopLeftXCoord
 
-        cellYCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetYPx + (
-                                (GRID_LINE_WIDTH + grid.cellSize) * row)
-        newTopLeftYCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetYPx, cellYCoord, row)
+        cellYCoord = self.grid.gridCoordMargin + GRID_LINE_WIDTH + self.grid.gridOffsetYPx + (
+                                (GRID_LINE_WIDTH + self.grid.cellSize) * self.row)
+        newTopLeftYCoord, _ = self.grid.computeCellCoordAndSize(self.grid.gridOffsetYPx, cellYCoord, self.row)
         zoomYOffset = self.topLeftYCoordinate - newTopLeftYCoord
         
         return zoomXOffset, zoomYOffset
@@ -62,6 +63,7 @@ class Grid():
         pass
 
     def setGridDimension(self):
+        print('setGridDimension: ', self.gridCoordMargin)
         self.drawnedColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
         self.drawnedRowNb = (self.surface.get_height() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
 
