@@ -68,13 +68,6 @@ class Grid():
         self.drawnedRowNb = (self.surface.get_height() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
 
     def draw(self):
-        if self.drawAxisLabel:
-            self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
-        else:
-            self.gridCoordMargin = 0
-
-        # drawing lines
-
         maxDrawnedLineNumber = self.drawnedRowNb + 1
         li = 0
 
@@ -262,6 +255,7 @@ class Grid():
 
         if self.cellSize > AXIS_HIDE_CELL_SIZE_LIMIT:
             self.drawAxisLabel = True
+            self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
 
         self.setGridDimension()
         self.updateStartDrawRowIndex()
@@ -278,6 +272,7 @@ class Grid():
             self.cellSize -= delta
             if self.cellSize <= AXIS_HIDE_CELL_SIZE_LIMIT:
                 self.drawAxisLabel = False
+                self.gridCoordMargin = 0
 
         # repositionning the display horizontaly so that only editable cells (cells in
         # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
