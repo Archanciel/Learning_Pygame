@@ -3,6 +3,32 @@ import pygame as pg
 from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
 
+olass MidCell():
+    def __init__(self, grid, row, col):
+        self.row = row
+        self.col = col
+        
+        cellXCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetXPx + (
+                                (GRID_LINE_WIDTH + grid.cellSize) * col)
+        self.topLeftXCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetXPx, cellXCoord, col)
+
+        cellYCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetYPx + (
+                                (GRID_LINE_WIDTH + grid.cellSize) * row)
+        self.topLeftYCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetYPx, cellYCoord, row)
+
+    def computeXYOffsetAfterZoom(self):        
+        cellXCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetXPx + (
+                                (GRID_LINE_WIDTH + cellSizePx) * self.col)
+        newTopLeftXCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetXPx, cellXCoord, self.col)
+        zoomXOffset = self.topLeftXCoordinate - newTopLeftXCoord
+
+        cellYCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetYPx + (
+                                (GRID_LINE_WIDTH + grid.cellSize) * row)
+        newTopLeftYCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetYPx, cellYCoord, row)
+        zoomYOffset = self.topLeftYCoordinate - newTopLeftYCoord
+        
+        return zoomXOffset, zoomYOffset
+
 class Grid():
 
     def __init__(self, surface, cellSize, initCellValue, gridDataFileName):
