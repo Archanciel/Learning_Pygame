@@ -139,10 +139,6 @@ class Grid():
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
                     drawnedActiveCellXCoord, cellWidth = self.computeCellCoordAndSize(self.gridOffsetXPx, activeCellXCoord, col)
 
-                    if drawnedActiveCellXCoord == None:
-                        # cell out of display area
-                        continue
-
                     activeCellYCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetYPx + (
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
                     drawnedActiveCellYCoord, cellHeight = self.computeCellCoordAndSize(self.gridOffsetYPx, activeCellYCoord, row)
