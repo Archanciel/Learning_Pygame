@@ -4,29 +4,29 @@ from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
 
 class MidCell():
-    def __init__(self, grid, row, col):
-        self.row = row
-        self.col = col
+    def __init__(self, grid):
+        self.rowBeforeZoom = grid.startDrawRowIndex + grid.drawnedRowNb // 2
+        self.colBeforeZoom = grid.startDrawColIndex + grid.drawnedColNb // 2
         self.grid = grid
         
         cellXCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetXPx + (
-                                (GRID_LINE_WIDTH + grid.cellSize) * col)
-        self.topLeftXCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetXPx, cellXCoord, col)
+                                (GRID_LINE_WIDTH + grid.cellSize) * self.colBeforeZoom)
+        self.topLeftXCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetXPx, cellXCoord, self.rowBeforeZoom)
 
         cellYCoord = grid.gridCoordMargin + GRID_LINE_WIDTH + grid.gridOffsetYPx + (
-                                (GRID_LINE_WIDTH + grid.cellSize) * row)
-        self.topLeftYCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetYPx, cellYCoord, row)
+                                (GRID_LINE_WIDTH + grid.cellSize) * self.rowBeforeZoom)
+        self.topLeftYCoord, _ = grid.computeCellCoordAndSize(grid.gridOffsetYPx, cellYCoord, self.rowBeforeZoom)
 
     def computeXYOffsetAfterZoom(self):        
         cellXCoord = self.grid.gridCoordMargin + GRID_LINE_WIDTH + self.grid.gridOffsetXPx + (
-                                (GRID_LINE_WIDTH + self.grid.cellSizePx) * self.col)
-        newTopLeftXCoord, _ = self.grid.computeCellCoordAndSize(self.grid.gridOffsetXPx, cellXCoord, self.col)
-        zoomXOffset = self.topLeftXCoordinate - newTopLeftXCoord
+                                (GRID_LINE_WIDTH + self.grid.cellSize) * self.colBeforeZoom)
+        newTopLeftXCoord, _ = self.grid.computeCellCoordAndSize(self.grid.gridOffsetXPx, cellXCoord, self.colBeforeZoom)
+        zoomXOffset = self.topLeftXCoord - newTopLeftXCoord
 
         cellYCoord = self.grid.gridCoordMargin + GRID_LINE_WIDTH + self.grid.gridOffsetYPx + (
-                                (GRID_LINE_WIDTH + self.grid.cellSize) * self.row)
-        newTopLeftYCoord, _ = self.grid.computeCellCoordAndSize(self.grid.gridOffsetYPx, cellYCoord, self.row)
-        zoomYOffset = self.topLeftYCoordinate - newTopLeftYCoord
+                                (GRID_LINE_WIDTH + self.grid.cellSize) * self.rowBeforeZoom)
+        newTopLeftYCoord, _ = self.grid.computeCellCoordAndSize(self.grid.gridOffsetYPx, cellYCoord, self.rowBeforeZoom)
+        zoomYOffset = self.topLeftYCoord - newTopLeftYCoord
         
         return zoomXOffset, zoomYOffset
 
@@ -286,9 +286,12 @@ class Grid():
         if -self.gridOffsetYPx > maxAllowedOffsetYPx:
             self.gridOffsetYPx = - (maxAllowedOffsetYPx - 1)
 
+        midCell = MidCell(self)
         self.setGridDimension()
         self.updateStartDrawRowIndex()
         self.updateStartDrawColIndex()
+        zoomXOffset, zoomYOffset = midCell.computeXYOffsetAfterZoom()
+        print(zoomXOffset, zoomYOffset)
         self.changed = True
 
     def move(self, xOffset, yOffset):
