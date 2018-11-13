@@ -8,7 +8,7 @@ import pygame as pg
 from tkinter import *
 from tkinter import messagebox
 
-from draw_grid.grid import Grid
+from draw_grid.gridview import GridView
 from draw_grid.settings import *
 import os
 
@@ -29,7 +29,7 @@ class Game:
         self.clock = pg.time.Clock()
         self.running = True
 
-        self.grid = Grid(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, initCellValue=1, gridDataFileName='gridData.csv')
+        self.gridView = GridView(surface=self.screen, cellSize=DEFAULT_CELL_SIZE, gridDataFileName='gridData.csv')
         self.buttonDownPressed = False
         self.dragging = False
         self.mouse_x_beg = 0
@@ -67,7 +67,7 @@ class Game:
                     self.running = False
                     Tk().wm_withdraw()  # to hide the main window
                     if messagebox.askquestion(None,'Do you want to save grid data ?') == 'yes':
-                        self.grid.saveGridData()
+                        self.gridView.saveGridData()
 
             # handling mouse grid move
             elif event.type == pg.MOUSEBUTTONDOWN:
@@ -82,7 +82,7 @@ class Game:
                     else:
                         if (self.mouse_x_beg, self.mouse_y_beg) == event.pos:
                             # here, we just clicked on a cell to activate or deactivate it
-                            self.grid.toggleCell(event.pos)
+                            self.gridView.toggleCell(event.pos)
             elif event.type == pg.MOUSEMOTION:
                 if self.buttonDownPressed:
                     self.dragging = True
@@ -90,7 +90,7 @@ class Game:
                     xOffset = self.mouse_x_beg - self.mouse_x_end
                     yOffset = self.mouse_y_beg - self.mouse_y_end
 
-                    self.grid.move(xOffset, yOffset)
+                    self.gridView.move(xOffset, yOffset)
 
                     self.mouse_x_beg = self.mouse_x_end
                     self.mouse_y_beg = self.mouse_y_end
@@ -107,27 +107,27 @@ class Game:
 
         if pg.key.get_mods() & pg.KMOD_SHIFT: #SHIFT key pressed
             if keys[pg.K_UP]:
-                self.grid.zoomIn()
+                self.gridView.zoomIn()
             elif keys[pg.K_DOWN]: # using elif: since either zoom in or out, not both together, makes sense
-                self.grid.zoomOut()
+                self.gridView.zoomOut()
         elif pg.key.get_mods() & pg.KMOD_CTRL:  # CTRL key pressed
             if keys[pg.K_UP]:
-                self.grid.moveViewToTop()
+                self.gridView.moveViewToTop()
             if keys[pg.K_DOWN]:
-                self.grid.moveViewToBottom()
+                self.gridView.moveViewToBottom()
             if keys[pg.K_LEFT]:
-                self.grid.moveViewToLeftHome()
+                self.gridView.moveViewToLeftHome()
             if keys[pg.K_RIGHT]:
-                self.grid.moveViewToRightEnd()
+                self.gridView.moveViewToRightEnd()
         else:
             if keys[pg.K_DOWN]:
-                self.grid.moveViewUp(GRID_MOVE_INCREMENT)
+                self.gridView.moveViewDown(GRID_MOVE_INCREMENT)
             if keys[pg.K_UP]:
-                self.grid.moveViewDown(GRID_MOVE_INCREMENT)
+                self.gridView.moveViewUp(GRID_MOVE_INCREMENT)
             if keys[pg.K_RIGHT]:
-                self.grid.moveViewLeft(GRID_MOVE_INCREMENT)
+                self.gridView.moveViewRight(GRID_MOVE_INCREMENT)
             if keys[pg.K_LEFT]:
-                self.grid.moveViewRight(GRID_MOVE_INCREMENT)
+                self.gridView.moveViewLeft(GRID_MOVE_INCREMENT)
 
     def update(self):
         '''
@@ -139,10 +139,10 @@ class Game:
         '''
         Redraws all game objects.
         '''
-        if self.grid.changed:
+        if self.gridView.changed:
             # optimization: the grid is only drawned if something changed on it
             self.screen.fill(WHITE)
-            self.grid.draw()
+            self.gridView.draw()
 
             # *after* drawing everything, flip the display
             pg.display.flip()
@@ -153,12 +153,12 @@ class Game:
         '''
         Tk().wm_withdraw()  # to hide the main window
         if messagebox.askquestion(None, 'Do you want to load existing grid data ?') == 'yes':
-            fileNotFoundName = self.grid.loadGridData()
+            fileNotFoundName = self.gridView.loadGridData()
             if fileNotFoundName:
                 messagebox.showerror(None, fileNotFoundName + ' not found. Grid initialized with neutral data !')
-                self.grid.initialiseCellsToValue(0)
+                self.gridView.initialiseCellsToValue(0)
         else:
-            self.grid.initialiseCellsToValue(0)
+            self.gridView.initialiseCellsToValue(0)
 
     def show_go_screen(self):
         '''
