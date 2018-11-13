@@ -259,6 +259,7 @@ class Grid():
         if -self.gridOffsetXPx > maxAllowedOffsetXPx:
             self.gridOffsetXPx = - (maxAllowedOffsetXPx - 1)
 
+        print(self.gridOffsetXPx)
         # repositionning the display vertically so that only editable cells (cells in
         # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
         # which does not exists, which would cause an IndexOutOfRange exception.
@@ -282,6 +283,8 @@ class Grid():
             self.moveViewUp(yOffset)
         elif yOffset < 0:
             self.moveViewDown(-yOffset)
+
+        print(self.gridOffsetXPx)
 
     def moveViewUp(self, pixels):
         newGridYOffset = self.gridOffsetYPx - pixels
@@ -441,6 +444,7 @@ class Grid():
             self.cellValueGrid[row][col] = 1
 
         self.changed = True
+        print(xyMousePosTuple)
 
     def saveGridData(self):
         self.gridDataMgr.writeGridData(self.cellValueGrid)
