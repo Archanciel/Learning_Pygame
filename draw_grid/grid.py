@@ -63,7 +63,6 @@ class Grid():
         pass
 
     def setGridDimension(self):
-        print('setGridDimension: ', self.gridCoordMargin)
         self.drawnedColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
         self.drawnedRowNb = (self.surface.get_height() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
 
