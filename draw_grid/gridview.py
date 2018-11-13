@@ -318,6 +318,9 @@ class GridView():
 
         if self.gridOffsetYPx > 0:
             self.gridOffsetYPx = 0
+        elif -self.gridOffsetYPx > maxAllowedOffsetYPx:
+            # this can happen when zooming out and recentring the displayed zone
+            self.gridOffsetYPx = -maxAllowedOffsetYPx
 
         self.updateStartDrawRowIndex()
         self.changed = True
@@ -408,6 +411,9 @@ class GridView():
 
         if self.gridOffsetXPx > 0:
             self.gridOffsetXPx = 0
+        elif -self.gridOffsetXPx > maxAllowedOffsetXPx:
+            # this can happen when zooming out and recentring the displayed zone
+            self.gridOffsetXPx = -maxAllowedOffsetXPx
 
         self.updateStartDrawColIndex()
         self.changed = True
