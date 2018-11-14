@@ -161,7 +161,7 @@ class GridView():
                  cellSize - size of current cell (square in fact)
         '''
         cellSize = 0
-        drawnedCellXorYcoordPx = 0
+        drawnedCellXorYcoordPx = theoreticalCellXorYcoordPx
 
         if theoreticalCellXorYcoordPx > 0:
             # here, the current cell x coordinate is greater than the left grid limit and so must be
@@ -176,7 +176,7 @@ class GridView():
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    theoreticalCellXorYcoordPx = self.gridCoordMargin
+                    drawnedCellXorYcoordPx = self.gridCoordMargin
                 else:
                     # here, the current active cell is behond the grid coord margin and is drawn entirely
                     cellSize = self.cellSize
@@ -199,7 +199,7 @@ class GridView():
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    theoreticalCellXorYcoordPx = self.gridCoordMargin
+                    drawnedCellXorYcoordPx = self.gridCoordMargin
                 # else: this case is not possible since activeCellCoordOffset = self.gridCoordMargin + negative
                 # value
             elif cellCoordOffset < 0:
@@ -212,7 +212,7 @@ class GridView():
                         # this happens depending on the combination of the cell size set by the zoom
                         # level and the value of the GRID_MOVE_INCREMENT constant
                         return None, None
-                    theoreticalCellXorYcoordPx = self.gridCoordMargin
+                    drawnedCellXorYcoordPx = self.gridCoordMargin
                 else:
                     # the move offset must account for the number of columns already moved to the left ...
                     offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + self.cellSize) * cellRowOrColIndex
@@ -220,12 +220,12 @@ class GridView():
                     cellwidth = self.cellSize + offset + GRID_LINE_WIDTH
                     if cellwidth > 0:
                         cellSize = cellwidth
-                        theoreticalCellXorYcoordPx = self.gridCoordMargin
+                        drawnedCellXorYcoordPx = self.gridCoordMargin
                     else:
                         # we do not draw a cell which size would be 0 !
                         return None, None
 
-        return theoreticalCellXorYcoordPx, cellSize
+        return drawnedCellXorYcoordPx, cellSize
 
     def zoomIn(self):
         midCellBeforeZoom = MidCell(self)
