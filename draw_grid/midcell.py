@@ -25,11 +25,11 @@ class MidCell():
 
         cellXCoord = gridView.gridCoordMargin + GRID_LINE_WIDTH + gridView.gridOffsetXPx + (
                 (GRID_LINE_WIDTH + gridView.cellSize) * self.colBeforeZoom)
-        self.topLeftXCoord, _ = gridView.computeCellCoordAndSize(gridView.gridOffsetXPx, cellXCoord, self.rowBeforeZoom)
+        self.topLeftXCoord, _ = gridView.computeVisibleCellCoordAndSize(gridView.gridOffsetXPx, cellXCoord, self.rowBeforeZoom)
 
         cellYCoord = gridView.gridCoordMargin + GRID_LINE_WIDTH + gridView.gridOffsetYPx + (
                 (GRID_LINE_WIDTH + gridView.cellSize) * self.rowBeforeZoom)
-        self.topLeftYCoord, _ = gridView.computeCellCoordAndSize(gridView.gridOffsetYPx, cellYCoord, self.rowBeforeZoom)
+        self.topLeftYCoord, _ = gridView.computeVisibleCellCoordAndSize(gridView.gridOffsetYPx, cellYCoord, self.rowBeforeZoom)
 
     def computeXYOffsetAfterZoom(self):
         '''
@@ -42,11 +42,11 @@ class MidCell():
 
         cellXCoord = self.gridView.gridCoordMargin + GRID_LINE_WIDTH + self.gridView.gridOffsetXPx + (
                 (GRID_LINE_WIDTH + self.gridView.cellSize) * self.colBeforeZoom)
-        newTopLeftXCoord, _ = self.gridView.computeCellCoordAndSize(self.gridView.gridOffsetXPx, cellXCoord, self.colBeforeZoom)
+        newTopLeftXCoord, _ = self.gridView.computeVisibleCellCoordAndSize(self.gridView.gridOffsetXPx, cellXCoord, self.colBeforeZoom)
 
         cellYCoord = self.gridView.gridCoordMargin + GRID_LINE_WIDTH + self.gridView.gridOffsetYPx + (
                 (GRID_LINE_WIDTH + self.gridView.cellSize) * self.rowBeforeZoom)
-        newTopLeftYCoord, _ = self.gridView.computeCellCoordAndSize(self.gridView.gridOffsetYPx, cellYCoord, self.rowBeforeZoom)
+        newTopLeftYCoord, _ = self.gridView.computeVisibleCellCoordAndSize(self.gridView.gridOffsetYPx, cellYCoord, self.rowBeforeZoom)
 
         # calculating the x and y offset caused ba the zoom operation
         zoomXOffset = self.topLeftXCoord - newTopLeftXCoord
