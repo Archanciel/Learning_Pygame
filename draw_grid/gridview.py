@@ -14,8 +14,8 @@ class GridView():
         self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
         self.setGridDimension()
 
-        self.horizontalMaxManagedCellNumber = (surface.get_width() - 1) // SMALLEST_CELL_REQUIRED_PX_NUMBER
-        self.verticalMaxManagedCellNumber = (surface.get_height() - 1) // SMALLEST_CELL_REQUIRED_PX_NUMBER
+        self.horizontalMaxManagedCellNumber = (surface.get_width())
+        self.verticalMaxManagedCellNumber = (surface.get_height())
         self.cellValueGrid = None
 
         self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
