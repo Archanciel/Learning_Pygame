@@ -111,11 +111,11 @@ class GridView():
                 if self.cellValueGrid[row][col]:
                     theoreticalCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetXPx + (
                                 (GRID_LINE_WIDTH + self.cellSize) * col)
-                    drawnedCellXCoord, cellWidth = self.computeVisibleCellCoordAndSize(self.gridOffsetXPx, theoreticalCellXCoord, col)
+                    drawnedCellXCoord, drawnedCellWidth = self.computeVisibleCellCoordAndSize(self.gridOffsetXPx, theoreticalCellXCoord, col)
 
                     theoreticalCellYCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetYPx + (
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
-                    drawnedCellYCoord, cellHeight = self.computeVisibleCellCoordAndSize(self.gridOffsetYPx, theoreticalCellYCoord, row)
+                    drawnedCellYCoord, drawnedCellHeight = self.computeVisibleCellCoordAndSize(self.gridOffsetYPx, theoreticalCellYCoord, row)
 
                     if drawnedCellYCoord == None:
                         # cell out of display area
@@ -125,8 +125,8 @@ class GridView():
                                      GREEN,
                                      [drawnedCellXCoord - CELL_SIZE_OFFSET,
                                       drawnedCellYCoord - CELL_SIZE_OFFSET,
-                                      cellWidth,
-                                      cellHeight])
+                                      drawnedCellWidth,
+                                      drawnedCellHeight])
 
         self.changed = False
 
