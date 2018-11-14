@@ -247,11 +247,9 @@ class GridView():
         self.updateStartDrawColIndex()
 
         zoomXOffset, zoomYOffset = midCellBeforeZoom.computeXYOffsetAfterZoom()
-        print('zoomIn before recentring', self.gridOffsetXPx)
 
         self.moveViewRight(-zoomXOffset)
         self.moveViewDown(-zoomYOffset)
-        print('zoomIn after recentring', self.gridOffsetXPx)
 
         self.changed = True
 
@@ -287,12 +285,10 @@ class GridView():
         self.setGridDimension()
         self.updateStartDrawRowIndex()
         self.updateStartDrawColIndex()
-        print('zoomOut Before recentring', self.gridOffsetXPx)
 
         zoomXOffset, zoomYOffset = midCellBeforeZoom.computeXYOffsetAfterZoom()
         self.moveViewLeft(zoomXOffset)
         self.moveViewUp(zoomYOffset)
-        print('zoomOut after recentring', self.gridOffsetXPx)
 
         self.changed = True
 
@@ -308,7 +304,6 @@ class GridView():
             self.moveViewUp(-yOffset)
 
     def moveViewDown(self, pixels):
-        # print('moveViewDown')
         newGridYOffset = self.gridOffsetYPx - pixels
         maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
 
@@ -325,13 +320,11 @@ class GridView():
         '''
         Resets to the top most (0) row.
         '''
-        # print('moveViewToTop')
         self.gridOffsetYPx = 0
         self.updateStartDrawRowIndex()
         self.changed = True
 
     def moveViewUp(self, pixels):
-        # print('moveViewUp')
         self.gridOffsetYPx += pixels
         maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
 
@@ -348,14 +341,12 @@ class GridView():
         '''
         Sets the display to the right most or end column.
         '''
-        # print('moveViewToBottom')
         maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
         self.gridOffsetYPx = -maxAllowedOffsetYPx + 1
         self.updateStartDrawRowIndex()
         self.changed = True
 
     def moveViewRight(self, pixels):
-        # print('moveViewRight')
         newGridXOffsetPx = self.gridOffsetXPx - pixels
         maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
         if -newGridXOffsetPx >= maxAllowedOffsetXPx:
@@ -365,18 +356,15 @@ class GridView():
 
         self.gridOffsetXPx = newGridXOffsetPx
         self.updateStartDrawColIndex()
-        print('moveViewRight', self.gridOffsetXPx)
         self.changed = True
 
     def moveViewToRightEnd(self):
         '''
         Sets the display to the right most or end column.
         '''
-        # print('moveViewToRightEnd')
         maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
         self.gridOffsetXPx = -maxAllowedOffsetXPx + 1
         self.updateStartDrawColIndex()
-        print('moveViewToRightEnd', self.gridOffsetXPx)
         self.changed = True
 
     def computeMaxAllowedHorizontalOffsetPx(self):
@@ -426,7 +414,6 @@ class GridView():
         return int(maxAllowedVerticalOffsetPx)
 
     def moveViewLeft(self, pixels):
-        # print('moveViewLeft')
         self.gridOffsetXPx += pixels
         maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
 
@@ -437,17 +424,14 @@ class GridView():
             self.gridOffsetXPx = -maxAllowedOffsetXPx
 
         self.updateStartDrawColIndex()
-        print('moveViewLeft', self.gridOffsetXPx)
         self.changed = True
 
     def moveViewToLeftHome(self):
         '''
         Resets to the left most (0) column.
         '''
-        # print('moveViewToLeftHome')
         self.gridOffsetXPx = 0
         self.updateStartDrawColIndex()
-        print('moveViewToLeftHome', self.gridOffsetXPx)
         self.changed = True
 
     def updateStartDrawColIndex(self):
