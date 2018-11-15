@@ -3,6 +3,8 @@ import pygame as pg
 from draw_grid.centercell import CenterCell
 from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
+from draw_grid.cell import Cell
+from draw_grid.bordercell import BorderCell
 
 class GridView():
 
@@ -111,27 +113,21 @@ class GridView():
                 if self.cellValueGrid[row][col]:
                     # calculating active cell top left x coord
 
-                    borderIndependentCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetXPx + (
-                            (GRID_LINE_WIDTH + self.cellSize) * col)
-
                     if col == self.startDrawColIndex or col == maxDrawnedColIndex - 1:
                         # current active cell is at the left or right grid view border and
                         # may have to be partially drawned
-                        drawnedCellXCoord, drawnedCellWidth = self.computeVisibleCellCoordAndSize(self.gridOffsetXPx, borderIndependentCellXCoord, col)
+                        drawnedCellXCoord, drawnedCellWidth = BorderCell.computeBorderCellCoordAndSize(self, col, doComputeX=True)
                     else:
-                        drawnedCellXCoord, drawnedCellWidth = borderIndependentCellXCoord, self.cellSize
+                        drawnedCellXCoord, drawnedCellWidth = Cell.computeBorderIndependentCellXCoord(self, col), self.cellSize
 
                     # calculating active cell top left y coord
-
-                    borderIndependentCellYCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetYPx + (
-                            (GRID_LINE_WIDTH + self.cellSize) * row)
 
                     if row == self.startDrawRowIndex or row == maxDrawnedRowIndex - 1:
                         # current active cell is at the top or bottom grid view border and
                         # may have to be partially drawned
-                        drawnedCellYCoord, drawnedCellHeight = self.computeVisibleCellCoordAndSize(self.gridOffsetYPx, borderIndependentCellYCoord, row)
+                        drawnedCellYCoord, drawnedCellHeight = BorderCell.computeBorderCellCoordAndSize(self, row, doComputeX=False)
                     else:
-                        drawnedCellYCoord, drawnedCellHeight = borderIndependentCellYCoord, self.cellSize
+                        drawnedCellYCoord, drawnedCellHeight = Cell.computeBorderIndependentCellYCoord(self, row), self.cellSize
 
                     pg.draw.rect(self.surface,
                                      GREEN,
@@ -141,87 +137,6 @@ class GridView():
                                       drawnedCellHeight])
 
         self.changed = False
-
-    def computeVisibleCellCoordAndSize(self, currentGridXorYOffsetPx, borderIndependentCellXorYcoordPx, cellRowOrColIndex):
-        '''
-        When drawing a cell on the grid view, according to the grid view position, a visible cell may be
-        have to be partially drawned if it is at the left side of the grid view or at its right side.
-        The grid view position is given by the parm currentGridXorYOffsetPx. For example, moving the grid view
-        10 pixels to the right will be reflected with a value of -10 for currentGridXorYOffsetPx, which means
-        the underlying grid matrix is shifted 10 pixels to the left.
-
-        A cell located precisely at the left side of the grid view would be drawned entirely. But if the view
-        is shifted one pixel to the right (currentGridXorYOffsetPx == -1), the cell has to be partially drawned
-        since 1 pixel of its left part is now outside of the grid view. Its top left x coordinate will be 20
-        (the grid view margin size in pixels), but its size will be reduced by 1 pixel.
-
-        The method computes the cell top left x or y coordinate aswell as its size accounting for the fact the cell
-        may have to be partially drawned if part of the cell is before the grid view left size or beyhound its right
-        side. Additionnally, the displayed or not grid view margin is taken in consideration.
-
-        Note that the code of this method is commented regarding the horizontal dimension and its effect on the
-        x cell top left coordinate. In order to keep comments readable, their adaptation to handling the vertical
-        dimension (y) is left to the reader !
-
-        :param currentGridXorYOffsetPx: x or y grid offset in pixels
-        :param borderIndependentCellXorYcoordPx: cell x or y coord as deducted from its location in the internal grid
-                                           matrix
-        :param cellRowOrColIndex: index of current cell row or col in the internal grid
-                                           matrix
-
-        :return: drawnedCellXorYcoordPx - drawned cell top left x or y pixel coordinate
-                 cellSizePx - size of current cell (square in fact)
-        '''
-        cellSizePx = 0
-        drawnedCellXorYcoordPx = borderIndependentCellXorYcoordPx
-
-        if borderIndependentCellXorYcoordPx > 0:
-            # here, the current cell x coordinate is greater than the left grid limit and so must be
-            # drawn entirely or partially ...
-            cellCoordOffset = self.gridCoordMargin - borderIndependentCellXorYcoordPx
-            if cellCoordOffset > 0:
-                if cellCoordOffset < self.gridCoordMargin:
-                    # here, we moved the grid to the left to a point where the current active cell is partially
-                    # at the left of the col margin (grid coord margin where the row/col numbers are displayed)
-                    cellSizePx = self.cellSize - cellCoordOffset
-                    drawnedCellXorYcoordPx = self.gridCoordMargin
-                else:
-                    # here, the current active cell is behond the grid coord margin and is drawn entirely
-                    cellSizePx = self.cellSize
-            else:
-                cellSizePx = self.cellSize
-        else:
-            # here, the current cell x coord is at the left of the left grid limit
-            cellCoordOffset = self.gridCoordMargin + borderIndependentCellXorYcoordPx  # activeCellXCoord is negative here !
-            if cellCoordOffset >= 0:
-                if cellCoordOffset <= self.gridCoordMargin:
-                    # here, the current active cell x coord is at the left of the left grid limit. But part
-                    # of the cell has to be drawn for the part which is still at the right of the grid coord
-                    # margin
-
-                    # the move offset must account for the number of columns already moved to the left ...
-                    offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + self.cellSize) * cellRowOrColIndex
-
-                    cellSizePx = self.cellSize + offset + GRID_LINE_WIDTH
-                    drawnedCellXorYcoordPx = self.gridCoordMargin
-                # else: this case is not possible since activeCellCoordOffset = self.gridCoordMargin + negative
-                # value
-            elif cellCoordOffset < 0:
-                if abs(cellCoordOffset) <= self.gridCoordMargin:
-                    # the move offset must account for the number of columns already moved to the left ...
-                    offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + self.cellSize) * cellRowOrColIndex
-
-                    cellSizePx = self.cellSize + offset + GRID_LINE_WIDTH
-                    drawnedCellXorYcoordPx = self.gridCoordMargin
-                else:
-                    # the move offset must account for the number of columns already moved to the left ...
-                    offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + self.cellSize) * cellRowOrColIndex
-
-                    cellwidth = self.cellSize + offset + GRID_LINE_WIDTH
-                    cellSizePx = cellwidth
-                    drawnedCellXorYcoordPx = self.gridCoordMargin
-
-        return drawnedCellXorYcoordPx, cellSizePx
 
     def zoomIn(self):
         midCellBeforeZoom = CenterCell(self)

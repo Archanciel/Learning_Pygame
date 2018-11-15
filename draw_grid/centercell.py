@@ -1,6 +1,7 @@
+from draw_grid.cell import Cell
 from draw_grid.settings import *
 
-class CenterCell():
+class CenterCell(Cell):
     '''
     Thia class calculates the horizontal (x) and vertical (y) offset caused by a zoom in or out operation.
     These offsets will be used by the GridView class to reposition the grid view so that the zoomed zone
@@ -19,15 +20,11 @@ class CenterCell():
 
         # computing the row/col index of the cell displaed in the middle of the grid view before the zoom occurs
         self.centerCellRowIndexBeforeZoom = gridView.startDrawRowIndex + (gridView.drawnedRowNb // 2) - 1 # minus 1 since 0 based !
-        self.centerCellColIndexolBeforeZoom = gridView.startDrawColIndex + (gridView.drawnedColNb // 2) - 1
+        self.centerCellColIndexBeforeZoom = gridView.startDrawColIndex + (gridView.drawnedColNb // 2) - 1
 
         # computing the top left x and y coordinates of the mid cell before the zoom operation
-
-        self.centerCellTopLeftXCoordBeforeZoom = gridView.gridCoordMargin + GRID_LINE_WIDTH + gridView.gridOffsetXPx + (
-                (GRID_LINE_WIDTH + gridView.cellSize) * self.centerCellColIndexolBeforeZoom)
-
-        self.centerCellTopLeftYCoordBeforeZoom = gridView.gridCoordMargin + GRID_LINE_WIDTH + gridView.gridOffsetYPx + (
-                (GRID_LINE_WIDTH + gridView.cellSize) * self.centerCellRowIndexBeforeZoom)
+        self.centerCellTopLeftXCoordBeforeZoom = super().computeBorderIndependentCellXCoord(gridView, self.centerCellColIndexBeforeZoom)
+        self.centerCellTopLeftYCoordBeforeZoom = super().computeBorderIndependentCellXCoord(gridView, self.centerCellRowIndexBeforeZoom)
 
     def computeXYOffsetAfterZoom(self):
         '''
@@ -37,12 +34,8 @@ class CenterCell():
         :return: zoomXOffsetPx and zoomYOffsetPx tuple
         '''
         # computing the top left x and y coordinates of the mid cell after the zoom operation
-
-        topLeftXCoordPxAfterZoom = self.gridView.gridCoordMargin + GRID_LINE_WIDTH + self.gridView.gridOffsetXPx + (
-                (GRID_LINE_WIDTH + self.gridView.cellSize) * self.centerCellColIndexolBeforeZoom)
-
-        topLeftYCoordPxAfterZoom = self.gridView.gridCoordMargin + GRID_LINE_WIDTH + self.gridView.gridOffsetYPx + (
-                (GRID_LINE_WIDTH + self.gridView.cellSize) * self.centerCellRowIndexBeforeZoom)
+        topLeftXCoordPxAfterZoom = super().computeBorderIndependentCellXCoord(self.gridView, self.centerCellColIndexBeforeZoom)
+        topLeftYCoordPxAfterZoom = super().computeBorderIndependentCellXCoord(self.gridView, self.centerCellRowIndexBeforeZoom)
 
         # calculating the x and y offset caused ba the zoom operation
         zoomXOffsetPx = self.centerCellTopLeftXCoordBeforeZoom - topLeftXCoordPxAfterZoom
