@@ -1,6 +1,6 @@
 import pygame as pg
 
-from draw_grid.midcell import MidCell
+from draw_grid.centercell import CenterCell
 from draw_grid.settings import *
 from draw_grid.griddatamanager import GridDataManager
 
@@ -224,7 +224,7 @@ class GridView():
         return drawnedCellXorYcoordPx, cellSizePx
 
     def zoomIn(self):
-        midCellBeforeZoom = MidCell(self)
+        midCellBeforeZoom = CenterCell(self)
         delta = self.cellSize // 10
         if delta <= 0:
             delta = 1
@@ -250,7 +250,7 @@ class GridView():
         self.changed = True
 
     def zoomOut(self):
-        midCellBeforeZoom = MidCell(self)
+        midCellBeforeZoom = CenterCell(self)
         delta = self.cellSize // 10
 
         if delta <= 0:

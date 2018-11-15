@@ -1,6 +1,6 @@
 from draw_grid.settings import *
 
-class MidCell():
+class CenterCell():
     '''
     Thia class calculates the horizontal (x) and vertical (y) offset caused by a zoom in or out operation.
     These offsets will be used by the GridView class to reposition the grid view so that the zoomed zone
