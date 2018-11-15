@@ -109,13 +109,29 @@ class GridView():
         for row in range(self.startDrawRowIndex, maxDrawnedRowIndex):
             for col in range(self.startDrawColIndex, maxDrawnedColIndex):
                 if self.cellValueGrid[row][col]:
-                    theoreticalCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetXPx + (
-                                (GRID_LINE_WIDTH + self.cellSize) * col)
-                    drawnedCellXCoord, drawnedCellWidth = self.computeVisibleCellCoordAndSize(self.gridOffsetXPx, theoreticalCellXCoord, col)
+                    # calculating active cell top left x coord
 
-                    theoreticalCellYCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetYPx + (
-                                (GRID_LINE_WIDTH + self.cellSize) * row)
-                    drawnedCellYCoord, drawnedCellHeight = self.computeVisibleCellCoordAndSize(self.gridOffsetYPx, theoreticalCellYCoord, row)
+                    borderIndependentCellXCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetXPx + (
+                            (GRID_LINE_WIDTH + self.cellSize) * col)
+
+                    if col == self.startDrawColIndex or col == maxDrawnedColIndex - 1:
+                        # current active cell is at the left or right grid view border and
+                        # may have to be partially drawned
+                        drawnedCellXCoord, drawnedCellWidth = self.computeVisibleCellCoordAndSize(self.gridOffsetXPx, borderIndependentCellXCoord, col)
+                    else:
+                        drawnedCellXCoord, drawnedCellWidth = borderIndependentCellXCoord, self.cellSize
+
+                    # calculating active cell top left y coord
+
+                    borderIndependentCellYCoord = self.gridCoordMargin + GRID_LINE_WIDTH + self.gridOffsetYPx + (
+                            (GRID_LINE_WIDTH + self.cellSize) * row)
+
+                    if row == self.startDrawRowIndex or row == maxDrawnedRowIndex - 1:
+                        # current active cell is at the top or bottom grid view border and
+                        # may have to be partially drawned
+                        drawnedCellYCoord, drawnedCellHeight = self.computeVisibleCellCoordAndSize(self.gridOffsetYPx, borderIndependentCellYCoord, row)
+                    else:
+                        drawnedCellYCoord, drawnedCellHeight = borderIndependentCellYCoord, self.cellSize
 
                     pg.draw.rect(self.surface,
                                      GREEN,
@@ -126,7 +142,7 @@ class GridView():
 
         self.changed = False
 
-    def computeVisibleCellCoordAndSize(self, currentGridXorYOffsetPx, theoreticalCellXorYcoordPx, cellRowOrColIndex):
+    def computeVisibleCellCoordAndSize(self, currentGridXorYOffsetPx, borderIndependentCellXorYcoordPx, cellRowOrColIndex):
         '''
         When drawing a cell on the grid view, according to the grid view position, a visible cell may be
         have to be partially drawned if it is at the left side of the grid view or at its right side.
@@ -148,7 +164,7 @@ class GridView():
         dimension (y) is left to the reader !
 
         :param currentGridXorYOffsetPx: x or y grid offset in pixels
-        :param theoreticalCellXorYcoordPx: cell x or y coord as deducted from its location in the internal grid
+        :param borderIndependentCellXorYcoordPx: cell x or y coord as deducted from its location in the internal grid
                                            matrix
         :param cellRowOrColIndex: index of current cell row or col in the internal grid
                                            matrix
@@ -157,12 +173,12 @@ class GridView():
                  cellSizePx - size of current cell (square in fact)
         '''
         cellSizePx = 0
-        drawnedCellXorYcoordPx = theoreticalCellXorYcoordPx
+        drawnedCellXorYcoordPx = borderIndependentCellXorYcoordPx
 
-        if theoreticalCellXorYcoordPx > 0:
+        if borderIndependentCellXorYcoordPx > 0:
             # here, the current cell x coordinate is greater than the left grid limit and so must be
             # drawn entirely or partially ...
-            cellCoordOffset = self.gridCoordMargin - theoreticalCellXorYcoordPx
+            cellCoordOffset = self.gridCoordMargin - borderIndependentCellXorYcoordPx
             if cellCoordOffset > 0:
                 if cellCoordOffset < self.gridCoordMargin:
                     # here, we moved the grid to the left to a point where the current active cell is partially
@@ -176,7 +192,7 @@ class GridView():
                 cellSizePx = self.cellSize
         else:
             # here, the current cell x coord is at the left of the left grid limit
-            cellCoordOffset = self.gridCoordMargin + theoreticalCellXorYcoordPx  # activeCellXCoord is negative here !
+            cellCoordOffset = self.gridCoordMargin + borderIndependentCellXorYcoordPx  # activeCellXCoord is negative here !
             if cellCoordOffset >= 0:
                 if cellCoordOffset <= self.gridCoordMargin:
                     # here, the current active cell x coord is at the left of the left grid limit. But part
