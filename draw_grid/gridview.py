@@ -117,10 +117,6 @@ class GridView():
                                 (GRID_LINE_WIDTH + self.cellSize) * row)
                     drawnedCellYCoord, drawnedCellHeight = self.computeVisibleCellCoordAndSize(self.gridOffsetYPx, theoreticalCellYCoord, row)
 
-                    if drawnedCellYCoord == None:
-                        # cell out of display area
-                        continue
-
                     pg.draw.rect(self.surface,
                                      GREEN,
                                      [drawnedCellXCoord - CELL_SIZE_OFFSET,
@@ -172,10 +168,6 @@ class GridView():
                     # here, we moved the grid to the left to a point where the current active cell is partially
                     # at the left of the col margin (grid coord margin where the row/col numbers are displayed)
                     cellSizePx = self.cellSize - cellCoordOffset
-                    if cellSizePx <= 0:
-                        # this happens depending on the combination of the cell size set by the zoom
-                        # level and the value of the GRID_MOVE_INCREMENT constant
-                        return None, None
                     drawnedCellXorYcoordPx = self.gridCoordMargin
                 else:
                     # here, the current active cell is behond the grid coord margin and is drawn entirely
@@ -195,10 +187,6 @@ class GridView():
                     offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + self.cellSize) * cellRowOrColIndex
 
                     cellSizePx = self.cellSize + offset + GRID_LINE_WIDTH
-                    if cellSizePx <= 0:
-                        # this happens depending on the combination of the cell size set by the zoom
-                        # level and the value of the GRID_MOVE_INCREMENT constant
-                        return None, None
                     drawnedCellXorYcoordPx = self.gridCoordMargin
                 # else: this case is not possible since activeCellCoordOffset = self.gridCoordMargin + negative
                 # value
@@ -208,22 +196,14 @@ class GridView():
                     offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + self.cellSize) * cellRowOrColIndex
 
                     cellSizePx = self.cellSize + offset + GRID_LINE_WIDTH
-                    if cellSizePx <= 0:
-                        # this happens depending on the combination of the cell size set by the zoom
-                        # level and the value of the GRID_MOVE_INCREMENT constant
-                        return None, None
                     drawnedCellXorYcoordPx = self.gridCoordMargin
                 else:
                     # the move offset must account for the number of columns already moved to the left ...
                     offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + self.cellSize) * cellRowOrColIndex
 
                     cellwidth = self.cellSize + offset + GRID_LINE_WIDTH
-                    if cellwidth > 0:
-                        cellSizePx = cellwidth
-                        drawnedCellXorYcoordPx = self.gridCoordMargin
-                    else:
-                        # we do not draw a cell which size would be 0 !
-                        return None, None
+                    cellSizePx = cellwidth
+                    drawnedCellXorYcoordPx = self.gridCoordMargin
 
         return drawnedCellXorYcoordPx, cellSizePx
 
