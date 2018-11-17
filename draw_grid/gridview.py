@@ -14,10 +14,19 @@ class GridView():
         self.cellSize = cellSize
         self.gridDataMgr = GridDataManager(gridDataFileName)
         self.gridCoordMargin = GRID_COORD_MARGIN_SIZE
+
+        # varinst storing the number of row/col number that can be displayed in function
+        # of the cell size which depends of the zoom in/out level. Their values are set
+        # by the setGridDimension() method.
+        self.gridViewDisplayableColNb = 0
+        self.gridViewDisplayableRowNb = 0
+
         self.setGridDimension()
 
+        # the max horz and vert cell number is set as below
         self.horizontalMaxManagedCellNumber = (surface.get_width())
         self.verticalMaxManagedCellNumber = (surface.get_height())
+
         self.cellValueGrid = None
 
         self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
@@ -39,30 +48,35 @@ class GridView():
         pass
 
     def setGridDimension(self):
-        self.drawnedColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
-        self.drawnedRowNb = (self.surface.get_height() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
+        '''
+        Sets the number of row/col number that can be displayed by the grid view. This
+        number is function of the cell size which itself depends of the zoom in/out level
+        (i.e. how many times the zoomIn()/zoomOut() methods were called.
+        '''
+        self.gridViewDisplayableColNb = (self.surface.get_width() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
+        self.gridViewDisplayableRowNb = (self.surface.get_height() - self.gridCoordMargin - GRID_LINE_WIDTH) // (self.cellSize + GRID_LINE_WIDTH)
 
     def draw(self):
-        maxDrawnedLineNumber = self.drawnedRowNb + 1
+        drawnedLineNumber = self.gridViewDisplayableRowNb + 1
         li = 0
 
         # for all the lines, drawing the y axis line number label and the horizontal line itself
 
-        while li < maxDrawnedLineNumber:
+        while li < drawnedLineNumber:
             lineNumberLabelYCoord = self.gridCoordMargin + self.gridOffsetYPx + (li * (self.cellSize + GRID_LINE_WIDTH))
 
             if self.drawAxisLabel:
-                if li < 10:
-                    ident = '   '
-                else:
-                    ident = '  '
-                zeroBasedLineNumberLabel = self.font.render(ident + str(li), 1, (0, 0, 0))
                 if lineNumberLabelYCoord < self.gridCoordMargin // 2:
                     # this happens when the grid view is down shifted (down arrow or mouse up)
-                    # so that more than half of the top most cells is hidden. Then, the line
-                    # number is not written
+                    # so that more than half of the top most cell line is hidden. in this case,
+                    # the line number is not written
                     pass
                 else:
+                    if li < 10:
+                        ident = '   '
+                    else:
+                        ident = '  '
+                    zeroBasedLineNumberLabel = self.font.render(ident + str(li), 1, (0, 0, 0))
                     self.surface.blit(zeroBasedLineNumberLabel, (0, lineNumberLabelYCoord))
 
             li += 1
@@ -72,33 +86,33 @@ class GridView():
                 # coordinates margin size.
                 # Since the line was skipped, it must be replaced by a supplementary
                 # line at the bottom of the grid
-                maxDrawnedLineNumber += 1
+                drawnedLineNumber += 1
                 continue
             else:
                 pg.draw.line(self.surface, BLACK, (self.gridCoordMargin, lineNumberLabelYCoord), (self.surface.get_width(), lineNumberLabelYCoord), GRID_LINE_WIDTH)
 
         # for all the columns, drawing the x axis column label and the column vertical line itself
 
-        maxDrawnedColNumber = self.drawnedColNb + 1
+        drawnedColNumber = self.gridViewDisplayableColNb + 1
         co = 0
 
-        while co < maxDrawnedColNumber:
+        while co < drawnedColNumber:
             colCoord = self.gridCoordMargin + self.gridOffsetXPx + co * (self.cellSize + GRID_LINE_WIDTH)
 
             # handling column number label
 
             if self.drawAxisLabel:
-                if co < 10:
-                    ident = '  '
-                else:
-                    ident = ' '
-                zeroBasedLineNumberLabel = self.font.render(ident + str(co), 1, (0, 0, 0))
                 if colCoord < self.gridCoordMargin // 2:
                     # this happens when the grid view is right shifted (right arrow or mouse)
                     # so that more than half of the left most cells is hidden. Then, the col
                     # number is not written
                     pass
                 else:
+                    if co < 10:
+                        ident = '  '
+                    else:
+                        ident = ' '
+                    zeroBasedLineNumberLabel = self.font.render(ident + str(co), 1, (0, 0, 0))
                     self.surface.blit(zeroBasedLineNumberLabel, (colCoord, 1))
 
             co += 1
@@ -110,15 +124,15 @@ class GridView():
                 # coordinates margin size.
                 # Since the column was skipped, it must be replaced by a supplementary
                 # column at the very right of the grid
-                maxDrawnedColNumber += 1
+                drawnedColNumber += 1
                 continue
             else:
                 pg.draw.line(self.surface, BLACK, (colCoord, self.gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
 
         # drawing active cells
 
-        maxDrawnedRowIndex = min(self.verticalMaxManagedCellNumber, self.drawnedRowNb + self.startDrawRowIndex + 2)
-        maxDrawnedColIndex = min(self.horizontalMaxManagedCellNumber, self.startDrawColIndex + self.drawnedColNb + 2)
+        maxDrawnedRowIndex = min(self.verticalMaxManagedCellNumber, self.gridViewDisplayableRowNb + self.startDrawRowIndex + 2)
+        maxDrawnedColIndex = min(self.horizontalMaxManagedCellNumber, self.startDrawColIndex + self.gridViewDisplayableColNb + 2)
 
         for row in range(self.startDrawRowIndex, maxDrawnedRowIndex):
             for col in range(self.startDrawColIndex, maxDrawnedColIndex):

@@ -19,8 +19,8 @@ class CenterCell(Cell):
         self.gridView = gridView
 
         # computing the row/col index of the cell displaed in the middle of the grid view before the zoom occurs
-        self.centerCellRowIndexBeforeZoom = gridView.startDrawRowIndex + (gridView.drawnedRowNb // 2) - 1 # minus 1 since 0 based !
-        self.centerCellColIndexBeforeZoom = gridView.startDrawColIndex + (gridView.drawnedColNb // 2) - 1
+        self.centerCellRowIndexBeforeZoom = gridView.startDrawRowIndex + (gridView.gridViewDisplayableRowNb // 2) - 1 # minus 1 since 0 based !
+        self.centerCellColIndexBeforeZoom = gridView.startDrawColIndex + (gridView.gridViewDisplayableColNb // 2) - 1
 
         # computing the top left x and y coordinates of the mid cell before the zoom operation
         self.centerCellTopLeftXCoordBeforeZoom = super().computeBorderIndependentCellXCoord(gridView, self.centerCellColIndexBeforeZoom)
