@@ -59,12 +59,12 @@ class GridView():
     def draw(self):
         drawnedRowNumber = self.gridViewDisplayableRowNb
         row = 0
-        currentRowIndex = -self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
+        currentRowIndex = self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
 
         # for all the lines, drawing the y axis line number label and the horizontal line itself
 
         while row <= drawnedRowNumber:
-            drawnedRowYCoord = self.gridCoordMargin + self.gridOffsetYPx + (currentRowIndex * (self.cellSize + GRID_LINE_WIDTH))
+            drawnedRowYCoord = self.gridCoordMargin - self.gridOffsetYPx + (currentRowIndex * (self.cellSize + GRID_LINE_WIDTH))
 
             if self.drawAxisLabel:
                 if drawnedRowYCoord < self.gridCoordMargin // 2:
@@ -101,10 +101,10 @@ class GridView():
 
         drawnedColNumber = self.gridViewDisplayableColNb
         col = 0
-        currentColIndex = -self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
+        currentColIndex = self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
 
         while col <= drawnedColNumber:
-            drawnedColXCoord = self.gridCoordMargin + self.gridOffsetXPx + currentColIndex * (self.cellSize + GRID_LINE_WIDTH)
+            drawnedColXCoord = self.gridCoordMargin - self.gridOffsetXPx + currentColIndex * (self.cellSize + GRID_LINE_WIDTH)
 
             # handling column number label
 
@@ -217,16 +217,16 @@ class GridView():
         # which does not exists, which would cause an IndexOutOfRange exception.
         maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
 
-        if -self.gridOffsetXPx > maxAllowedOffsetXPx:
-            self.gridOffsetXPx = - (maxAllowedOffsetXPx - 1)
+        if self.gridOffsetXPx > maxAllowedOffsetXPx:
+            self.gridOffsetXPx = maxAllowedOffsetXPx - 1
 
         # repositionning the display vertically so that only editable cells (cells in
         # self.cellValueGrid) are displayed, preventing to set a cell value on a cell
         # which does not exists, which would cause an IndexOutOfRange exception.
         maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
 
-        if -self.gridOffsetYPx > maxAllowedOffsetYPx:
-            self.gridOffsetYPx = - (maxAllowedOffsetYPx - 1)
+        if self.gridOffsetYPx > maxAllowedOffsetYPx:
+            self.gridOffsetYPx = maxAllowedOffsetYPx - 1
 
         self.setGridDimension()
         self.updateStartDrawRowIndex()
@@ -250,10 +250,10 @@ class GridView():
             self.moveViewDown(-yOffset)
 
     def moveViewDown(self, pixels):
-        newGridYOffset = self.gridOffsetYPx - pixels
+        newGridYOffset = self.gridOffsetYPx + pixels
         maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
 
-        if -newGridYOffset >= maxAllowedOffsetYPx:
+        if newGridYOffset >= maxAllowedOffsetYPx:
             #preventing from moving behond grid height. This avoids changing a cell value
             #for a cell outside of the internal cell value grid
             return
@@ -271,14 +271,14 @@ class GridView():
         self.changed = True
 
     def moveViewUp(self, pixels):
-        self.gridOffsetYPx += pixels
+        self.gridOffsetYPx -= pixels
         maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
 
-        if self.gridOffsetYPx > 0:
+        if self.gridOffsetYPx < 0:
             self.gridOffsetYPx = 0
-        elif -self.gridOffsetYPx > maxAllowedOffsetYPx:
+        elif self.gridOffsetYPx > maxAllowedOffsetYPx:
             # this can happen when zooming out and recentring the displayed zone
-            self.gridOffsetYPx = -maxAllowedOffsetYPx
+            self.gridOffsetYPx = maxAllowedOffsetYPx
 
         self.updateStartDrawRowIndex()
         self.changed = True
@@ -288,14 +288,14 @@ class GridView():
         Sets the display to the right most or end column.
         '''
         maxAllowedOffsetYPx = self.computeMaxAllowedVerticalOffsetPx()
-        self.gridOffsetYPx = -maxAllowedOffsetYPx + 1
+        self.gridOffsetYPx = maxAllowedOffsetYPx - 1
         self.updateStartDrawRowIndex()
         self.changed = True
 
     def moveViewRight(self, pixels):
-        newGridXOffsetPx = self.gridOffsetXPx - pixels
+        newGridXOffsetPx = self.gridOffsetXPx + pixels
         maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
-        if -newGridXOffsetPx >= maxAllowedOffsetXPx:
+        if newGridXOffsetPx >= maxAllowedOffsetXPx:
             #preventing from moving behond grid width. This avoids changing a cell value
             #for a cell outside of the internal cell value grid
             return
@@ -309,7 +309,7 @@ class GridView():
         Sets the display to the right most or end column.
         '''
         maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
-        self.gridOffsetXPx = -maxAllowedOffsetXPx + 1
+        self.gridOffsetXPx = maxAllowedOffsetXPx - 1
         self.updateStartDrawColIndex()
         self.changed = True
 
@@ -360,14 +360,14 @@ class GridView():
         return int(maxAllowedVerticalOffsetPx)
 
     def moveViewLeft(self, pixels):
-        self.gridOffsetXPx += pixels
+        self.gridOffsetXPx -= pixels
         maxAllowedOffsetXPx = self.computeMaxAllowedHorizontalOffsetPx()
 
-        if self.gridOffsetXPx > 0:
+        if self.gridOffsetXPx < 0:
             self.gridOffsetXPx = 0
-        elif -self.gridOffsetXPx > maxAllowedOffsetXPx:
+        elif self.gridOffsetXPx > maxAllowedOffsetXPx:
             # this can happen when zooming out and recentring the displayed zone
-            self.gridOffsetXPx = -maxAllowedOffsetXPx
+            self.gridOffsetXPx = maxAllowedOffsetXPx
 
         self.updateStartDrawColIndex()
         self.changed = True
@@ -390,7 +390,7 @@ class GridView():
         column x index will become 1, then 2, etc, i.e. the positive value of the
         self.gridOffsetXPx integer divided by the current cell width + grid line width.
         '''
-        self.startDrawColIndex = -self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
+        self.startDrawColIndex = self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
 
     def updateStartDrawRowIndex(self):
         '''
@@ -402,12 +402,12 @@ class GridView():
         row y index will become 1, then 2, etc, i.e. the positive value of the
         self.gridOffsetYPx integer divided by the current cell height + grid line width.
         '''
-        self.startDrawRowIndex = -self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
+        self.startDrawRowIndex = self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
 
     def toggleCell(self, xyMousePosTuple):
         x, y = xyMousePosTuple
-        col = (x - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetXPx) // (GRID_LINE_WIDTH + self.cellSize)
-        row = (y - self.gridCoordMargin - GRID_LINE_WIDTH - self.gridOffsetYPx) // (GRID_LINE_WIDTH + self.cellSize)
+        col = (x - self.gridCoordMargin - GRID_LINE_WIDTH + self.gridOffsetXPx) // (GRID_LINE_WIDTH + self.cellSize)
+        row = (y - self.gridCoordMargin - GRID_LINE_WIDTH + self.gridOffsetYPx) // (GRID_LINE_WIDTH + self.cellSize)
 
         if self.cellValueGrid[row][col]:
             self.cellValueGrid[row][col] = 0

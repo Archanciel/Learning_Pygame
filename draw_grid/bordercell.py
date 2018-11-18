@@ -61,7 +61,8 @@ class BorderCell(Cell):
             else:
                 cellSizePx = gridView.cellSize
         else:
-            # here, the current cell x coord is at the left of the left gridView limit
+            # here, the current cell x coord is on the left gridView limit or at the left
+            # of the left gridView limit
             cellCoordOffset = gridView.gridCoordMargin + borderIndependentCellXorYcoordPx  # activeCellXCoord is negative here !
             if cellCoordOffset >= 0:
                 if cellCoordOffset <= gridView.gridCoordMargin:
@@ -70,7 +71,7 @@ class BorderCell(Cell):
                     # margin
 
                     # the move offset must account for the number of columns already moved to the left ...
-                    offset = currentGridXorYOffsetPx + (GRID_LINE_WIDTH + gridView.cellSize) * cellRowOrColIndex
+                    offset = currentGridXorYOffsetPx - (GRID_LINE_WIDTH + gridView.cellSize) * cellRowOrColIndex
 
                     cellSizePx = gridView.cellSize + offset + GRID_LINE_WIDTH
                     drawnedCellXorYcoordPx = gridView.gridCoordMargin
