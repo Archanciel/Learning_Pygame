@@ -240,14 +240,14 @@ class GridView():
 
     def move(self, xOffset, yOffset):
         if xOffset > 0:
-            self.moveViewRight(xOffset)
+            self.moveViewLeft(xOffset)
         elif xOffset < 0:
-            self.moveViewLeft(-xOffset)
+            self.moveViewRight(-xOffset)
 
         if yOffset > 0:
-            self.moveViewDown(yOffset)
+            self.moveViewUp(yOffset)
         elif yOffset < 0:
-            self.moveViewUp(-yOffset)
+            self.moveViewDown(-yOffset)
 
     def moveViewDown(self, pixels):
         newGridYOffset = self.gridOffsetYPx - pixels
