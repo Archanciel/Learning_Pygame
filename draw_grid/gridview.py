@@ -29,7 +29,7 @@ class GridView():
 
         self.cellValueGrid = None
 
-        self.font = pg.font.SysFont('arial', int(GRID_COORD_MARGIN_SIZE / 20 * 12), False)
+        self.font = pg.font.SysFont('arial', int(GRID_AXIS_FONT_SIZE), False)
         self.drawAxisLabel = True
 
         # when opening the grid windows, the visible part of the cells is set at the very
@@ -59,11 +59,14 @@ class GridView():
     def draw(self):
         drawnedLineNumber = self.gridViewDisplayableRowNb + 1
         li = 0
+        lineNumberLabelY = -self.gridOffsetYPx // (self.cellSize + GRID_LINE_WIDTH)
 
         # for all the lines, drawing the y axis line number label and the horizontal line itself
 
+        z = 0
+
         while li < drawnedLineNumber:
-            lineNumberLabelYCoord = self.gridCoordMargin + self.gridOffsetYPx + (li * (self.cellSize + GRID_LINE_WIDTH))
+            lineNumberLabelYCoord = self.gridCoordMargin + self.gridOffsetYPx + (lineNumberLabelY * (self.cellSize + GRID_LINE_WIDTH))
 
             if self.drawAxisLabel:
                 if lineNumberLabelYCoord < self.gridCoordMargin // 2:
@@ -72,14 +75,20 @@ class GridView():
                     # the line number is not written
                     pass
                 else:
-                    if li < 10:
-                        ident = '   '
-                    else:
+                    if lineNumberLabelY < 10:
                         ident = '  '
-                    zeroBasedLineNumberLabel = self.font.render(ident + str(li), 1, (0, 0, 0))
+                    elif lineNumberLabelY < 100:
+                        ident = ' '
+                    else:
+                        ident = ''
+
+                    zeroBasedLineNumberLabel = self.font.render(ident + str(lineNumberLabelY), 1, (0, 0, 0))
                     self.surface.blit(zeroBasedLineNumberLabel, (0, lineNumberLabelYCoord))
 
             li += 1
+            lineNumberLabelY += 1
+
+            # drawing the line horizontal line
 
             if lineNumberLabelYCoord < self.gridCoordMargin:
                 # We do not draw the line if its y coordinate is less than the grid
@@ -87,39 +96,46 @@ class GridView():
                 # Since the line was skipped, it must be replaced by a supplementary
                 # line at the bottom of the grid
                 drawnedLineNumber += 1
+                z += 1
+                print(z)
                 continue
             else:
+                z = 0
                 pg.draw.line(self.surface, BLACK, (self.gridCoordMargin, lineNumberLabelYCoord), (self.surface.get_width(), lineNumberLabelYCoord), GRID_LINE_WIDTH)
 
         # for all the columns, drawing the x axis column label and the column vertical line itself
 
         drawnedColNumber = self.gridViewDisplayableColNb + 1
-        co = 0
+        col = 0
+        colNumberLabelX = -self.gridOffsetXPx // (self.cellSize + GRID_LINE_WIDTH)
 
-        while co < drawnedColNumber:
-            colCoord = self.gridCoordMargin + self.gridOffsetXPx + co * (self.cellSize + GRID_LINE_WIDTH)
+        while col < drawnedColNumber:
+            colNumberLabelXCoord = self.gridCoordMargin + self.gridOffsetXPx + colNumberLabelX * (self.cellSize + GRID_LINE_WIDTH)
 
             # handling column number label
 
             if self.drawAxisLabel:
-                if colCoord < self.gridCoordMargin // 2:
+                if colNumberLabelXCoord < self.gridCoordMargin // 2:
                     # this happens when the grid view is right shifted (right arrow or mouse)
                     # so that more than half of the left most cells is hidden. Then, the col
                     # number is not written
                     pass
                 else:
-                    if co < 10:
+                    if colNumberLabelX < 10:
                         ident = '  '
-                    else:
+                    elif colNumberLabelX < 100:
                         ident = ' '
-                    zeroBasedLineNumberLabel = self.font.render(ident + str(co), 1, (0, 0, 0))
-                    self.surface.blit(zeroBasedLineNumberLabel, (colCoord, 1))
+                    else:
+                        ident = ''
+                    zeroBasedLineNumberLabel = self.font.render(ident + str(colNumberLabelX), 1, (0, 0, 0))
+                    self.surface.blit(zeroBasedLineNumberLabel, (colNumberLabelXCoord, 1))
 
-            co += 1
+            col += 1
+            colNumberLabelX += 1
 
             # drawing the column vertical line
 
-            if colCoord < self.gridCoordMargin:
+            if colNumberLabelXCoord < self.gridCoordMargin:
                 # We do not draw the column line if its x coordinate is less than the grid
                 # coordinates margin size.
                 # Since the column was skipped, it must be replaced by a supplementary
@@ -127,7 +143,7 @@ class GridView():
                 drawnedColNumber += 1
                 continue
             else:
-                pg.draw.line(self.surface, BLACK, (colCoord, self.gridCoordMargin), (colCoord,self.surface.get_height()), GRID_LINE_WIDTH)
+                pg.draw.line(self.surface, BLACK, (colNumberLabelXCoord, self.gridCoordMargin), (colNumberLabelXCoord,self.surface.get_height()), GRID_LINE_WIDTH)
 
         # drawing active cells
 
