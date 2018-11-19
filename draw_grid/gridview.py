@@ -198,6 +198,7 @@ class GridView():
         self.moveViewDown(-zoomYOffset)
 
         self.changed = True
+        print(self.cellSize)
 
     def zoomOut(self):
         midCellBeforeZoom = CenterCell(self)
