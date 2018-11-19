@@ -55,13 +55,13 @@ class BorderCell(Cell):
                     # at the left of the col margin (gridView coord margin where the row/col numbers are displayed)
                     cellSizePx = gridView.cellSize - cellCoordOffset
                     drawnedCellXorYcoordPx = gridView.gridCoordMargin
-                    print(Cell.getExecInfo(gridView))
+                    print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
                 else:
                     # here, the current active cell is behond the gridView coord margin and is drawn entirely
                     cellSizePx = gridView.cellSize
-                    print(Cell.getExecInfo(gridView))
+                    print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
             else:
-                print(Cell.getExecInfo(gridView))
+                print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
                 cellSizePx = gridView.cellSize
         else:
             # here, the current cell x coord is at the left of the left gridView limit
@@ -77,7 +77,7 @@ class BorderCell(Cell):
 
                     cellSizePx = gridView.cellSize - offset + GRID_LINE_WIDTH
                     drawnedCellXorYcoordPx = gridView.gridCoordMargin
-                    print(Cell.getExecInfo(gridView))
+                    print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
                 # else: this case is not possible since activeCellCoordOffset = gridView.gridCoordMargin + negative
                 # value
             elif cellCoordOffset < 0:
@@ -87,7 +87,7 @@ class BorderCell(Cell):
 
                     cellSizePx = gridView.cellSize + offset + GRID_LINE_WIDTH
                     drawnedCellXorYcoordPx = gridView.gridCoordMargin
-                    print(Cell.getExecInfo(gridView))
+                    print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
                 else:
                     # the move offset must account for the number of columns already moved to the left ...
                     offset = currentGridXorYOffsetPx - (GRID_LINE_WIDTH + gridView.cellSize) * cellRowOrColIndex
@@ -95,6 +95,6 @@ class BorderCell(Cell):
                     cellwidth = gridView.cellSize - offset + GRID_LINE_WIDTH
                     cellSizePx = cellwidth
                     drawnedCellXorYcoordPx = gridView.gridCoordMargin
-                    print(Cell.getExecInfo(gridView))
+                    print(Cell.getExecInfo(gridView, cellRowOrColIndex, doComputeX))
 
         return drawnedCellXorYcoordPx, cellSizePx
