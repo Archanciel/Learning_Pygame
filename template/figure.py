@@ -5,7 +5,7 @@ from template.settings import GREEN, WIDTH, HEIGHT
 FPS = 30
 
 
-class Player(pygame.sprite.Sprite):
+class Figure(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface((50, 50))

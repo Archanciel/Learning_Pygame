@@ -6,7 +6,7 @@
 import pygame as pg
 import os
 
-from template.player import Player
+from template.figure import Figure
 from template.settings import *
 
 class Game: 
@@ -24,15 +24,19 @@ class Game:
         pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
+        self.playing = False
         self.running = True
+
+        self.all_sprites = None
+        self.figure = None
 
     def new(self):
         '''
         Starts a new game.
         '''
         self.all_sprites = pg.sprite.Group()
-        self.player = Player()
-        self.all_sprites.add(self.player)
+        self.figure = Figure()
+        self.all_sprites.add(self.figure)
 
     def run(self):
         '''
@@ -68,7 +72,7 @@ class Game:
                 self.running = False
             elif event.type == pg.MOUSEBUTTONDOWN: #on Android, tap the sreen to quit
                 if self.timer == 0:
-            	    self.timer = 0.001
+                    self.timer = 0.001
                     # Click again before 0.5 seconds to double click.
                 elif self.timer < 0.5:
                     # Double click happened
@@ -85,9 +89,9 @@ class Game:
                     self.running = False
                 else:	 
                     if mouse_x < 800: 
-         	           self.player.moveL(10)
+                        self.figure.moveL(10)
                     else:
-                	    self.player.moveR(10)
+                        self.figure.moveR(10)
                     
     def update(self):
         '''
