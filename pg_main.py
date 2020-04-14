@@ -6,21 +6,24 @@
 import pygame as pg
 import os
 
-from player import Player
-from settings import *
+from template.player import Player
+from template.settings import *
 
-class Game:
+class Game: 
     def __init__(self):
         '''
         Initializes game window, etc.
         '''
         # setting Pygame window position
+        self.clock = pg.time.Clock()
+        self.timer = 0
+        self.dt = 0
+
         os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
         pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
-        self.clock = pg.time.Clock()
         self.running = True
 
     def new(self):
@@ -42,6 +45,16 @@ class Game:
             self.handleEvents()
             self.update()
             self.draw()
+            # Increase timer after mouse was pressed the first time.
+            if self.timer != 0:
+                self.timer += self.dt
+            # Reset after 0.5 seconds.
+            if self.timer >= 0.5:
+                self.timer = 0
+        
+            # dt == time in seconds since last tick.
+            # / 1000 to convert milliseconds to seconds.
+            self.dt = self.clock.tick(30) / 1000
 
     def handleEvents(self):
         '''
@@ -54,20 +67,28 @@ class Game:
                     self.playing = False
                 self.running = False
             elif event.type == pg.MOUSEBUTTONDOWN: #on Android, tap the sreen to quit
+                if self.timer == 0:
+            	    self.timer = 0.001
+                    # Click again before 0.5 seconds to double click.
+                elif self.timer < 0.5:
+                    # Double click happened
+                    if self.playing:
+                        self.playing = False
+                    self.running = False
+                    
                 mouse_x, mouse_y = pg.mouse.get_pos()
                 pg.key.get_pressed()
-                if mouse_x < 100:
-                    self.player.moveL(1)
-                else:
-                    self.player.moveR(1)
-
-        keys = pg.key.get_pressed()
-
-        if keys[pg.K_LEFT]:
-            self.player.moveL(1)
-        elif keys[pg.K_RIGHT]:
-            self.player.moveR(1)
-
+                
+                if mouse_y > 2000:
+                    if self.playing:
+                       self.playing = False
+                    self.running = False
+                else:	 
+                    if mouse_x < 800: 
+         	           self.player.moveL(10)
+                    else:
+                	    self.player.moveR(10)
+                    
     def update(self):
         '''
         Updates all game objects.
