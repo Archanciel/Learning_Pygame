@@ -49,16 +49,7 @@ class Game:
             self.handleEvents()
             self.update()
             self.draw()
-            # Increase timer after mouse was pressed the first time.
-            if self.timer != 0:
-                self.timer += self.dt
-            # Reset after 0.5 seconds.
-            if self.timer >= 0.5:
-                self.timer = 0
-        
-            # dt == time in seconds since last tick.
-            # / 1000 to convert milliseconds to seconds.
-            self.dt = self.clock.tick(30) / 1000
+            self.updateTimerForDoubleClick()
 
     def handleEvents(self):
         '''
@@ -70,16 +61,9 @@ class Game:
                 if self.playing:
                     self.playing = False
                 self.running = False
-            elif event.type == pg.MOUSEBUTTONDOWN: #on Android, tap the sreen to quit
-                if self.timer == 0:
-                    self.timer = 0.001
-                    # Click again before 0.5 seconds to double click.
-                elif self.timer < 0.5:
-                    # Double click happened
-                    if self.playing:
-                        self.playing = False
-                    self.running = False
-                    
+            elif event.type == pg.MOUSEBUTTONDOWN: #on Android, double-tap the sreen to quit
+                self.handleDoubleClick()
+
                 mouse_x, mouse_y = pg.mouse.get_pos()
                 pg.key.get_pressed()
                 
@@ -92,7 +76,29 @@ class Game:
                         self.figure.moveL(10)
                     else:
                         self.figure.moveR(10)
-                    
+
+    def updateTimerForDoubleClick(self):
+        # Increase timer after mouse was pressed the first time.
+        if self.timer != 0:
+            self.timer += self.dt
+        # Reset after 0.5 seconds.
+        if self.timer >= 0.07:
+            self.timer = 0
+
+        # dt == time in seconds since last tick.
+        # / 1000 to convert milliseconds to seconds.
+        self.dt = self.clock.tick(FPS) / 2000
+
+    def handleDoubleClick(self):
+        if self.timer == 0:
+            self.timer = 0.001
+            # Click again before 0.5 seconds to double click.
+        elif self.timer < 0.07:
+            # Double click happened
+            if self.playing:
+                self.playing = False
+            self.running = False
+
     def update(self):
         '''
         Updates all game objects.
