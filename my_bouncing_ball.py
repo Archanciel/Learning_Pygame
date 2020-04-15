@@ -35,7 +35,7 @@ class Game:
         Starts a new game.
         '''
         self.all_sprites = pg.sprite.Group()
-        self.figure = Ball(screen=self.screen, color=GREEN, radius=20, startX=0, startY=0, dirX=10, dirY=10)
+        self.figure = Ball(screen=self.screen, color=GREEN, radius=30, startX=0, startY=0, dirX=10, dirY=10)
         self.all_sprites.add(self.figure)
 
     def run(self):
@@ -63,20 +63,7 @@ class Game:
                 self.running = False
             elif event.type == pg.MOUSEBUTTONDOWN: #on Android, tap the sreen to quit
                 self.handleDoubleClick()
-                    
-                mouse_x, mouse_y = pg.mouse.get_pos()
-                pg.key.get_pressed()
-                
-                if mouse_y > 2000:
-                    if self.playing:
-                       self.playing = False
-                    self.running = False
-                else:	 
-                    if mouse_x < 800: 
-                        self.figure.moveL(10)
-                    else:
-                        self.figure.moveR(10)
-                    
+                                        
     def updateTimerForDoubleClick(self):
         # Increase timerDC after mouse was pressed the first time.
         if self.timerDC != 0:
@@ -111,6 +98,7 @@ class Game:
         '''
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
+        
         # *after* drawing everything, flip the display
         pg.display.flip()
 
