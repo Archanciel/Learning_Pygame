@@ -1,8 +1,8 @@
 # game options/settings
 TITLE = "Jumpy!"
 WINDOWS_LOCATION = '100,100'
-WIDTH = 480
-HEIGHT = 600
+WIDTH = 1000
+HEIGHT = 700
 FPS = 60
 
 # define colors
