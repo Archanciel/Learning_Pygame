@@ -10,15 +10,19 @@ pygame.display.set_caption('Bouncing Ball with classes')
 # Set our color constants
 
 BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
 # Create the ball class
 
-class Ball():
+class Ball(pygame.sprite.Sprite):
     # This code gets executed as soon as we create a new instance
     def __init__(self, color, x, y, radius, speed):
+        super().__init__() 
         self.color = color
-        self.rect = pygame.Rect(x, y, radius * 2, radius * 2)
+        rectSize = radius * 2
+        self.image = pygame.Surface((rectSize, rectSize))
+        self.rect = self.image.get_rect()
+        pygame.draw.circle(self.image, self.color, self.rect.center, int(self.rect.width / 2))
         self.speed = [speed, speed]
 
     # Update our game state by moving and bouncing if needed
@@ -34,13 +38,15 @@ class Ball():
 
     # Draw our ball to the screen
 
-    def draw(self):
-        pygame.draw.circle(DISPLAYSURF, self.color, self.rect.center, int(self.rect.width / 2))
+#    def draw(self): NO LONGER USED DUE TO BALL INHERITING FROM SPRITE !!!
+#        pygame.draw.circle(self.image, self.color, self.rect.center, int(self.rect.width / 2))
 
 
 # Create a new Ball instance named 'myball'
+all_sprites = pygame.sprite.Group()
+myball = Ball(RED, 100, 100, 25, 15)
+all_sprites.add(myball)
 
-myball = Ball(WHITE, 100, 100, 25, 15)
 run = True
 clock = pygame.time.Clock()
 timer = 0
@@ -70,7 +76,7 @@ while run:
     # Draw screen
 
     DISPLAYSURF.fill(BLACK)
-    myball.draw()
+    all_sprites.draw(DISPLAYSURF)
     pygame.display.update()
     
     # Increase timer after mouse was pressed the first time.
