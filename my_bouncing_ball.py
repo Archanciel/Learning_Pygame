@@ -28,15 +28,16 @@ class Game:
         self.running = True
 
         self.all_sprites = None
-        self.figure = None
 
     def new(self):
         '''
         Starts a new game.
         '''
         self.all_sprites = pg.sprite.Group()
-        self.figure = Ball(screen=self.screen, color=GREEN, radius=30, startX=0, startY=0, dirX=10, dirY=10)
-        self.all_sprites.add(self.figure)
+        figure = Ball(screen=self.screen, color=GREEN, radius=30, startX=50, startY=50, dirX=10, dirY=10)
+        self.all_sprites.add(figure)
+        figure = Ball(screen=self.screen, color=RED, radius=30, startX=500, startY=600, dirX=15, dirY=15)
+        self.all_sprites.add(figure)
 
     def run(self):
         '''
