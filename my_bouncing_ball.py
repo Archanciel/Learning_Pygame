@@ -34,10 +34,16 @@ class Game:
         Starts a new game.
         '''
         self.all_sprites = pg.sprite.Group()
-        figure = Ball(screen=self.screen, color=GREEN, radius=30, startX=50, startY=50, dirX=10, dirY=10)
-        self.all_sprites.add(figure)
-        figure = Ball(screen=self.screen, color=RED, radius=30, startX=500, startY=600, dirX=15, dirY=15)
-        self.all_sprites.add(figure)
+        if os.name == 'posix':
+            figure = Ball(screen=self.screen, color=GREEN, radius=30, startX=50, startY=50, dirX=10, dirY=10)
+            self.all_sprites.add(figure)
+            figure = Ball(screen=self.screen, color=RED, radius=30, startX=500, startY=600, dirX=15, dirY=15)
+            self.all_sprites.add(figure)
+        else:
+            figure = Ball(screen=self.screen, color=GREEN, radius=20, startX=50, startY=50, dirX=3, dirY=3)
+            self.all_sprites.add(figure)
+            figure = Ball(screen=self.screen, color=RED, radius=20, startX=500, startY=600, dirX=4, dirY=4)
+            self.all_sprites.add(figure)
 
     def run(self):
         '''
