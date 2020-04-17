@@ -51,7 +51,7 @@ class Ball():
 ball_list = []
 
 # Create a list of 10 Ball instances
-for i in range(10):
+for i in range(1, 11):
     colIdx = random.randrange(0, 4)
     ball_list.append(Ball(COLORS[colIdx], i * 60, i * 45, max(i * 3, 20), min(i * 2, 8)))
 
