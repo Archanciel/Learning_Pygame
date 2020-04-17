@@ -4,12 +4,14 @@
 # Project setup
 
 import pygame as pg
-import os
+import os, random
 
 from ball import Ball
 from settings import *
 
-class Game: 
+COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
+
+class Game:	 
     def __init__(self):
         '''
         Initializes game window, etc.
@@ -33,12 +35,21 @@ class Game:
         '''
         Starts a new game.
         '''
+        
+        # Create multiple sprite Ball instances
         self.all_sprites = pg.sprite.Group()
-        figure = Ball(screen=self.screen, color=GREEN, radius=30, startX=50, startY=50, dirX=10, dirY=10)
-        self.all_sprites.add(figure)
-        figure = Ball(screen=self.screen, color=RED, radius=30, startX=500, startY=600, dirX=15, dirY=15)
-        self.all_sprites.add(figure)
 
+        for i in range(1, 10):
+            colIdx = random.randrange(0, 4)
+            ball = Ball(screen=self.screen,
+                        spriteGroup=self.all_sprites,
+                        color=COLORS[colIdx],
+                        radius=max(i * 3, 20),
+                        startX=i * 60,
+                        startY= i * 45,
+                        speed=min(i * 2, 8))   
+            self.all_sprites.add(ball)
+            
     def run(self):
         '''
         Is the game loop.
