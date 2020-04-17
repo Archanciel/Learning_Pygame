@@ -3,7 +3,7 @@ TITLE = "Jumpy!"
 WINDOWS_LOCATION = '100,100'
 WIDTH = 1000
 HEIGHT = 700
-FPS = 60
+FPS = 600
 
 # define colors
 WHITE = (255, 255, 255)

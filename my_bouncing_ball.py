@@ -69,19 +69,19 @@ class Game:
         # Increase timerDC after mouse was pressed the first time.
         if self.timerDC != 0:
             self.timerDC += self.dt
-        # Reset after 0.5 seconds.
-        if self.timerDC >= 0.07:
+        # Reset after 0.1 seconds.
+        if self.timerDC >= 0.1:
             self.timerDC = 0
 
         # dt == time in seconds since last tick.
-        # / 1000 to convert milliseconds to seconds.
-        self.dt = self.clock.tick(FPS) / 2000
+        # / 1000 to convert milliseconds to 10th of seconds.
+        self.dt = self.clock.tick(FPS) / 10000
 
     def handleDoubleClick(self):
         if self.timerDC == 0:
-            self.timerDC = 0.001
-            # Click again before 0.5 seconds to double click.
-        elif self.timerDC < 0.07:
+            self.timerDC = 0.01
+            # Click again before 0.1 seconds to double click.
+        elif self.timerDC < 0.1:
             # Double click happened
             if self.playing:
                 self.playing = False
