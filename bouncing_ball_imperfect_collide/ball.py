@@ -22,7 +22,7 @@ class Ball(pg.sprite.Sprite):
 #		self.rect.left = startX
 #		self.rect.top = startY
 		self.speed = speed
-		self.angle = angle
+		self.angle = math.radians(-angle)
 		pg.draw.circle(self.image, self.color, self.rect.center, int(self.rect.width / 2))
 
 	def update(self):
