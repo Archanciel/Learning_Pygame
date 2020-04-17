@@ -41,13 +41,24 @@ class Game:
 
         for i in range(1, 10):
             colIdx = random.randrange(0, 4)
-            ball = Ball(screen=self.screen,
-                        allBalls=self.allBalls,
-                        color=COLORS[colIdx],
-                        radius=max(i * 3, 20),
-                        startX=i * 60,
-                        startY= i * 45,
-                        speed=min(i * 3, 8))   
+
+            if os.name == 'posix':
+                ball = Ball(screen=self.screen,
+                            allBalls=self.allBalls,
+                            color=COLORS[colIdx],
+                            radius=max(i * 3, 20),
+                            startX=i * 60,
+                            startY= i * 45,
+                            speed=min(i * 3, 8))
+            else:
+                ball = Ball(screen=self.screen,
+                            allBalls=self.allBalls,
+                            color=COLORS[colIdx],
+                            radius=max(i * 3, 10),
+                            startX=i * 60,
+                            startY=i * 45,
+                            speed=min(i * 2, 4))
+
             self.allBalls.append(ball)
             
     def run(self):
