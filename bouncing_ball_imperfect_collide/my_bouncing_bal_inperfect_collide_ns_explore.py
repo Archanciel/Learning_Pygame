@@ -21,6 +21,11 @@ class Game:
         self.timerDC = 0
         self.dt = 0
 
+        if os.name == 'posix':
+            self.fps = FPS
+        else:
+            self.fps = FPS / 2
+
         os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
         pg.init()
@@ -68,7 +73,7 @@ class Game:
         self.playing = True
 
         while self.playing:
-            self.clock.tick(FPS)
+            self.clock.tick(self.fps)
             self.handleEvents()
             self.update()
             self.draw()
