@@ -45,8 +45,9 @@ class Ball(pg.sprite.Sprite):
 		xDiff = (self.rect.centerx - ball.rect.centerx)
 		yDiff = (self.rect.centery - ball.rect.centery)
 		hSquare = xDiff * xDiff + yDiff * yDiff
+		radiuses = self.rect.width / 2 + ball.rect.width / 2
 		
-		return hSquare <= self.rect.width + ball.rect.width
+		return hSquare <= radiuses * radiuses
 								
 	# Draw our ball to the screen
 	def draw(self):
