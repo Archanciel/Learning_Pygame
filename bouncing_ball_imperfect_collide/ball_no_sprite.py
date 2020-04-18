@@ -42,12 +42,15 @@ class Ball(pg.sprite.Sprite):
 				break
 
 	def collideBall(self, ball):
+		'''
+		Returns True if self collides with ball.
+		'''
 		xDiff = (self.rect.centerx - ball.rect.centerx)
 		yDiff = (self.rect.centery - ball.rect.centery)
-		hSquare = xDiff * xDiff + yDiff * yDiff
-		radiuses = self.rect.width / 2 + ball.rect.width / 2
+		hypothenuseSquared = xDiff * xDiff + yDiff * yDiff
+		sumOfRadiuses = self.rect.width / 2 + ball.rect.width / 2
 
-		return hSquare <= radiuses * radiuses
+		return hypothenuseSquared <= sumOfRadiuses * sumOfRadiuses
 
 	# Draw our ball to the screen
 	def draw(self):
