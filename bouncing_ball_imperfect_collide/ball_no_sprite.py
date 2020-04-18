@@ -35,12 +35,20 @@ class Ball(pg.sprite.Sprite):
 		if self.rect.top <= 0 or self.rect.bottom >= self.screen.get_height():
 			self.angle = -self.angle
 			hit_bounds = True
-				
+
 		for ball in self.allBalls:
-			if not hit_bounds and not ball is self and self.rect.colliderect(ball.rect):
+			if not hit_bounds and not ball is self and self.collideBall(ball):
 				self.angle = self.angle - math.pi
 				break
-				
+
+	def collideBall(self, ball):
+		xDiff = (self.rect.centerx - ball.rect.centerx)
+		yDiff = (self.rect.centery - ball.rect.centery)
+		hSquare = xDiff * xDiff + yDiff * yDiff
+		radiuses = self.rect.width / 2 + ball.rect.width / 2
+
+		return hSquare <= radiuses * radiuses
+
 	# Draw our ball to the screen
 	def draw(self):
 		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
