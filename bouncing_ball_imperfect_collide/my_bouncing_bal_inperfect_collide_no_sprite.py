@@ -51,10 +51,10 @@ class Game:
                 ball = Ball(screen=self.screen,
                             allBalls=self.allBalls,
                             color=COLORS[colIdx],
-                            radius=max(i * 3, 20),
-                            startX=i * 60,
-                            startY= i * 45,
-                            speed=min(i * 3, 8))
+                            radius=min(i * 10, 70),
+                            startX=i * 160,
+                            startY= i * 140,
+                            speed=min(i * 4, 8))
             else:
                 ball = Ball(screen=self.screen,
                             allBalls=self.allBalls,
