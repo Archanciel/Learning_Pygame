@@ -9,7 +9,7 @@ import os, random
 from ball_no_sprite import Ball
 from settings import *
 
-COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
+COLORS = [WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, ORANGE]
 
 class Game:	 
     def __init__(self):
@@ -35,6 +35,21 @@ class Game:
         self.running = True
 
         self.allBalls = None
+        self.usedColIdx = []
+        
+    def getRandomColor(self):
+        colIdx = random.randrange(0, 8)
+
+        while colIdx in self.usedColIdx:
+            colIdx = random.randrange(0, 8)
+            
+        self.usedColIdx.append(colIdx)
+        
+        if len(self.usedColIdx) >= len(COLORS):
+            self.usedColIdx = []
+            self.usedColIdx.append(colIdx)
+    	        
+        return COLORS[colIdx]
 
     def new(self):
         '''
@@ -45,12 +60,11 @@ class Game:
         self.allBalls = []
 
         for i in range(1, 10):
-            colIdx = random.randrange(0, 4)
 
             if os.name == 'posix':
                 ball = Ball(screen=self.screen,
                             allBalls=self.allBalls,
-                            color=COLORS[colIdx],
+                            color=self.getRandomColor(),
                             radius=min(i * 10, 70),
                             startX=i * 160,
                             startY= i * 140,
@@ -58,7 +72,7 @@ class Game:
             else:
                 ball = Ball(screen=self.screen,
                             allBalls=self.allBalls,
-                            color=COLORS[colIdx],
+                            color=self.getRandomColor(),
                             radius=max(i * 3, 10),
                             startX=i * 60,
                             startY=i * 45,
