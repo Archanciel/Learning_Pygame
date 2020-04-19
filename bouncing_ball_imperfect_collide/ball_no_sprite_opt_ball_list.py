@@ -7,7 +7,6 @@ class Ball(pg.sprite.Sprite):
 	             screen, 
 	             allBalls, 
 	             index,
-				 ballNumber,
 	             color, 
 	             radius, 
 	             startX, 
@@ -17,8 +16,8 @@ class Ball(pg.sprite.Sprite):
 		super().__init__()
 		self.screen = screen
 		self.allBalls = allBalls
+		self.ballNumber = len(allBalls)
 		self.index = index
-		self.maxBallIndex = ballNumber - 1
 		self.color = color
 		rectSize = radius * 2
 		self.rect = pg.Rect(startX, startY, rectSize, rectSize)
@@ -40,9 +39,9 @@ class Ball(pg.sprite.Sprite):
 			self.angle = -self.angle
 			hit_bounds = True
 
-		for i in range(self.index + 1, self.maxBallIndex):
+		for i in range(self.index + 1, self.ballNumber):
 			ball = self.allBalls[i]
-			if not hit_bounds and self.collideBall(ball):
+			if not hit_bounds and not ball is self and self.collideBall(ball):
 				self.angle = self.angle - math.pi
 				break
 
@@ -54,9 +53,8 @@ class Ball(pg.sprite.Sprite):
 		yDiff = (self.rect.centery - ball.rect.centery)
 		hypothenuseSquared = xDiff * xDiff + yDiff * yDiff
 		sumOfRadiuses = self.rect.width / 2 + ball.rect.width / 2
-		bang = hypothenuseSquared <= sumOfRadiuses * sumOfRadiuses
 
-		return bang
+		return hypothenuseSquared <= sumOfRadiuses * sumOfRadiuses
 
 	# Draw our ball to the screen
 	def draw(self):

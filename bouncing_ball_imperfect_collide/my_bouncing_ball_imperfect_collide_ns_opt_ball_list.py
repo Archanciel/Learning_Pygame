@@ -24,7 +24,7 @@ class Game:
         if os.name == 'posix':
             self.fps = FPS
         else:
-            self.fps = FPS / 20
+            self.fps = FPS / 2
 
         os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
@@ -35,7 +35,6 @@ class Game:
         self.running = True
 
         self.allBalls = None
-        self.ballNumber = 10
 
     def new(self):
         '''
@@ -45,14 +44,13 @@ class Game:
         # Create multiple sprite Ball instances
         self.allBalls = []
 
-        for i in range(1, self.ballNumber + 1):
+        for i in range(1, 10):
             colIdx = random.randrange(0, 4)
 
             if os.name == 'posix':
                 ball = Ball(screen=self.screen,
                             allBalls=self.allBalls,
                             index=i - 1,
-                            ballNumber=self.ballNumber,
                             color=COLORS[colIdx],
                             radius=min(i * 10, 70),
                             startX=i * 160,
@@ -62,7 +60,6 @@ class Game:
                 ball = Ball(screen=self.screen,
                             allBalls=self.allBalls,
                             index=i - 1,
-                            ballNumber=self.ballNumber,
                             color=COLORS[colIdx],
                             radius=max(i * 3, 10),
                             startX=i * 60,
