@@ -20,7 +20,11 @@ class Ball(pg.sprite.Sprite):
 		self.rect = pg.Rect(startX, startY, rectSize, rectSize)
 		self.speed = speed
 		self.angle = math.radians(-angle)
-		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
+		self.font = pg.font.Font(None, 32)
+		self.font_height = self.font.get_linesize()
+		self.textLeftMargin = self.rect.width / 4
+		self.textTopMargin = radius - self.font_height / 2
+		self.text_color = BLACK
 
 	def update(self):
 		delta_x = self.speed * math.cos(self.angle)
@@ -52,3 +56,18 @@ class Ball(pg.sprite.Sprite):
 	# Draw our ball to the screen
 	def draw(self):
 		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
+		lines = []
+		lines.append('x: ' + str(int(self.rect.centerx)) + ' y: ' + str(int(self.rect.centery)))
+		lines.append('angle: ' + str(int(math.degrees(self.angle))))
+        
+		self.images = []  # The text surfaces.
+                
+		for line in lines:
+			surf = self.font.render(line, True, self.text_color)
+			self.images.append(surf)
+        	
+		for y, surf in enumerate(self.images):
+            # Don't blit below the rect area.
+			if y * self.font_height + self.font_height > self.rect.h:
+				break
+			self.screen.blit(surf, (self.rect.x + self.textLeftMargin, self.rect.y + self.textTopMargin + y*self.font_height))
