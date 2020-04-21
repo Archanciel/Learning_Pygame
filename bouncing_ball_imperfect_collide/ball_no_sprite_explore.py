@@ -2,11 +2,11 @@ import pygame as pg
 import math
 from settings import *
 
-class Ball(pg.sprite.Sprite):
+class Ball():
 	def __init__(self, 
 	             screen, 
 	             allBalls, 
-	             color, 
+	             color,
 	             radius, 
 	             startX, 
 	             startY, 
