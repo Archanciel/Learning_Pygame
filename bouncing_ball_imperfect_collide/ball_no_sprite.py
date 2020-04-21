@@ -20,7 +20,6 @@ class Ball(pg.sprite.Sprite):
 		self.rect = pg.Rect(startX, startY, rectSize, rectSize)
 		self.speed = speed
 		self.angle = math.radians(-angle)
-		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
 
 	def update(self):
 		delta_x = self.speed * math.cos(self.angle)
