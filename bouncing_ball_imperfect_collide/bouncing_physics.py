@@ -10,6 +10,7 @@ from ball_no_sprite_explore import Ball
 from settings import *
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
+secondBall = False
 
 class Game:	 
     def __init__(self):
@@ -50,9 +51,10 @@ class Game:
                         allBalls=self.allBalls,
                         color=YELLOW,
                         radius=250,
-                        startX=150,
-                        startY=750,
-                        speed=2)
+                        startX=950,
+                        startY=100,
+                        speed=6,
+                        angle=-80)
         else:
             ball = Ball(screen=self.screen,
                         allBalls=self.allBalls,
@@ -67,25 +69,27 @@ class Game:
         colIdx = random.randrange(0, 4)
 
         # second ball
-        if os.name == 'posix':
-            ball = Ball(screen=self.screen,
-                        allBalls=self.allBalls,
-                        color=GREEN,
-                        radius=250,
-                        startX=600,
-                        startY=1700,
-                        speed=2,
-                        angle=45)
-        else:
-            ball = Ball(screen=self.screen,
-                        allBalls=self.allBalls,
-                        color=GREEN,
-                        radius=100,
-                        startX=2 * 200,
-                        startY=2 * 100,
-                        speed=2)
+        
+        if secondBall:
+            if os.name == 'posix':
+                ball = Ball(screen=self.screen,
+                            allBalls=self.allBalls,
+                            color=GREEN,
+                            radius=250,
+                            startX=600,
+                            startY=1700,
+                            speed=2,
+                            angle=-45)
+            else:
+                ball = Ball(screen=self.screen,
+                            allBalls=self.allBalls,
+                            color=GREEN,
+                            radius=100,
+                            startX=2 * 200,
+                            startY=2 * 100,
+                            speed=2)
 
-        self.allBalls.append(ball)
+            self.allBalls.append(ball)
             
     def run(self):
         '''
