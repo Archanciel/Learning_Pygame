@@ -6,7 +6,6 @@ class TextBox:
     def __init__(self, pos, font, bg_color, text_color=(255, 255, 255)):
         self.font = font
         self.font_height = font.get_linesize()
-        self.text = text.split()  # Single words.
         self.rect = pg.Rect(pos, (200, 200))
         self.bg_color = bg_color
         self.text_color = text_color
@@ -48,8 +47,8 @@ screen = pg.display.set_mode((800, 600))
 clock = pg.time.Clock()
 FONT = pg.font.Font(None, 22)
 selected_box = None
-textbox = TextBox(text, (50, 50), FONT, (20, 50, 120))
-textbox2 = TextBox(text, (350, 100), pg.font.Font(None, 22), (20, 80, 60))
+textbox = TextBox((50, 50), FONT, (20, 50, 120))
+textbox2 = TextBox((350, 100), pg.font.Font(None, 22), (20, 80, 60))
 
 done = False
 while not done:
