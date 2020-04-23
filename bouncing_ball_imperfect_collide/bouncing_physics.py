@@ -8,6 +8,7 @@ import os, random
 
 from ball_no_sprite_explore import Ball
 from settings import *
+import math
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
 secondBall = False
@@ -36,6 +37,9 @@ class Game:
         self.running = True
 
         self.allBalls = None
+        self.trajectPoints = []
+        self.previousX = 0
+        self.previousY = 0
 
     def new(self):
         '''
@@ -50,11 +54,11 @@ class Game:
             ball = Ball(screen=self.screen,
                         allBalls=self.allBalls,
                         color=YELLOW,
-                        radius=250,
-                        startX=950,
+                        radius=150,
+                        startX=550,
                         startY=100,
                         speed=6,
-                        angle=-80)
+                        angle=-45)
         else:
             ball = Ball(screen=self.screen,
                         allBalls=self.allBalls,
@@ -62,7 +66,8 @@ class Game:
                         radius=100,
                         startX=1 * 200,
                         startY=1 * 100,
-                        speed=2)
+                        speed=2,
+                        angle=-45)
 
         self.allBalls.append(ball)
         
@@ -78,7 +83,7 @@ class Game:
                             radius=250,
                             startX=600,
                             startY=1700,
-                            speed=2,
+                            speed=8,
                             angle=-45)
             else:
                 ball = Ball(screen=self.screen,
@@ -96,11 +101,15 @@ class Game:
         Is the game loop.
         '''
         self.playing = True
+        self.pause = False
 
         while self.playing:
             self.clock.tick(self.fps)
             self.handleEvents()
-            self.update()
+
+            if not self.pause:
+                self.update()
+
             self.draw()
             self.updateTimerForDoubleClick()
 
@@ -136,11 +145,16 @@ class Game:
             # Click again before 0.1 seconds to double click.
         elif self.timerDC < 0.1:
             # Double click happened
+            if not self.pause:
+                self.pause = True
+            else:
+                self.pause = False
+            '''
             if self.playing:
                 self.playing = False
                 
             self.running = False
-
+            '''
     def update(self):
         '''
         Updates all game objects.
@@ -153,10 +167,10 @@ class Game:
         Redraws all game objects.
         '''
         self.screen.fill(BLACK)
-        
+
         for ball in self.allBalls: 
             ball.draw()
-        
+           
         # *after* drawing everything, flip the display
         pg.display.flip()
 

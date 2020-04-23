@@ -2,11 +2,11 @@ import pygame as pg
 import math
 from settings import *
 
-class Ball():
+class Ball(pg.sprite.Sprite):
 	def __init__(self, 
 	             screen, 
 	             allBalls, 
-	             color,
+	             color, 
 	             radius, 
 	             startX, 
 	             startY, 
@@ -20,11 +20,16 @@ class Ball():
 		self.rect = pg.Rect(startX, startY, rectSize, rectSize)
 		self.speed = speed
 		self.angle = math.radians(-angle)
+
 		self.font = pg.font.Font(None, 32)
 		self.font_height = self.font.get_linesize()
 		self.textLeftMargin = self.rect.width / 4
 		self.textTopMargin = radius - self.font_height / 2
 		self.text_color = BLACK
+
+		self.trajectPoints = []
+		self.previousX = 0
+		self.previousY = 0
 
 	def update(self):
 		delta_x = self.speed * math.cos(self.angle)
@@ -39,7 +44,11 @@ class Ball():
 		if self.rect.top <= 0 or self.rect.bottom >= self.screen.get_height():
 			self.angle = -self.angle
 			hit_bounds = True
-				
+
+		if hit_bounds:
+			self.previousX = 0
+			self.previousY = 0
+
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
 				self.angle = self.angle - math.pi
@@ -58,7 +67,7 @@ class Ball():
 		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
 		lines = []
 		lines.append('x: ' + str(int(self.rect.centerx)) + ' y: ' + str(int(self.rect.centery)))
-		lines.append('angle: ' + str(int(math.degrees(self.angle))))
+		lines.append('angle: ' + str(-int(math.degrees(self.angle))))
         
 		self.images = []  # The text surfaces.
                 
@@ -71,3 +80,21 @@ class Ball():
 			if y * self.font_height + self.font_height > self.rect.h:
 				break
 			self.screen.blit(surf, (self.rect.x + self.textLeftMargin, self.rect.y + self.textTopMargin + y*self.font_height))
+
+		if self.angle >= 0:
+			a = (self.rect.centerx - self.rect.left) / math.sin(self.angle) * math.cos(self.angle)
+			x = self.rect.left
+			y = self.rect.centery - a
+		else:
+			a = self.rect.centery + self.rect.height / 2
+			o = a * math.sin(-self.angle) / math.cos(-self.angle)
+			x = self.rect.centerx - o
+			y = a
+
+		if x - self.previousX > 20 and y - self.previousY > 20:
+			self.trajectPoints.append(pg.Rect(x, y, 2, 2))
+			self.previousX = x
+			self.previousY = y
+
+		for point in self.trajectPoints:
+			pg.draw.circle(self.screen, GREEN, point.center, 2)
