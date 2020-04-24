@@ -57,6 +57,7 @@ class Ball():
     	'''
         pygame.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
         
+        # Writing information on the ball
         textLines = [None] * self.lineNumber
         textLines[0] = 'x: ' + str(int(self.rect.centerx))
         textLines[1] = 'y: ' + str(int(self.rect.centery))
