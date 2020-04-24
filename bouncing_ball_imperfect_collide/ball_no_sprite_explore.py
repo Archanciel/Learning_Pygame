@@ -21,11 +21,18 @@ class Ball(pg.sprite.Sprite):
 		self.speed = speed
 		self.angle = math.radians(-angle)
 
+        # Position related instance variables
 		self.font = pg.font.Font(None, 32)
 		self.font_height = self.font.get_linesize()
-		self.textLeftMargin = self.rect.width / 4
-		self.textTopMargin = radius - self.font_height / 2
-		self.text_color = BLACK
+        
+        # Calculating the left margin based on longest possible text
+		texthorizontalSize = self.font.size("angle: 360")[0]
+		self.textLeftMargin = (self.rect.width - texthorizontalSize) / 2
+        
+        # Calculating the top margin based on the number of text lines
+		self.lineNumber = 3
+		self.textTopMargin = radius - (self.font_height * self.lineNumber / 2)
+		self.textColor = BLACK
 
 		self.trajectPoints = []
 		self.previousX = 0
@@ -65,14 +72,17 @@ class Ball(pg.sprite.Sprite):
 	# Draw our ball to the screen
 	def draw(self):
 		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
-		lines = []
-		lines.append('x: ' + str(int(self.rect.centerx)) + ' y: ' + str(int(self.rect.centery)))
-		lines.append('angle: ' + str(-int(math.degrees(self.angle))))
+        
+        # Writing information on the ball
+		textLines = [None] * self.lineNumber
+		textLines[0] = 'x: ' + str(int(self.rect.centerx))
+		textLines[1] = 'y: ' + str(int(self.rect.centery))
+		textLines[2] = 'angle: ' + str(int(math.degrees(self.angle)))
         
 		self.images = []  # The text surfaces.
                 
-		for line in lines:
-			surf = self.font.render(line, True, self.text_color)
+		for line in textLines:
+			surf = self.font.render(line, True, self.textColor)
 			self.images.append(surf)
         	
 		for y, surf in enumerate(self.images):
