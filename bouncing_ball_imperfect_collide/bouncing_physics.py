@@ -31,7 +31,18 @@ class Game:
         os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
         pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+
+        width = 0
+        height = 0
+
+        if os.name == 'posix':
+            width = TABLET_WIDTH
+            height = TABLET_HEIGHT
+        else:
+            width = PC_WIDTH
+            height = PC_HEIGHT
+
+        self.screen = pg.display.set_mode((width, height))
         pg.display.set_caption(TITLE)
         self.playing = False
         self.running = True
@@ -63,7 +74,7 @@ class Game:
             ball = Ball(screen=self.screen,
                         allBalls=self.allBalls,
                         color=YELLOW,
-                        radius=100,
+                        radius=70,
                         startX=1 * 200,
                         startY=1 * 100,
                         speed=2,

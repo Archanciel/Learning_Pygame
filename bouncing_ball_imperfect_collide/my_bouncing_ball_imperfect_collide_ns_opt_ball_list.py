@@ -29,7 +29,7 @@ class Game:
         os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
         pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pg.display.set_mode((TABLET_WIDTH, TABLET_HEIGHT))
         pg.display.set_caption(TITLE)
         self.playing = False
         self.running = True

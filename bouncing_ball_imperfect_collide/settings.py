@@ -1,8 +1,10 @@
 # game options/settings
 TITLE = "My bouncing ball imperfect collission"
-WINDOWS_LOCATION = '100,50'
-WIDTH = 1000
-HEIGHT = 700
+WINDOWS_LOCATION = '100,15'
+TABLET_WIDTH = 1000
+TABLET_HEIGHT = 700
+PC_WIDTH = 800
+PC_HEIGHT = 850
 FPS = 600
 
 # define colors
