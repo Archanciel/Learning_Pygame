@@ -14,195 +14,195 @@ COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
 secondBall = False
 
 class Game:	 
-    def __init__(self):
-        '''
-        Initializes game window, etc.
-        '''
-        # setting Pygame window position
-        self.clock = pg.time.Clock()
-        self.timerDC = 0
-        self.dt = 0
+	def __init__(self):
+		'''
+		Initializes game window, etc.
+		'''
+		# setting Pygame window position
+		self.clock = pg.time.Clock()
+		self.timerDC = 0
+		self.dt = 0
 
-        if os.name == 'posix':
-            self.fps = FPS
-        else:
-            self.fps = FPS / 2
+		if os.name == 'posix':
+			self.fps = FPS
+		else:
+			self.fps = FPS / 2
 
-        os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
+		os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
-        pg.init()
+		pg.init()
 
-        width = 0
-        height = 0
+		width = 0
+		height = 0
 
-        if os.name == 'posix':
-            width = TABLET_WIDTH
-            height = TABLET_HEIGHT
-        else:
-            width = PC_WIDTH
-            height = PC_HEIGHT
+		if os.name == 'posix':
+			width = TABLET_WIDTH
+			height = TABLET_HEIGHT
+		else:
+			width = PC_WIDTH
+			height = PC_HEIGHT
 
-        self.screen = pg.display.set_mode((width, height))
-        pg.display.set_caption(TITLE)
-        self.playing = False
-        self.running = True
+		self.screen = pg.display.set_mode((width, height))
+		pg.display.set_caption(TITLE)
+		self.playing = False
+		self.running = True
 
-        self.allBalls = None
-        self.trajectPoints = []
-        self.previousX = 0
-        self.previousY = 0
+		self.allBalls = None
+		self.trajectPoints = []
+		self.previousX = 0
+		self.previousY = 0
 
-    def new(self):
-        '''
-        Starts a new game.
-        '''
-        
-        # Create multiple sprite Ball instances
-        self.allBalls = []
+	def new(self):
+		'''
+		Starts a new game.
+		'''
 
-        # first ball
-        if os.name == 'posix':
-            ball = Ball(screen=self.screen,
-                        allBalls=self.allBalls,
-                        color=YELLOW,
-                        radius=150,
-                        startX=550,
-                        startY=100,
-                        speed=6,
-                        angle=-45)
-        else:
-            ball = Ball(screen=self.screen,
-                        allBalls=self.allBalls,
-                        color=YELLOW,
-                        radius=70,
-                        startX=1 * 200,
-                        startY=1 * 100,
-                        speed=2,
-                        angle=-45)
+		# Create multiple sprite Ball instances
+		self.allBalls = []
 
-        self.allBalls.append(ball)
-        
-        colIdx = random.randrange(0, 4)
+		# first ball
+		if os.name == 'posix':
+			ball = Ball(screen=self.screen,
+						allBalls=self.allBalls,
+						color=YELLOW,
+						radius=150,
+						startX=550,
+						startY=100,
+						speed=6,
+						angle=-45)
+		else:
+			ball = Ball(screen=self.screen,
+						allBalls=self.allBalls,
+						color=YELLOW,
+						radius=70,
+						startX=1 * 200,
+						startY=1 * 100,
+						speed=2,
+						angle=-45)
 
-        # second ball
-        
-        if secondBall:
-            if os.name == 'posix':
-                ball = Ball(screen=self.screen,
-                            allBalls=self.allBalls,
-                            color=GREEN,
-                            radius=250,
-                            startX=600,
-                            startY=1700,
-                            speed=8,
-                            angle=-45)
-            else:
-                ball = Ball(screen=self.screen,
-                            allBalls=self.allBalls,
-                            color=GREEN,
-                            radius=100,
-                            startX=2 * 200,
-                            startY=2 * 100,
-                            speed=2)
+		self.allBalls.append(ball)
 
-            self.allBalls.append(ball)
-            
-    def run(self):
-        '''
-        Is the game loop.
-        '''
-        self.playing = True
-        self.pause = False
+		colIdx = random.randrange(0, 4)
 
-        while self.playing:
-            self.clock.tick(self.fps)
-            self.handleEvents()
+		# second ball
 
-            if not self.pause:
-                self.update()
+		if secondBall:
+			if os.name == 'posix':
+				ball = Ball(screen=self.screen,
+							allBalls=self.allBalls,
+							color=GREEN,
+							radius=250,
+							startX=600,
+							startY=1700,
+							speed=8,
+							angle=-45)
+			else:
+				ball = Ball(screen=self.screen,
+							allBalls=self.allBalls,
+							color=GREEN,
+							radius=100,
+							startX=2 * 200,
+							startY=2 * 100,
+							speed=2)
 
-            self.draw()
-            self.updateTimerForDoubleClick()
+			self.allBalls.append(ball)
 
-    def handleEvents(self):
-        '''
-        Acquires and handles events.
-        '''
-        for event in pg.event.get():
-            # check for closing window
-            if event.type == pg.QUIT:
-                if self.playing:
-                    self.playing = False
-                self.running = False
-            elif event.type == pg.MOUSEBUTTONDOWN: #on Android, tap the sreen to quit
-                self.handleDoubleClick()
-                                        
-    def updateTimerForDoubleClick(self):
-        # Increase timerDC after mouse was pressed the first time.
-        if self.timerDC != 0:
-            self.timerDC += self.dt
-            
-        # Reset after 0.5 seconds.
-        if self.timerDC >= 0.1:
-            self.timerDC = 0
+	def run(self):
+		'''
+		Is the game loop.
+		'''
+		self.playing = True
+		self.pause = False
 
-        # dt == time in seconds since last tick.
-        # / 1000 to convert milliseconds to 10th of seconds.
-        self.dt = self.clock.tick(FPS) / 10000
+		while self.playing:
+			self.clock.tick(self.fps)
+			self.handleEvents()
 
-    def handleDoubleClick(self):
-        if self.timerDC == 0:
-            self.timerDC = 0.01
-            # Click again before 0.1 seconds to double click.
-        elif self.timerDC < 0.1:
-            # Double click happened
-            if not self.pause:
-                self.pause = True
-            else:
-                self.pause = False
-            '''
-            if self.playing:
-                self.playing = False
-                
-            self.running = False
-            '''
-    def update(self):
-        '''
-        Updates all game objects.
-        '''
-        for ball in self.allBalls:
-            ball.update()
+			if not self.pause:
+				self.update()
 
-    def draw(self):
-        '''
-        Redraws all game objects.
-        '''
-        self.screen.fill(BLACK)
+			self.draw()
+			self.updateTimerForDoubleClick()
 
-        for ball in self.allBalls: 
-            ball.draw()
-           
-        # *after* drawing everything, flip the display
-        pg.display.flip()
+	def handleEvents(self):
+		'''
+		Acquires and handles events.
+		'''
+		for event in pg.event.get():
+			# check for closing window
+			if event.type == pg.QUIT:
+				if self.playing:
+					self.playing = False
+				self.running = False
+			elif event.type == pg.MOUSEBUTTONDOWN: #on Android, tap the sreen to quit
+				self.handleDoubleClick()
 
-    def show_start_screen(self):
-        '''
-        Shows game splash/start screen.
-        '''
-        pass
+	def updateTimerForDoubleClick(self):
+		# Increase timerDC after mouse was pressed the first time.
+		if self.timerDC != 0:
+			self.timerDC += self.dt
 
-    def show_go_screen(self):
-        '''
-        Shows game over screen.
-        '''
-        pass
+		# Reset after 0.5 seconds.
+		if self.timerDC >= 0.1:
+			self.timerDC = 0
+
+		# dt == time in seconds since last tick.
+		# / 1000 to convert milliseconds to 10th of seconds.
+		self.dt = self.clock.tick(FPS) / 10000
+
+	def handleDoubleClick(self):
+		if self.timerDC == 0:
+			self.timerDC = 0.01
+			# Click again before 0.1 seconds to double click.
+		elif self.timerDC < 0.1:
+			# Double click happened
+			if not self.pause:
+				self.pause = True
+			else:
+				self.pause = False
+			'''
+			if self.playing:
+				self.playing = False
+				
+			self.running = False
+			'''
+	def update(self):
+		'''
+		Updates all game objects.
+		'''
+		for ball in self.allBalls:
+			ball.update()
+
+	def draw(self):
+		'''
+		Redraws all game objects.
+		'''
+		self.screen.fill(BLACK)
+
+		for ball in self.allBalls:
+			ball.draw()
+
+		# *after* drawing everything, flip the display
+		pg.display.flip()
+
+	def show_start_screen(self):
+		'''
+		Shows game splash/start screen.
+		'''
+		pass
+
+	def show_go_screen(self):
+		'''
+		Shows game over screen.
+		'''
+		pass
 
 g = Game()
 g.show_start_screen()
 
 while g.running:
-    g.new()
-    g.run()
-    g.show_go_screen()
+	g.new()
+	g.run()
+	g.show_go_screen()
 
 pg.quit()
