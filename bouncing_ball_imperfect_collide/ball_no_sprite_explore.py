@@ -2,7 +2,6 @@ import pygame as pg
 import math
 from settings import *
 
-
 class Ball(pg.sprite.Sprite):
 	def __init__(self,
 				 screen,
@@ -39,6 +38,8 @@ class Ball(pg.sprite.Sprite):
 		self.trajectPoints = []
 		self.previousX = 0
 		self.previousY = 0
+		self.previousSteppedX = 0
+		self.previousSteppedY = 0
 
 	def update(self):
 		delta_x = self.speed * math.cos(self.angle)
@@ -55,8 +56,8 @@ class Ball(pg.sprite.Sprite):
 			hit_bounds = True
 
 		if hit_bounds:
-			self.previousX = 0
-			self.previousY = 0
+			self.previousSteppedX = 0
+			self.previousSteppedY = 0
 
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
@@ -75,10 +76,19 @@ class Ball(pg.sprite.Sprite):
 	def draw(self):
 		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
 
-		# Writing information on the ball
+		currentX = int(self.rect.centerx)
+		currentY = int(self.rect.centery)
+
+		moveRight = (currentX - self.previousX) > 0
+		moveDown = (currentY - self.previousY) > 0
+
+		self.previousX = currentX
+		self.previousY = currentY
+
+		# Writing information on the ball surface
 		textLines = [None] * self.lineNumber
-		textLines[0] = 'x: ' + str(int(self.rect.centerx))
-		textLines[1] = 'y: ' + str(int(self.rect.centery))
+		textLines[0] = 'x: ' + str(currentX) + ' ' + ('+' if moveRight else '-')
+		textLines[1] = 'y: ' + str(currentY) + ' ' + ('+' if moveDown else '-')
 		textLines[2] = 'angle: ' + str(int(math.degrees(self.angle)))
 
 		self.images = []  # The text surfaces.
@@ -97,23 +107,22 @@ class Ball(pg.sprite.Sprite):
 		angleDegree = math.degrees(self.angle)
 		x = 0
 		y = 0
-		if 0 <= angleDegree <= 90:
+		if moveRight and moveDown:
 			angle = self.angle
 			a = self.radius / math.sin(angle) * math.cos(angle)
 			x = self.rect.left
 			y = self.rect.centery - a
-		elif 90 < angleDegree <= 180:
+		elif not moveRight and moveDown:
 			calcAngleDegree = 180 - angleDegree
 			angle = math.radians(calcAngleDegree)
-			aa = (math.pi / 2) - self.angle
 			o = self.radius / math.cos(angle) * math.sin(angle)
 			x = self.rect.right
 			y = self.rect.centery - o
 
-		if abs(x - self.previousX) > 20 and abs(y - self.previousY) > 20:
+		if abs(x - self.previousSteppedX) > BALL_TRACING_STEP_SIZE and abs(y - self.previousSteppedY) > BALL_TRACING_STEP_SIZE:
 			self.trajectPoints.append(pg.Rect(x, y, 2, 2))
-			self.previousX = x
-			self.previousY = y
+			self.previousSteppedX = x
+			self.previousSteppedY = y
 
 		for point in self.trajectPoints:
 			pg.draw.circle(self.screen, GREEN, point.center, 2)
