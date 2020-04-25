@@ -40,6 +40,9 @@ class Ball(pg.sprite.Sprite):
 		self.previousY = 0
 		self.previousSteppedX = 0
 		self.previousSteppedY = 0
+		self.previousMoveRight = None
+		self.previousMoveDown = None
+		self.directionChangeNumber = -2
 
 	def update(self):
 		delta_x = self.speed * math.cos(self.angle)
@@ -82,6 +85,16 @@ class Ball(pg.sprite.Sprite):
 		moveRight = (currentX - self.previousX) > 0
 		moveDown = (currentY - self.previousY) > 0
 
+		if self.previousMoveRight != moveRight or self.previousMoveDown != moveDown:
+			# ball direction changed
+			self.previousMoveRight = moveRight
+			self.previousMoveDown = moveDown
+			self.directionChangeNumber += 1
+
+			if self.directionChangeNumber >= 3:
+				self.trajectPoints = []
+				self.directionChangeNumber = 0
+
 		self.previousX = currentX
 		self.previousY = currentY
 
@@ -108,8 +121,7 @@ class Ball(pg.sprite.Sprite):
 		x = 0
 		y = 0
 		if moveRight and moveDown:
-			angle = self.angle
-			a = self.radius / math.sin(angle) * math.cos(angle)
+			a = self.radius / math.sin(self.angle) * math.cos(self.angle)
 			x = self.rect.left
 			y = self.rect.centery - a
 		elif not moveRight and moveDown:
@@ -118,6 +130,18 @@ class Ball(pg.sprite.Sprite):
 			o = self.radius / math.cos(angle) * math.sin(angle)
 			x = self.rect.right
 			y = self.rect.centery - o
+		elif not moveRight and not moveDown:
+			a = self.radius
+			o = a * math.sin(self.angle) / math.cos(self.angle)
+			x = self.rect.centerx + o
+			y = self.rect.centery + a
+		elif moveRight and not moveDown:
+			calcAngleDegree = 180 - angleDegree
+			angle = math.radians(calcAngleDegree)
+			o = self.radius
+			a = o * math.cos(angle) / math.sin(angle)
+			x = self.rect.centerx - a
+			y = self.rect.centery + o
 
 		if abs(x - self.previousSteppedX) > BALL_TRACING_STEP_SIZE and abs(y - self.previousSteppedY) > BALL_TRACING_STEP_SIZE:
 			self.trajectPoints.append(pg.Rect(x, y, 2, 2))

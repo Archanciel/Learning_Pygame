@@ -67,7 +67,7 @@ class Game:
 						color=YELLOW,
 						radius=150,
 						startX=550,
-						startY=100,
+						startY=600,
 						speed=6,
 						angle=-45)
 		else:
@@ -75,14 +75,12 @@ class Game:
 						allBalls=self.allBalls,
 						color=YELLOW,
 						radius=70,
-						startX=1 * 200,
-						startY=1 * 100,
+						startX=200,
+						startY=600,
 						speed=2,
-						angle=-45)
+						angle=45)
 
 		self.allBalls.append(ball)
-
-		colIdx = random.randrange(0, 4)
 
 		# second ball
 
@@ -92,10 +90,10 @@ class Game:
 							allBalls=self.allBalls,
 							color=GREEN,
 							radius=250,
-							startX=600,
+							startX=100,
 							startY=1700,
 							speed=8,
-							angle=-45)
+							angle=45)
 			else:
 				ball = Ball(screen=self.screen,
 							allBalls=self.allBalls,
