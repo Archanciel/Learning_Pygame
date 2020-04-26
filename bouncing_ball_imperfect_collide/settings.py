@@ -4,7 +4,7 @@ WINDOWS_LOCATION = '100,15'
 TABLET_WIDTH = 1000
 TABLET_HEIGHT = 700
 PC_WIDTH = 800
-PC_HEIGHT = 850
+PC_HEIGHT = 810
 FPS = 600
 
 # define colors
@@ -19,4 +19,7 @@ MAGENTA = (255, 0, 255)
 ORANGE = (255, 165, 0)
 
 # defines the number of pixels after which a tracing point is drawned on screen
-BALL_TRACING_STEP_SIZE = 20
+BALL_TRACING_STEP_SIZE = 10
+
+# number of ball trajects to display
+MAX_BOUNCE_TRAJECTS = 4

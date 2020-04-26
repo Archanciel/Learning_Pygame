@@ -11,7 +11,7 @@ from settings import *
 import math
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
-secondBall = False
+secondBall = True
 
 class Game:	 
 	def __init__(self):
@@ -76,7 +76,7 @@ class Game:
 						color=YELLOW,
 						radius=70,
 						startX=200,
-						startY=600,
+						startY=500,
 						speed=2,
 						angle=45)
 
@@ -98,10 +98,11 @@ class Game:
 				ball = Ball(screen=self.screen,
 							allBalls=self.allBalls,
 							color=GREEN,
-							radius=100,
+							radius=10,
 							startX=2 * 200,
 							startY=2 * 100,
-							speed=2)
+							speed=4,
+							angle=30)
 
 			self.allBalls.append(ball)
 

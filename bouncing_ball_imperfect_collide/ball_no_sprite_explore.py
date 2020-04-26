@@ -1,5 +1,6 @@
 import pygame as pg
 import math
+from collections import deque
 from settings import *
 
 class Ball(pg.sprite.Sprite):
@@ -27,22 +28,22 @@ class Ball(pg.sprite.Sprite):
 		self.font_height = self.font.get_linesize()
 
 		# Calculating the left margin based on longest possible text
-		texthorizontalSize = self.font.size("angle: 360")[0]
-		self.textLeftMargin = (self.rect.width - texthorizontalSize) / 2
+		self.textHorizontalSize = self.font.size("angle: 360")[0]
+		self.textLeftMargin = (self.rect.width - self.textHorizontalSize) / 2
 
 		# Calculating the top margin based on the number of text lines
 		self.lineNumber = 3
 		self.textTopMargin = radius - (self.font_height * self.lineNumber / 2)
 		self.textColor = BLACK
 
-		self.trajectPoints = []
+		self.multipleBounceTrajectPointLists = deque(maxlen=MAX_BOUNCE_TRAJECTS)
 		self.previousX = 0
 		self.previousY = 0
-		self.previousSteppedX = 0
-		self.previousSteppedY = 0
+		self.previousTraceX = 0
+		self.previousTraceY = 0
 		self.previousMoveRight = None
 		self.previousMoveDown = None
-		self.directionChangeNumber = -2
+		self.currentBounceTrajectIndex = -1
 
 	def update(self):
 		delta_x = self.speed * math.cos(self.angle)
@@ -57,10 +58,6 @@ class Ball(pg.sprite.Sprite):
 		if self.rect.top <= 0 or self.rect.bottom >= self.screen.get_height():
 			self.angle = -self.angle
 			hit_bounds = True
-
-		if hit_bounds:
-			self.previousSteppedX = 0
-			self.previousSteppedY = 0
 
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
@@ -85,68 +82,82 @@ class Ball(pg.sprite.Sprite):
 		moveRight = (currentX - self.previousX) > 0
 		moveDown = (currentY - self.previousY) > 0
 
+		self.previousX = currentX
+		self.previousY = currentY
+
 		if self.previousMoveRight != moveRight or self.previousMoveDown != moveDown:
 			# ball direction changed
 			self.previousMoveRight = moveRight
 			self.previousMoveDown = moveDown
-			self.directionChangeNumber += 1
 
-			if self.directionChangeNumber >= 3:
-				self.trajectPoints = []
-				self.directionChangeNumber = 0
+			# add a new traject points list to the deque. This will remove the oldest
+			# traject points list if the number of traject points list exceeds
+			# MAX_BOUNCE_TRAJECTS
+			self.multipleBounceTrajectPointLists.append([])
+			self.currentBounceTrajectIndex += 1
 
-		self.previousX = currentX
-		self.previousY = currentY
+			if self.currentBounceTrajectIndex >= MAX_BOUNCE_TRAJECTS:
+				# since the new traject points list is added at the right of the deque,
+				# the currentBounceTrajectIndex must be set to the max deque size - 1
+				self.currentBounceTrajectIndex = MAX_BOUNCE_TRAJECTS - 1
 
-		# Writing information on the ball surface
+		# Writing information on the ball surface if the ball size is large enough
+		if self.textHorizontalSize <= self.rect.width:
+			self.blitTextOnBall(currentX, currentY, moveDown, moveRight)
+
+		# angleDegree = math.degrees(self.angle)
+		# x = 0
+		# y = 0
+		#
+		# if moveRight and moveDown:
+		# 	a = self.radius / math.sin(self.angle) * math.cos(self.angle)
+		# 	x = self.rect.left
+		# 	y = self.rect.centery - a
+		# elif not moveRight and moveDown:
+		# 	calcAngleDegree = 180 - angleDegree
+		# 	angle = math.radians(calcAngleDegree)
+		# 	o = self.radius / math.cos(angle) * math.sin(angle)
+		# 	x = self.rect.right
+		# 	y = self.rect.centery - o
+		# elif not moveRight and not moveDown:
+		# 	a = self.radius
+		# 	o = a * math.sin(self.angle) / math.cos(self.angle)
+		# 	x = self.rect.centerx + o
+		# 	y = self.rect.centery + a
+		# elif moveRight and not moveDown:
+		# 	calcAngleDegree = 180 - angleDegree
+		# 	angle = math.radians(calcAngleDegree)
+		# 	o = self.radius
+		# 	a = o * math.cos(angle) / math.sin(angle)
+		# 	x = self.rect.centerx - a
+		# 	y = self.rect.centery + o
+
+		x = self.rect.centerx
+		y = self.rect.centery
+
+		if abs(x - self.previousTraceX) > BALL_TRACING_STEP_SIZE or abs(y - self.previousTraceY) > BALL_TRACING_STEP_SIZE:
+			self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(x, y, 1, 1))
+			self.previousTraceX = x
+			self.previousTraceY = y
+
+		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
+			for point in oneBouncesTrajectPointList:
+				pg.draw.circle(self.screen, self.color, point.center, 2)
+
+	def blitTextOnBall(self, xValue, yValue, ballDirectionMoveDown, ballDirectionMoveRight):
 		textLines = [None] * self.lineNumber
-		textLines[0] = 'x: ' + str(currentX) + ' ' + ('+' if moveRight else '-')
-		textLines[1] = 'y: ' + str(currentY) + ' ' + ('+' if moveDown else '-')
+		textLines[0] = 'x: ' + str(xValue) + ' ' + ('+' if ballDirectionMoveRight else '-')
+		textLines[1] = 'y: ' + str(yValue) + ' ' + ('+' if ballDirectionMoveDown else '-')
 		textLines[2] = 'angle: ' + str(int(math.degrees(self.angle)))
 
 		self.images = []  # The text surfaces.
 
 		for line in textLines:
-			surf = self.font.render(line, True, self.textColor)
-			self.images.append(surf)
-
-		for y, surf in enumerate(self.images):
-			# Don't blit below the rect area.
+			textSurface = self.font.render(line, True, self.textColor)
+			self.images.append(textSurface)
+		for y, textSurface in enumerate(self.images):
 			if y * self.font_height + self.font_height > self.rect.h:
+				# Don't blit below the rect area.
 				break
-			self.screen.blit(surf, (
-			self.rect.x + self.textLeftMargin, self.rect.y + self.textTopMargin + y * self.font_height))
-
-		angleDegree = math.degrees(self.angle)
-		x = 0
-		y = 0
-		if moveRight and moveDown:
-			a = self.radius / math.sin(self.angle) * math.cos(self.angle)
-			x = self.rect.left
-			y = self.rect.centery - a
-		elif not moveRight and moveDown:
-			calcAngleDegree = 180 - angleDegree
-			angle = math.radians(calcAngleDegree)
-			o = self.radius / math.cos(angle) * math.sin(angle)
-			x = self.rect.right
-			y = self.rect.centery - o
-		elif not moveRight and not moveDown:
-			a = self.radius
-			o = a * math.sin(self.angle) / math.cos(self.angle)
-			x = self.rect.centerx + o
-			y = self.rect.centery + a
-		elif moveRight and not moveDown:
-			calcAngleDegree = 180 - angleDegree
-			angle = math.radians(calcAngleDegree)
-			o = self.radius
-			a = o * math.cos(angle) / math.sin(angle)
-			x = self.rect.centerx - a
-			y = self.rect.centery + o
-
-		if abs(x - self.previousSteppedX) > BALL_TRACING_STEP_SIZE and abs(y - self.previousSteppedY) > BALL_TRACING_STEP_SIZE:
-			self.trajectPoints.append(pg.Rect(x, y, 2, 2))
-			self.previousSteppedX = x
-			self.previousSteppedY = y
-
-		for point in self.trajectPoints:
-			pg.draw.circle(self.screen, GREEN, point.center, 2)
+			textCoordinatesTuple = (self.rect.x + self.textLeftMargin, self.rect.y + self.textTopMargin + y * self.font_height)
+			self.screen.blit(textSurface, textCoordinatesTuple)
