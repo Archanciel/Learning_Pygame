@@ -3,7 +3,7 @@ import math
 from collections import deque
 from settings import *
 
-class Ball(pg.sprite.Sprite):
+class Ball():
 	def __init__(self,
 				 screen,
 				 allBalls,
