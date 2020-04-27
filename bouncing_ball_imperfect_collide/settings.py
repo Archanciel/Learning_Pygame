@@ -23,3 +23,5 @@ BALL_TRACING_STEP_SIZE = 10
 
 # number of ball trajects to display
 MAX_BOUNCE_TRAJECTS = 4
+
+DRAW_BOUNCING_LOCATION = True

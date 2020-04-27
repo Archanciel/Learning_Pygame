@@ -62,13 +62,13 @@ class Ball():
 			self.angle = math.pi - self.angle
 			hit_bounds = True
 			self.bounceX = self.screen.get_width()
-			self.bounceY = self.rect.bottom
+			self.bounceY = self.rect.centery
 
 		if self.rect.left <= 0:
 			self.angle = math.pi - self.angle
 			hit_bounds = True
 			self.bounceX = 0
-			self.bounceY = self.rect.bottom
+			self.bounceY = self.rect.centery
 
 		if self.rect.top <= 0:
 			self.angle = -self.angle
@@ -172,15 +172,16 @@ class Ball():
 
 		# handling ball bounce tracing
 
-		if self.bounceX != None and self.bounceY != None:
-			self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, 6, 6))
-			self.bounceX = None
-			self.bounceY = None
+		if DRAW_BOUNCING_LOCATION:
+			if self.bounceX != None and self.bounceY != None:
+				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, 6, 6))
+				self.bounceX = None
+				self.bounceY = None
 
 		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
 			for point in oneBouncesTrajectPointList:
 				if point.width > 1:
-					# this point is a bounce coordinate on the screen limits
+					# this point is a bounce location on the screen limits
 					p = copy.deepcopy(point)
 
 					if p.top > 0:
@@ -192,6 +193,10 @@ class Ball():
 
 					if p.right >= self.screen.get_width():
 						p.right -= 4
+
+					if p.left == 0:
+						p.top -= 4
+						p.bottom -= 4
 
 					pg.draw.rect(self.screen, self.bouncePointColor, p, 0)
 				else:
