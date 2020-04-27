@@ -46,8 +46,8 @@ class Ball(pg.sprite.Sprite):
 		self.currentBounceTrajectIndex = -1
 
 	def update(self):
-		delta_x = self.speed * math.cos(self.angle)
-		delta_y = self.speed * math.sin(self.angle)
+		delta_x = round(self.speed * math.cos(self.angle))
+		delta_y = round(self.speed * math.sin(self.angle))
 		self.rect = self.rect.move(delta_x, delta_y)
 		hit_bounds = False
 

@@ -11,6 +11,8 @@ from settings import *
 import math
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
+
+firstBall = False
 secondBall = True
 
 class Game:	 
@@ -61,26 +63,29 @@ class Game:
 		self.allBalls = []
 
 		# first ball
-		if os.name == 'posix':
-			ball = Ball(screen=self.screen,
-						allBalls=self.allBalls,
-						color=YELLOW,
-						radius=90,
-						startX=550,
-						startY=600,
-						speed=6,
-						angle=-45)
-		else:
-			ball = Ball(screen=self.screen,
-						allBalls=self.allBalls,
-						color=YELLOW,
-						radius=70,
-						startX=200,
-						startY=500,
-						speed=2,
-						angle=45)
 
-		self.allBalls.append(ball)
+		if firstBall:
+
+			if os.name == 'posix':
+				ball = Ball(screen=self.screen,
+							allBalls=self.allBalls,
+							color=YELLOW,
+							radius=90,
+							startX=550,
+							startY=600,
+							speed=6,
+							angle=-45)
+			else:
+				ball = Ball(screen=self.screen,
+							allBalls=self.allBalls,
+							color=YELLOW,
+							radius=70,
+							startX=200,
+							startY=500,
+							speed=2,
+							angle=45)
+
+			self.allBalls.append(ball)
 
 		# second ball
 
@@ -101,8 +106,8 @@ class Game:
 							radius=10,
 							startX=2 * 200,
 							startY=2 * 100,
-							speed=4,
-							angle=30)
+							speed=2,
+							angle=15)
 
 			self.allBalls.append(ball)
 
