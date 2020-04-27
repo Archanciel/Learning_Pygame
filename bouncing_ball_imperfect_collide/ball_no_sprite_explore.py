@@ -1,6 +1,8 @@
 import pygame as pg
 import math
 from collections import deque
+import copy
+
 from settings import *
 
 class Ball():
@@ -8,6 +10,7 @@ class Ball():
 				 screen,
 				 allBalls,
 				 color,
+				 bouncePointColor,
 				 radius,
 				 startX,
 				 startY,
@@ -17,6 +20,7 @@ class Ball():
 		self.screen = screen
 		self.allBalls = allBalls
 		self.color = color
+		self.bouncePointColor = bouncePointColor
 		self.radius = radius
 		rectSize = radius * 2
 		self.rect = pg.Rect(startX, startY, rectSize, rectSize)
@@ -45,19 +49,38 @@ class Ball():
 		self.previousMoveDown = None
 		self.currentBounceTrajectIndex = -1
 
+		self.bounceX = None
+		self.bounceY = None
+
 	def update(self):
 		delta_x = round(self.speed * math.cos(self.angle))
 		delta_y = round(self.speed * math.sin(self.angle))
 		self.rect = self.rect.move(delta_x, delta_y)
 		hit_bounds = False
 
-		if self.rect.right >= self.screen.get_width() or self.rect.left <= 0:
+		if self.rect.right >= self.screen.get_width():
 			self.angle = math.pi - self.angle
 			hit_bounds = True
+			self.bounceX = self.screen.get_width()
+			self.bounceY = self.rect.bottom
 
-		if self.rect.top <= 0 or self.rect.bottom >= self.screen.get_height():
+		if self.rect.left <= 0:
+			self.angle = math.pi - self.angle
+			hit_bounds = True
+			self.bounceX = 0
+			self.bounceY = self.rect.bottom
+
+		if self.rect.top <= 0:
 			self.angle = -self.angle
 			hit_bounds = True
+			self.bounceX = self.rect.centerx
+			self.bounceY = 0
+
+		if self.rect.bottom >= self.screen.get_height():
+			self.angle = -self.angle
+			hit_bounds = True
+			self.bounceX = self.rect.centerx
+			self.bounceY = self.screen.get_height()
 
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
@@ -137,6 +160,8 @@ class Ball():
 		# 	x = self.rect.centerx - a
 		# 	y = self.rect.centery + o
 
+		# handling ball traject tracing
+
 		x = self.rect.centerx
 		y = self.rect.centery
 
@@ -145,9 +170,32 @@ class Ball():
 			self.previousTraceX = x
 			self.previousTraceY = y
 
+		# handling ball bounce tracing
+
+		if self.bounceX != None and self.bounceY != None:
+			self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, 6, 6))
+			self.bounceX = None
+			self.bounceY = None
+
 		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
 			for point in oneBouncesTrajectPointList:
-				pg.draw.circle(self.screen, self.color, point.center, 2)
+				if point.width > 1:
+					# this point is a bounce coordinate on the screen limits
+					p = copy.deepcopy(point)
+
+					if p.top > 0:
+						p.top -= 4
+						p.bottom -= 4
+					else:
+						p.top += 1
+						p.bottom += 1
+
+					if p.right >= self.screen.get_width():
+						p.right -= 4
+
+					pg.draw.rect(self.screen, self.bouncePointColor, p, 0)
+				else:
+					pg.draw.circle(self.screen, self.color, point.center, 1)
 
 	def blitTextOnBall(self, xValue, yValue, ballDirectionMoveDown, ballDirectionMoveRight):
 		textLines = [None] * self.lineNumber

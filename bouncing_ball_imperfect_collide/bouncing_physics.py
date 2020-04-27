@@ -12,7 +12,7 @@ import math
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
 
-firstBall = False
+firstBall = True
 secondBall = True
 
 class Game:	 
@@ -70,6 +70,7 @@ class Game:
 				ball = Ball(screen=self.screen,
 							allBalls=self.allBalls,
 							color=YELLOW,
+							bouncePointColor=RED,
 							radius=90,
 							startX=550,
 							startY=600,
@@ -79,6 +80,7 @@ class Game:
 				ball = Ball(screen=self.screen,
 							allBalls=self.allBalls,
 							color=YELLOW,
+							bouncePointColor=RED,
 							radius=70,
 							startX=200,
 							startY=500,
@@ -94,6 +96,7 @@ class Game:
 				ball = Ball(screen=self.screen,
 							allBalls=self.allBalls,
 							color=GREEN,
+							bouncePointColor=BLUE,
 							radius=10,
 							startX=100,
 							startY=1700,
@@ -103,6 +106,7 @@ class Game:
 				ball = Ball(screen=self.screen,
 							allBalls=self.allBalls,
 							color=GREEN,
+							bouncePointColor=BLUE,
 							radius=10,
 							startX=2 * 200,
 							startY=2 * 100,
