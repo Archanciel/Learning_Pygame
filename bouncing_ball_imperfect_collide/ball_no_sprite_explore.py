@@ -187,16 +187,15 @@ class Ball():
 					if p.top > 0:
 						p.top -= 4
 						p.bottom -= 4
-					else:
-						p.top += 1
-						p.bottom += 1
+					# else:
+					# 	p.top += 1
+					# 	p.bottom += 1
 
 					if p.right >= self.screen.get_width():
 						p.right -= 4
-
-					if p.left == 0:
-						p.top -= 4
-						p.bottom -= 4
+						if p.top > 0:
+							p.top += 4
+							p.bottom += 4
 
 					pg.draw.rect(self.screen, self.bouncePointColor, p, 0)
 				else:
