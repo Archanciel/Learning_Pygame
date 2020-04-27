@@ -79,11 +79,16 @@ class Ball(pg.sprite.Sprite):
 		currentX = int(self.rect.centerx)
 		currentY = int(self.rect.centery)
 
-		moveRight = (currentX - self.previousX) > 0
-		moveDown = (currentY - self.previousY) > 0
+		if (currentX - self.previousX) == 0 and (currentY - self.previousY) == 0:
+			# the case after double click to stop the balls
+			moveRight = self.previousMoveRight
+			moveDown = self.previousMoveDown
+		else:
+			moveRight = (currentX - self.previousX) > 0
+			moveDown = (currentY - self.previousY) > 0
 
-		self.previousX = currentX
-		self.previousY = currentY
+			self.previousX = currentX
+			self.previousY = currentY
 
 		if self.previousMoveRight != moveRight or self.previousMoveDown != moveDown:
 			# ball direction changed
