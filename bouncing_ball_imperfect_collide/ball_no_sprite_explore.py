@@ -183,7 +183,7 @@ class Ball():
 			self.previousTraceX = x
 			self.previousTraceY = y
 
-		if DRAW_BOUNCING_LOCATION:
+		if DRAW_BOUNCE_LOCATION:
 			# handling ball bounce location tracing
 			if self.bounceMarkDirection != None:
 				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, self.bounceMarkDirection, self.bounceMarkDirection))
@@ -191,27 +191,24 @@ class Ball():
 
 		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
 			for point in oneBouncesTrajectPointList:
-				if point.width > 1: # indicates that this point is a bounce location on the screen limits
+				if point.width > 1: # indicates that this point is a bounce mark location on the screen limits
 					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDir=point.width)	
 				else:
 					pg.draw.circle(self.screen, self.color, point.center, 1)
 
 	def drawBounceMark(self, bounceLocX, bounceLocY, bounceMarkDir):	
 		if bounceMarkDir == BOUNCE_ARROW_TOP:
-			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - X_ARROW, bounceLocY + Y_ARROW), ARROW_WIDTH)
-			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + X_ARROW, bounceLocY + Y_ARROW), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - ARROW_DIM_1, bounceLocY + ARROW_DIM_2), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + ARROW_DIM_1, bounceLocY + ARROW_DIM_2), ARROW_WIDTH)
 		elif bounceMarkDir == BOUNCE_ARROW_RIGHT:
-			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - Y_ARROW, bounceLocY - X_ARROW), ARROW_WIDTH)
-			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - Y_ARROW, bounceLocY + X_ARROW), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - ARROW_DIM_2, bounceLocY - ARROW_DIM_1), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - ARROW_DIM_2, bounceLocY + ARROW_DIM_1), ARROW_WIDTH)
 		elif bounceMarkDir == BOUNCE_ARROW_BOTTOM:
-			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - X_ARROW, bounceLocY - Y_ARROW), ARROW_WIDTH)
-			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + X_ARROW, bounceLocY - Y_ARROW), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - ARROW_DIM_1, bounceLocY - ARROW_DIM_2), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + ARROW_DIM_1, bounceLocY - ARROW_DIM_2), ARROW_WIDTH)
 		else: # BOUNCE_ARROW_LEFT
-			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + Y_ARROW, bounceLocY - X_ARROW), ARROW_WIDTH)
-			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + Y_ARROW, bounceLocY + X_ARROW), ARROW_WIDTH)
-
-
-
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + ARROW_DIM_2, bounceLocY - ARROW_DIM_1), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + ARROW_DIM_2, bounceLocY + ARROW_DIM_1), ARROW_WIDTH)
 
 	def blitTextOnBall(self, xValue, yValue, ballDirectionMoveDown, ballDirectionMoveRight):
 		textLines = [None] * self.lineNumber
