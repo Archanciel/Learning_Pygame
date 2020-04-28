@@ -51,6 +51,7 @@ class Ball():
 
 		self.bounceX = None
 		self.bounceY = None
+		self.bounceMarkDirection = None
 
 	def update(self):
 		delta_x = round(self.speed * math.cos(self.angle))
@@ -61,26 +62,38 @@ class Ball():
 		if self.rect.right >= self.screen.get_width():
 			self.angle = math.pi - self.angle
 			hit_bounds = True
+			
+			# storing bounce location coordinates
 			self.bounceX = self.screen.get_width()
 			self.bounceY = self.rect.centery
+			self.bounceMarkDirection = BOUNCE_ARROW_RIGHT
 
 		if self.rect.left <= 0:
 			self.angle = math.pi - self.angle
 			hit_bounds = True
+			
+			# storing bounce location coordinates
 			self.bounceX = 0
 			self.bounceY = self.rect.centery
+			self.bounceMarkDirection = BOUNCE_ARROW_LEFT
 
 		if self.rect.top <= 0:
 			self.angle = -self.angle
 			hit_bounds = True
+			
+			# storing bounce location coordinates
 			self.bounceX = self.rect.centerx
 			self.bounceY = 0
+			self.bounceMarkDirection = BOUNCE_ARROW_TOP
 
 		if self.rect.bottom >= self.screen.get_height():
 			self.angle = -self.angle
 			hit_bounds = True
+			
+			# storing bounce location coordinates
 			self.bounceX = self.rect.centerx
 			self.bounceY = self.screen.get_height()
+			self.bounceMarkDirection = BOUNCE_ARROW_BOTTOM
 
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
@@ -118,8 +131,8 @@ class Ball():
 			self.previousMoveRight = moveRight
 			self.previousMoveDown = moveDown
 
-			# add a new traject points list to the deque. This will remove the oldest
-			# traject points list if the number of traject points list exceeds
+			# add a new traject point list to the deque. This will remove the oldest
+			# traject point list if the number of traject point list exceeds
 			# MAX_BOUNCE_TRAJECTS
 			self.multipleBounceTrajectPointLists.append([])
 			self.currentBounceTrajectIndex += 1
@@ -170,36 +183,35 @@ class Ball():
 			self.previousTraceX = x
 			self.previousTraceY = y
 
-		# handling ball bounce tracing
-
 		if DRAW_BOUNCING_LOCATION:
-			if self.bounceX != None and self.bounceY != None:
-				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, 6, 6))
-				self.bounceX = None
-				self.bounceY = None
+			# handling ball bounce location tracing
+			if self.bounceMarkDirection != None:
+				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, self.bounceMarkDirection, self.bounceMarkDirection))
+				self.bounceMarkDirection = None
 
 		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
 			for point in oneBouncesTrajectPointList:
-				if point.width > 1:
-					# this point is a bounce location on the screen limits
-					p = copy.deepcopy(point)
-
-					if p.top > 0:
-						p.top -= 4
-						p.bottom -= 4
-					# else:
-					# 	p.top += 1
-					# 	p.bottom += 1
-
-					if p.right >= self.screen.get_width():
-						p.right -= 4
-						if p.top > 0:
-							p.top += 4
-							p.bottom += 4
-
-					pg.draw.rect(self.screen, self.bouncePointColor, p, 0)
+				if point.width > 1: # indicates that this point is a bounce location on the screen limits
+					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDir=point.width)	
 				else:
 					pg.draw.circle(self.screen, self.color, point.center, 1)
+
+	def drawBounceMark(self, bounceLocX, bounceLocY, bounceMarkDir):	
+		if bounceMarkDir == BOUNCE_ARROW_TOP:
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - X_ARROW, bounceLocY + Y_ARROW), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + X_ARROW, bounceLocY + Y_ARROW), ARROW_WIDTH)
+		elif bounceMarkDir == BOUNCE_ARROW_RIGHT:
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - Y_ARROW, bounceLocY - X_ARROW), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - Y_ARROW, bounceLocY + X_ARROW), ARROW_WIDTH)
+		elif bounceMarkDir == BOUNCE_ARROW_BOTTOM:
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - X_ARROW, bounceLocY - Y_ARROW), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + X_ARROW, bounceLocY - Y_ARROW), ARROW_WIDTH)
+		else: # BOUNCE_ARROW_LEFT
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + Y_ARROW, bounceLocY - X_ARROW), ARROW_WIDTH)
+			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + Y_ARROW, bounceLocY + X_ARROW), ARROW_WIDTH)
+
+
+
 
 	def blitTextOnBall(self, xValue, yValue, ballDirectionMoveDown, ballDirectionMoveRight):
 		textLines = [None] * self.lineNumber
