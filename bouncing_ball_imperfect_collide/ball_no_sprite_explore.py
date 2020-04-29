@@ -15,7 +15,7 @@ class Ball():
 				 startX,
 				 startY,
 				 speed,
-				 angle=-45):
+				 angle=45):
 		super().__init__()
 		self.screen = screen
 		self.allBalls = allBalls
@@ -25,7 +25,7 @@ class Ball():
 		rectSize = radius * 2
 		self.rect = pg.Rect(startX, startY, rectSize, rectSize)
 		self.speed = speed
-		self.angle = math.radians(-angle)
+		self.angleRad = math.radians(angle)
 
 		# Position related instance variables
 		self.font = pg.font.Font(None, 32)
@@ -54,13 +54,17 @@ class Ball():
 		self.bounceMarkDirection = None
 
 	def update(self):
-		delta_x = round(self.speed * math.cos(self.angle))
-		delta_y = round(self.speed * math.sin(self.angle))
-		self.rect = self.rect.move(delta_x, delta_y)
+		delta_x = round(self.speed * math.cos(self.angleRad))
+		delta_y = round(self.speed * math.sin(self.angleRad))
+		self.rect = self.rect.move(delta_x, -delta_y) # since y coordinate of screen top is 0 !
 		hit_bounds = False
 
 		if self.rect.right >= self.screen.get_width():
-			self.angle = math.pi - self.angle
+			self.angleRad = math.pi - self.angleRad
+			if self.angleRad > 2 * math.pi:
+				# if not done, angleRad continue to increase, which corrupts the display of ball
+				# angle in degree
+				self.angleRad = self.angleRad - (2 * math.pi)
 			hit_bounds = True
 			
 			# storing bounce location coordinates
@@ -69,7 +73,11 @@ class Ball():
 			self.bounceMarkDirection = BOUNCE_ARROW_RIGHT
 
 		if self.rect.left <= 0:
-			self.angle = math.pi - self.angle
+			self.angleRad = math.pi - self.angleRad
+			if self.angleRad > 2 * math.pi:
+				# if not done, angleRad continue to increase, which corrupts the display of ball
+				# angle in degree
+				self.angleRad = self.angleRad - (2 * math.pi)
 			hit_bounds = True
 			
 			# storing bounce location coordinates
@@ -78,7 +86,7 @@ class Ball():
 			self.bounceMarkDirection = BOUNCE_ARROW_LEFT
 
 		if self.rect.top <= 0:
-			self.angle = -self.angle
+			self.angleRad = -self.angleRad
 			hit_bounds = True
 			
 			# storing bounce location coordinates
@@ -87,7 +95,7 @@ class Ball():
 			self.bounceMarkDirection = BOUNCE_ARROW_TOP
 
 		if self.rect.bottom >= self.screen.get_height():
-			self.angle = -self.angle
+			self.angleRad = -self.angleRad
 			hit_bounds = True
 			
 			# storing bounce location coordinates
@@ -97,7 +105,7 @@ class Ball():
 
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
-				self.angle = self.angle - math.pi
+				self.angleRad = self.angleRad - math.pi
 				break
 
 	def collideBall(self, ball):
@@ -214,7 +222,13 @@ class Ball():
 		textLines = [None] * self.lineNumber
 		textLines[0] = 'x: ' + str(xValue) + ' ' + ('+' if ballDirectionMoveRight else '-')
 		textLines[1] = 'y: ' + str(yValue) + ' ' + ('+' if ballDirectionMoveDown else '-')
-		textLines[2] = 'angle: ' + str(int(math.degrees(self.angle)))
+		if (self.angleRad < 0):
+			# negative degrees are nonsensical !
+			angleDegree = round(math.degrees(2 * math.pi + self.angleRad))
+		else:
+			angleDegree = round(math.degrees(self.angleRad))
+
+		textLines[2] = 'angle: ' + str(angleDegree)
 
 		self.images = []  # The text surfaces.
 

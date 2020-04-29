@@ -107,11 +107,11 @@ class Game:
 							allBalls=self.allBalls,
 							color=GREEN,
 							bouncePointColor=CYAN,
-							radius=10,
-							startX=2 * 200,
-							startY=2 * 100,
+							radius=70,
+							startX=150,
+							startY=100,
 							speed=2,
-							angle=15)
+							angle=-15)
 
 			self.allBalls.append(ball)
 
