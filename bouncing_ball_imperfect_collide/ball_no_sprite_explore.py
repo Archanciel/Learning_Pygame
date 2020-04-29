@@ -106,6 +106,10 @@ class Ball():
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
 				self.angleRad = self.angleRad - math.pi
+				if self.angleRad < (-2 * math.pi):
+					# if not done, angleRad continue to increase, which corrupts the display of ball
+					# angle in degree
+					self.angleRad = self.angleRad + (2 * math.pi)
 				break
 
 	def collideBall(self, ball):
