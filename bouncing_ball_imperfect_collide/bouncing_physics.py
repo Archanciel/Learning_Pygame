@@ -13,7 +13,7 @@ import math
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
 
 firstBall = True
-secondBall = True
+secondBall = False
 
 class Game:	 
 	def __init__(self):
@@ -44,7 +44,7 @@ class Game:
 			width = PC_WIDTH
 			height = PC_HEIGHT
 
-		self.screen = pg.display.set_mode((width, height))
+		self.screen = pg.display.set_mode((width, height), pg.FULLSCREEN)
 		pg.display.set_caption(TITLE)
 		self.playing = False
 		self.running = True
@@ -74,8 +74,8 @@ class Game:
 							radius=200,
 							startX=550,
 							startY=600,
-							speed=6,
-							angle=-45)
+							speed=29, # 29 = minimum speed for angle 1 degree
+							angle=1)
 			else:
 				ball = Ball(screen=self.screen,
 							allBalls=self.allBalls,
@@ -84,8 +84,8 @@ class Game:
 							radius=70,
 							startX=200,
 							startY=500,
-							speed=2,
-							angle=45)
+							speed=29,
+							angle=1)
 
 			self.allBalls.append(ball)
 

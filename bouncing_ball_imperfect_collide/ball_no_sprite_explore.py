@@ -54,8 +54,10 @@ class Ball():
 		self.bounceMarkDirection = None
 
 	def update(self):
-		delta_x = round(self.speed * math.cos(self.angleRad))
-		delta_y = round(self.speed * math.sin(self.angleRad))
+		cosAngle = math.cos(self.angleRad)
+		delta_x = round(self.speed * cosAngle)
+		sinAngle = math.sin(self.angleRad)
+		delta_y = round(self.speed * sinAngle)
 		self.rect = self.rect.move(delta_x, -delta_y) # since y coordinate of screen top is 0 !
 		hit_bounds = False
 

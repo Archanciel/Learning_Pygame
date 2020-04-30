@@ -1,11 +1,11 @@
 # game options/settings
 TITLE = "My bouncing ball imperfect collission"
 WINDOWS_LOCATION = '100,15'
-TABLET_WIDTH = 1000
-TABLET_HEIGHT = 700
-PC_WIDTH = 800
-PC_HEIGHT = 800
-FPS = 600
+TABLET_WIDTH = 0
+TABLET_HEIGHT = 0
+PC_WIDTH = int(2160 / 1.6865)
+PC_HEIGHT = int(1440 / 2)
+FPS = 100
 
 # define colors
 WHITE = (255, 255, 255)
