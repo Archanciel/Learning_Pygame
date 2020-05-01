@@ -83,7 +83,7 @@ class Game:
 							bouncePointColor=RED,
 							radius=70,
 							startX=200,
-							startY=450,
+							startY=400,
 							speed=2,
 							angle=1)
 
@@ -111,7 +111,7 @@ class Game:
 							startX=150,
 							startY=650,
 							speed=5,
-							angle=100)
+							angle=20)
 
 			self.allBalls.append(ball)
 

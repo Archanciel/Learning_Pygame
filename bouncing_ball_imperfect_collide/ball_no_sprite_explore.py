@@ -53,7 +53,6 @@ class Ball():
 		self.previousMoveRight = None
 		self.previousMoveDown = None
 		self.currentBounceTrajectIndex = -1
-		self.moveDirection = None
 
 		self.bounceX = None
 		self.bounceY = None
@@ -144,18 +143,6 @@ class Ball():
 		else:
 			moveRight = (currentX - self.previousX) > 0
 			moveDown = (currentY - self.previousY) > 0
-
-			if self.previousX != 0:
-				if moveRight:
-					if moveDown:
-						self.moveDirection = LEFT_TO_RIGHT_TOP_TO_BOTTOM
-					else:
-						self.moveDirection = LEFT_TO_RIGHT_BOTTOM_TO_TOP
-				else:
-					if moveDown:
-						self.moveDirection = RIGHT_TO_LEFT_TOP_TO_BOTTOM
-					else:
-						self.moveDirection = RIGHT_TO_LEFT_BOTTOM_TO_TOP
 
 			self.previousX = currentX
 			self.previousY = currentY
@@ -250,25 +237,11 @@ class Ball():
 		textLines[0] = 'x: ' + str(xValue) + ' ' + ('+' if ballDirectionMoveRight else '-')
 		textLines[1] = 'y: ' + str(yValue) + ' ' + ('+' if ballDirectionMoveDown else '-')
 
-		negativeAngleCorrected = False
-
 		if (self.angleRad < 0):
 			# negative degrees are nonsensical !
 			angleDegree = round(math.degrees(2 * math.pi + self.angleRad))
-			negativeAngleCorrected = True
 		else:
 			angleDegree = round(math.degrees(self.angleRad))
-
-		# if self.moveDirection == RIGHT_TO_LEFT_BOTTOM_TO_TOP:
-		# 	angleDegree += 180
-		# elif self.moveDirection == RIGHT_TO_LEFT_TOP_TO_BOTTOM:
-		# 	angleDegree -= 180
-		# elif self.moveDirection == LEFT_TO_RIGHT_BOTTOM_TO_TOP:
-		# 	pass #angleDegree -= 180
-		# elif self.moveDirection == LEFT_TO_RIGHT_TOP_TO_BOTTOM:
-		# 	pass
-			# if not negativeAngleCorrected:
-			# 	angleDegree += 180
 
 		textLines[2] = 'angle: ' + str(angleDegree)
 

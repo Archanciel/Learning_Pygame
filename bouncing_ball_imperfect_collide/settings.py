@@ -3,7 +3,7 @@ TITLE = "My bouncing ball imperfect collission"
 WINDOWS_LOCATION = '100,15'
 TABLET_WIDTH = 0
 TABLET_HEIGHT = 0
-PC_WIDTH = 800
+PC_WIDTH = 1000
 PC_HEIGHT = 800
 FPS = 200
 
@@ -20,11 +20,6 @@ ORANGE = (255, 165, 0)
 
 # defines the number of pixels after which a tracing point is drawned on screen
 BALL_TRACING_STEP_SIZE = 10
-
-LEFT_TO_RIGHT_TOP_TO_BOTTOM = 1
-RIGHT_TO_LEFT_TOP_TO_BOTTOM = 2
-LEFT_TO_RIGHT_BOTTOM_TO_TOP = 3
-RIGHT_TO_LEFT_BOTTOM_TO_TOP = 4
 
 # number of ball trajects to display
 MAX_BOUNCE_TRAJECTS = 4
