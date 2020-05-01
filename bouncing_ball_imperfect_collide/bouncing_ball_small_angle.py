@@ -2,7 +2,7 @@ import pygame, sys, math
 from pygame.locals import *
 
 pygame.init()
-DISPLAYSURF = pygame.display.set_mode((1000, 600))
+DISPLAYSURF = pygame.display.set_mode((1000, 800))
 pygame.display.set_caption('Bouncing Ball with position and angle')
 
 # Set our color constants
@@ -46,7 +46,7 @@ class Ball():
 
 # Create a new Ball instance named 'myball'
 myball = Ball(screen=DISPLAYSURF, color=YELLOW, startX=100, startY=100, radius=150, speed=8, angle=10)
-mySmaLlAngleball = Ball(screen=DISPLAYSURF, color=YELLOW, startX=100, startY=1200, radius=150, speed=58, angle=-1)
+mySmaLlAngleball = Ball(screen=DISPLAYSURF, color=YELLOW, startX=100, startY=500, radius=150, speed=58, angle=-1)
 
 run = True
 clock = pygame.time.Clock()
