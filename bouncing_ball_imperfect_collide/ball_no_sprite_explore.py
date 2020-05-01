@@ -24,6 +24,11 @@ class Ball():
 		self.radius = radius
 		rectSize = radius * 2
 		self.rect = pg.Rect(startX, startY, rectSize, rectSize)
+		
+		# will store the exact baLl center float tuple. Pygame rect only stores
+		# integers
+		self.ballCenterFloat = self.rect.center
+		
 		self.speed = speed
 		self.angleRad = math.radians(angle)
 
@@ -54,11 +59,13 @@ class Ball():
 		self.bounceMarkDirection = None
 
 	def update(self):
-		cosAngle = math.cos(self.angleRad)
-		delta_x = round(self.speed * cosAngle)
-		sinAngle = math.sin(self.angleRad)
-		delta_y = round(self.speed * sinAngle)
-		self.rect = self.rect.move(delta_x, -delta_y) # since y coordinate of screen top is 0 !
+		delta_x = self.speed * math.cos(self.angleRad)
+		delta_y = self.speed * math.sin(self.angleRad)
+		
+		# minus deltaY since the y coordinate of screen top is 0 !
+		self.ballCenterFloat = (self.ballCenterFloat[0] + delta_x, self.ballCenterFloat[1] - delta_y)
+		
+		self.rect.center = self.ballCenterFloat
 		hit_bounds = False
 
 		if self.rect.right >= self.screen.get_width():
@@ -71,7 +78,7 @@ class Ball():
 			
 			# storing bounce location coordinates
 			self.bounceX = self.screen.get_width()
-			self.bounceY = self.rect.centery
+			self.bounceY = self.ballCenterFloat[1]
 			self.bounceMarkDirection = BOUNCE_ARROW_RIGHT
 
 		if self.rect.left <= 0:
@@ -84,7 +91,7 @@ class Ball():
 			
 			# storing bounce location coordinates
 			self.bounceX = 0
-			self.bounceY = self.rect.centery
+			self.bounceY = self.ballCenterFloat[1]
 			self.bounceMarkDirection = BOUNCE_ARROW_LEFT
 
 		if self.rect.top <= 0:
@@ -92,7 +99,7 @@ class Ball():
 			hit_bounds = True
 			
 			# storing bounce location coordinates
-			self.bounceX = self.rect.centerx
+			self.bounceX = self.ballCenterFloat[0]
 			self.bounceY = 0
 			self.bounceMarkDirection = BOUNCE_ARROW_TOP
 
@@ -101,7 +108,7 @@ class Ball():
 			hit_bounds = True
 			
 			# storing bounce location coordinates
-			self.bounceX = self.rect.centerx
+			self.bounceX = self.ballCenterFloat[0]
 			self.bounceY = self.screen.get_height()
 			self.bounceMarkDirection = BOUNCE_ARROW_BOTTOM
 
@@ -126,8 +133,8 @@ class Ball():
 	def draw(self):
 		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
 
-		currentX = int(self.rect.centerx)
-		currentY = int(self.rect.centery)
+		currentX = round(self.ballCenterFloat[0], 2)
+		currentY = round(self.ballCenterFloat[1], 2)
 
 		if (currentX - self.previousX) == 0 and (currentY - self.previousY) == 0:
 			# the case after double click to stop the balls
@@ -197,8 +204,8 @@ class Ball():
 			self.previousTraceX = x
 			self.previousTraceY = y
 
+		# handling ball bounce location tracing
 		if DRAW_BOUNCE_LOCATION:
-			# handling ball bounce location tracing
 			if self.bounceMarkDirection != None:
 				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, self.bounceMarkDirection, self.bounceMarkDirection))
 				self.bounceMarkDirection = None
