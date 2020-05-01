@@ -3,8 +3,8 @@ TITLE = "My bouncing ball imperfect collission"
 WINDOWS_LOCATION = '100,15'
 TABLET_WIDTH = 0
 TABLET_HEIGHT = 0
-PC_WIDTH = int(2160 / 1.6865)
-PC_HEIGHT = int(1440 / 2)
+PC_WIDTH = 800
+PC_HEIGHT = 800
 FPS = 100
 
 # define colors

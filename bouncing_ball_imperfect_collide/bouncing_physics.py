@@ -44,7 +44,7 @@ class Game:
 			width = PC_WIDTH
 			height = PC_HEIGHT
 
-		self.screen = pg.display.set_mode((width, height), pg.FULLSCREEN)
+		self.screen = pg.display.set_mode((width, height))
 		pg.display.set_caption(TITLE)
 		self.playing = False
 		self.running = True
@@ -84,8 +84,8 @@ class Game:
 							radius=70,
 							startX=200,
 							startY=500,
-							speed=29,
-							angle=1)
+							speed=2,
+							angle=45)
 
 			self.allBalls.append(ball)
 
@@ -189,6 +189,9 @@ class Game:
 
 		for ball in self.allBalls:
 			ball.draw()
+			
+		pg.draw.line(self.screen, RED, (0, self.screen.get_height() - 20), 
+					(57, self.screen.get_height() - 21), 1)
 
 		# *after* drawing everything, flip the display
 		pg.display.flip()
