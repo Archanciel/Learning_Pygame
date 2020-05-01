@@ -13,7 +13,7 @@ import math
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
 
 firstBall = True
-secondBall = False
+secondBall = True
 
 class Game:	 
 	def __init__(self):
