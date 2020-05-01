@@ -74,7 +74,7 @@ class Game:
 							radius=200,
 							startX=550,
 							startY=600,
-							speed=29, # 29 = minimum speed for angle 1 degree
+							speed=1,
 							angle=1)
 			else:
 				ball = Ball(screen=self.screen,
