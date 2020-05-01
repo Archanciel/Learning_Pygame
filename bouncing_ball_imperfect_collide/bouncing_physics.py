@@ -12,7 +12,7 @@ import math
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
 
-firstBall = True
+firstBall = False
 secondBall = True
 
 class Game:	 
@@ -83,7 +83,7 @@ class Game:
 							bouncePointColor=RED,
 							radius=70,
 							startX=200,
-							startY=500,
+							startY=450,
 							speed=2,
 							angle=1)
 
@@ -109,9 +109,9 @@ class Game:
 							bouncePointColor=CYAN,
 							radius=70,
 							startX=150,
-							startY=100,
-							speed=2,
-							angle=-15)
+							startY=650,
+							speed=5,
+							angle=5)
 
 			self.allBalls.append(ball)
 

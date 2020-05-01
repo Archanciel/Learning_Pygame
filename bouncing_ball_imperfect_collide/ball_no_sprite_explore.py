@@ -53,17 +53,29 @@ class Ball():
 		self.previousMoveRight = None
 		self.previousMoveDown = None
 		self.currentBounceTrajectIndex = -1
+		self.moveDirection = None
 
 		self.bounceX = None
 		self.bounceY = None
 		self.bounceMarkDirection = None
 
 	def update(self):
-		delta_x = self.speed * math.cos(self.angleRad)
-		delta_y = self.speed * math.sin(self.angleRad)
-		
+		deltaX = self.speed * math.cos(self.angleRad)
+		deltaY = self.speed * math.sin(self.angleRad)
+
+		if deltaX > 0:
+			if deltaY > 0:
+				self.moveDirection = LEFT_TO_RIGHT_TOP_TO_BOTTOM
+			else:
+				self.moveDirection = LEFT_TO_RIGHT_BOTTOM_TO_TOP
+		else:
+			if deltaY > 0:
+				self.moveDirection = RIGHT_TO_LEFT_TOP_TO_BOTTOM
+			else:
+				self.moveDirection = RIGHT_TO_LEFT_BOTTOM_TO_TOP
+
 		# minus deltaY since the y coordinate of screen top is 0 !
-		self.ballCenterFloat = (self.ballCenterFloat[0] + delta_x, self.ballCenterFloat[1] - delta_y)
+		self.ballCenterFloat = (self.ballCenterFloat[0] + deltaX, self.ballCenterFloat[1] - deltaY)
 		
 		self.rect.center = self.ballCenterFloat
 		hit_bounds = False
@@ -208,23 +220,24 @@ class Ball():
 		if DRAW_BOUNCE_LOCATION:
 			if self.bounceMarkDirection != None:
 				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, self.bounceMarkDirection, self.bounceMarkDirection))
-				self.bounceMarkDirection = None
 
 		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
 			for point in oneBouncesTrajectPointList:
-				if point.width > 1: # indicates that this point is a bounce mark location on the screen limits
-					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDir=point.width)	
+				if point.width > 1:
+					# indicates that this point is a bounce mark location on the screen limits.
+					# The bounce mark direction is coded in the point.width !
+					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDirection=point.width)
 				else:
 					pg.draw.circle(self.screen, self.color, point.center, 1)
 
-	def drawBounceMark(self, bounceLocX, bounceLocY, bounceMarkDir):	
-		if bounceMarkDir == BOUNCE_ARROW_TOP:
+	def drawBounceMark(self, bounceLocX, bounceLocY, bounceMarkDirection):
+		if bounceMarkDirection == BOUNCE_ARROW_TOP:
 			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - ARROW_DIM_1, bounceLocY + ARROW_DIM_2), ARROW_WIDTH)
 			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + ARROW_DIM_1, bounceLocY + ARROW_DIM_2), ARROW_WIDTH)
-		elif bounceMarkDir == BOUNCE_ARROW_RIGHT:
+		elif bounceMarkDirection == BOUNCE_ARROW_RIGHT:
 			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - ARROW_DIM_2, bounceLocY - ARROW_DIM_1), ARROW_WIDTH)
 			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - ARROW_DIM_2, bounceLocY + ARROW_DIM_1), ARROW_WIDTH)
-		elif bounceMarkDir == BOUNCE_ARROW_BOTTOM:
+		elif bounceMarkDirection == BOUNCE_ARROW_BOTTOM:
 			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX - ARROW_DIM_1, bounceLocY - ARROW_DIM_2), ARROW_WIDTH)
 			pg.draw.line(self.screen, self.bouncePointColor, (bounceLocX, bounceLocY), (bounceLocX + ARROW_DIM_1, bounceLocY - ARROW_DIM_2), ARROW_WIDTH)
 		else: # BOUNCE_ARROW_LEFT
@@ -235,11 +248,21 @@ class Ball():
 		textLines = [None] * self.lineNumber
 		textLines[0] = 'x: ' + str(xValue) + ' ' + ('+' if ballDirectionMoveRight else '-')
 		textLines[1] = 'y: ' + str(yValue) + ' ' + ('+' if ballDirectionMoveDown else '-')
+
 		if (self.angleRad < 0):
 			# negative degrees are nonsensical !
 			angleDegree = round(math.degrees(2 * math.pi + self.angleRad))
 		else:
 			angleDegree = round(math.degrees(self.angleRad))
+
+		if self.moveDirection == RIGHT_TO_LEFT_BOTTOM_TO_TOP:
+			angleDegree -= 180
+		elif self.moveDirection == RIGHT_TO_LEFT_TOP_TO_BOTTOM:
+			angleDegree += 180
+		elif self.moveDirection == LEFT_TO_RIGHT_BOTTOM_TO_TOP:
+			angleDegree -= 180
+		elif self.moveDirection == LEFT_TO_RIGHT_TOP_TO_BOTTOM:
+			angleDegree += 180
 
 		textLines[2] = 'angle: ' + str(angleDegree)
 
