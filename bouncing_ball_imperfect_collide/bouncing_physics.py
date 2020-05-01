@@ -12,7 +12,7 @@ import math
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
 
-firstBall = False
+firstBall = True
 secondBall = True
 
 class Game:	 
@@ -111,7 +111,7 @@ class Game:
 							startX=150,
 							startY=650,
 							speed=5,
-							angle=5)
+							angle=100)
 
 			self.allBalls.append(ball)
 
