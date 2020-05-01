@@ -2,7 +2,7 @@ import pygame, sys, math
 from pygame.locals import *
 
 pygame.init()
-DISPLAYSURF = pygame.display.set_mode((1000, 600))
+DISPLAYSURF = pygame.display.set_mode((1000, 800))
 pygame.display.set_caption('Bouncing Ball with position and angle')
 
 # Set our color constants
