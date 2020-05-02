@@ -7,7 +7,7 @@ from settings import *
 
 class Ball():
 	def __init__(self,
-				 screen,
+				 game,
 				 allBalls,
 				 color,
 				 bouncePointColor,
@@ -17,7 +17,8 @@ class Ball():
 				 speed,
 				 angle=45):
 		super().__init__()
-		self.screen = screen
+		self.game = game
+		self.screen = game.screen
 		self.allBalls = allBalls
 		self.color = color
 		self.bouncePointColor = bouncePointColor
@@ -30,7 +31,7 @@ class Ball():
 		self.ballCenterFloat = self.rect.center
 		
 		self.speed = speed
-		self.angleRad = math.radians(angle)
+		self.angleRadian = math.radians(angle)
 
 		# Position related instance variables
 		self.font = pg.font.Font(None, 32)
@@ -59,8 +60,8 @@ class Ball():
 		self.bounceMarkDirection = None
 
 	def update(self):
-		deltaX = self.speed * math.cos(self.angleRad)
-		deltaY = self.speed * math.sin(self.angleRad)
+		deltaX = self.speed * math.cos(self.angleRadian)
+		deltaY = self.speed * math.sin(self.angleRadian)
 
 		# minus deltaY since the y coordinate of screen top is 0 !
 		self.ballCenterFloat = (self.ballCenterFloat[0] + deltaX, self.ballCenterFloat[1] - deltaY)
@@ -69,11 +70,11 @@ class Ball():
 		hit_bounds = False
 
 		if self.rect.right >= self.screen.get_width():
-			self.angleRad = math.pi - self.angleRad
-			if self.angleRad > 2 * math.pi:
-				# if not done, angleRad continue to increase, which corrupts the display of ball
+			self.angleRadian = math.pi - self.angleRadian
+			if self.angleRadian > 2 * math.pi:
+				# if not done, angleRadian continue to increase, which corrupts the display of ball
 				# angle in degree
-				self.angleRad = self.angleRad - (2 * math.pi)
+				self.angleRadian = self.angleRadian - (2 * math.pi)
 			hit_bounds = True
 			
 			# storing bounce location coordinates
@@ -82,11 +83,11 @@ class Ball():
 			self.bounceMarkDirection = BOUNCE_ARROW_RIGHT
 
 		if self.rect.left <= 0:
-			self.angleRad = math.pi - self.angleRad
-			if self.angleRad > 2 * math.pi:
-				# if not done, angleRad continue to increase, which corrupts the display of ball
+			self.angleRadian = math.pi - self.angleRadian
+			if self.angleRadian > 2 * math.pi:
+				# if not done, angleRadian continue to increase, which corrupts the display of ball
 				# angle in degree
-				self.angleRad = self.angleRad - (2 * math.pi)
+				self.angleRadian = self.angleRadian - (2 * math.pi)
 			hit_bounds = True
 			
 			# storing bounce location coordinates
@@ -95,7 +96,7 @@ class Ball():
 			self.bounceMarkDirection = BOUNCE_ARROW_LEFT
 
 		if self.rect.top <= 0:
-			self.angleRad = -self.angleRad
+			self.angleRadian = -self.angleRadian
 			hit_bounds = True
 			
 			# storing bounce location coordinates
@@ -104,7 +105,7 @@ class Ball():
 			self.bounceMarkDirection = BOUNCE_ARROW_TOP
 
 		if self.rect.bottom >= self.screen.get_height():
-			self.angleRad = -self.angleRad
+			self.angleRadian = -self.angleRadian
 			hit_bounds = True
 			
 			# storing bounce location coordinates
@@ -114,13 +115,34 @@ class Ball():
 
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
-				self.angleRad = self.angleRad - math.pi
-				if self.angleRad < (-2 * math.pi):
-					# if not done, angleRad continue to increase, which corrupts the display of ball
+				self.angleRadian = self.computeCollideAngleOpposite()
+				#self.angleRadian = self.computeCollideAnglePhysic2(ball)
+				if self.angleRadian < (-2 * math.pi):
+					# if not done, angleRadian continue to increase, which corrupts the display of ball
 					# angle in degree
-					self.angleRad = self.angleRad + (2 * math.pi)
+					self.angleRadian = self.angleRadian + (2 * math.pi)
+				if PAUSE_ON_COLLIDE:
+					self.game.pause = True
 				break
 
+	def computeCollideAngleOpposite(self):
+		return self.angleRadian - math.pi
+
+	def computeCollideAnglePhysic(self, collideBall):
+		x = collideBall.ballCenterFloat[0] - self.ballCenterFloat[0]
+		y = - collideBall.ballCenterFloat[1] + collideBall.ballCenterFloat[1]
+		tangentAngleRadian = math.acos(x / math.sqrt((x * x) + (y * y)))
+		epsilon = 2 * math.pi - self.angleRadian
+		
+		return (2 * tangentAngleRadian) + epsilon
+				
+	def computeCollideAnglePhysic2(self, collideBall):
+		x = collideBall.ballCenterFloat[0] - self.ballCenterFloat[0]
+		y = - collideBall.ballCenterFloat[1] + collideBall.ballCenterFloat[1]
+		tangentAngleRadian = math.acos(x / math.sqrt((x * x) + (y * y)))
+		
+		return (2 * tangentAngleRadian) - self.angleRadian
+				
 	def collideBall(self, ball):
 		xDiff = (self.rect.centerx - ball.rect.centerx)
 		yDiff = (self.rect.centery - ball.rect.centery)
@@ -237,11 +259,11 @@ class Ball():
 		textLines[0] = 'x: ' + str(xValue) + ' ' + ('+' if ballDirectionMoveRight else '-')
 		textLines[1] = 'y: ' + str(yValue) + ' ' + ('+' if ballDirectionMoveDown else '-')
 
-		if (self.angleRad < 0):
+		if (self.angleRadian < 0):
 			# negative degrees are nonsensical !
-			angleDegree = round(math.degrees(2 * math.pi + self.angleRad))
+			angleDegree = round(math.degrees(2 * math.pi + self.angleRadian))
 		else:
-			angleDegree = round(math.degrees(self.angleRad))
+			angleDegree = round(math.degrees(self.angleRadian))
 
 		textLines[2] = 'angle: ' + str(angleDegree)
 

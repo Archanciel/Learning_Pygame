@@ -67,17 +67,17 @@ class Game:
 		if firstBall:
 
 			if os.name == 'posix':
-				ball = Ball(screen=self.screen,
+				ball = Ball(game=self,
 							allBalls=self.allBalls,
 							color=YELLOW,
 							bouncePointColor=RED,
 							radius=200,
 							startX=550,
 							startY=600,
-							speed=1,
+							speed=20,
 							angle=1)
 			else:
-				ball = Ball(screen=self.screen,
+				ball = Ball(game=self,
 							allBalls=self.allBalls,
 							color=YELLOW,
 							bouncePointColor=RED,
@@ -93,17 +93,17 @@ class Game:
 
 		if secondBall:
 			if os.name == 'posix':
-				ball = Ball(screen=self.screen,
+				ball = Ball(game=self,
 							allBalls=self.allBalls,
 							color=GREEN,
 							bouncePointColor=CYAN,
-							radius=30,
+							radius=120,
 							startX=100,
 							startY=1700,
-							speed=8,
-							angle=45)
+							speed=15,
+							angle=25)
 			else:
-				ball = Ball(screen=self.screen,
+				ball = Ball(game=self,
 							allBalls=self.allBalls,
 							color=GREEN,
 							bouncePointColor=CYAN,
