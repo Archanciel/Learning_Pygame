@@ -115,8 +115,8 @@ class Ball():
 
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
-				self.angleRadian = self.computeCollideAngleOpposite()
-				#self.angleRadian = self.computeCollideAnglePhysic2(ball)
+				#self.angleRadian = self.computeCollideAngleOpposite()
+				self.angleRadian = self.computeCollideAnglePhysic2(ball)
 				if self.angleRadian < (-2 * math.pi):
 					# if not done, angleRadian continue to increase, which corrupts the display of ball
 					# angle in degree
@@ -133,16 +133,26 @@ class Ball():
 		y = - collideBall.ballCenterFloat[1] + collideBall.ballCenterFloat[1]
 		tangentAngleRadian = math.acos(x / math.sqrt((x * x) + (y * y)))
 		epsilon = 2 * math.pi - self.angleRadian
-		
-		return (2 * tangentAngleRadian) + epsilon
+		newAngleRadian = (2 * tangentAngleRadian) + epsilon
+
+		oldAngleDegree = round(math.degrees(self.angleRadian))
+		newAngleDegree = round(newAngleRadian)
+		print(oldAngleDegree," ",newAngleDegree)
+
+		return newAngleRadian
 				
 	def computeCollideAnglePhysic2(self, collideBall):
 		x = collideBall.ballCenterFloat[0] - self.ballCenterFloat[0]
 		y = - collideBall.ballCenterFloat[1] + collideBall.ballCenterFloat[1]
 		tangentAngleRadian = math.acos(x / math.sqrt((x * x) + (y * y)))
-		
-		return (2 * tangentAngleRadian) - self.angleRadian
-				
+		newAngleRadian = (2 * tangentAngleRadian) - self.angleRadian
+
+		oldAngleDegree = round(math.degrees(self.angleRadian))
+		newAngleDegree = round(newAngleRadian)
+		print(oldAngleDegree," ",newAngleDegree)
+
+		return newAngleRadian
+
 	def collideBall(self, ball):
 		xDiff = (self.rect.centerx - ball.rect.centerx)
 		yDiff = (self.rect.centery - ball.rect.centery)
