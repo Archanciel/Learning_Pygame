@@ -66,7 +66,8 @@ class Ball():
 		# minus deltaY since the y coordinate of screen top is 0 !
 		self.ballCenterFloat = (self.ballCenterFloat[0] + deltaX, self.ballCenterFloat[1] - deltaY)
 		
-		self.rect.center = self.ballCenterFloat
+		self.rect.center = (round(self.ballCenterFloat[0]), round(self.ballCenterFloat[1]))
+#self.rect.center = self.ballCenterFloat
 		hit_bounds = False
 
 		if self.rect.right >= self.screen.get_width():
