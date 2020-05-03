@@ -1,6 +1,7 @@
 import pygame as pg
 import math
 from collections import deque
+import os
 import copy
 
 from settings import *
@@ -24,11 +25,10 @@ class Ball():
 		self.bouncePointColor = bouncePointColor
 		self.radius = radius
 		rectSize = radius * 2
-		self.rect = pg.Rect(startX, startY, rectSize, rectSize)
 		
 		# will store the exact baLl center float tuple. Pygame rect only stores
 		# integers
-		self.ballCenterFloat = self.rect.center
+		self.ballCenterFloat = (startX + radius, startY + radius)
 		
 		self.speed = speed
 		self.angleRadian = math.radians(angle)
@@ -39,7 +39,7 @@ class Ball():
 
 		# Calculating the left margin based on longest possible text
 		self.textHorizontalSize = self.font.size("angle: 360")[0]
-		self.textLeftMargin = (self.rect.width - self.textHorizontalSize) / 2
+		self.textLeftMargin = (rectSize - self.textHorizontalSize) / 2
 
 		# Calculating the top margin based on the number of text lines
 		self.lineNumber = 3
@@ -66,11 +66,9 @@ class Ball():
 		# minus deltaY since the y coordinate of screen top is 0 !
 		self.ballCenterFloat = (self.ballCenterFloat[0] + deltaX, self.ballCenterFloat[1] - deltaY)
 		
-		self.rect.center = (round(self.ballCenterFloat[0]), round(self.ballCenterFloat[1]))
-#self.rect.center = self.ballCenterFloat
 		hit_bounds = False
 
-		if self.rect.right >= self.screen.get_width():
+		if self.ballCenterFloat[0] + self.radius >= self.screen.get_width():
 			self.angleRadian = math.pi - self.angleRadian
 			if self.angleRadian > 2 * math.pi:
 				# if not done, angleRadian continue to increase, which corrupts the display of ball
@@ -83,7 +81,7 @@ class Ball():
 			self.bounceY = self.ballCenterFloat[1]
 			self.bounceMarkDirection = BOUNCE_ARROW_RIGHT
 
-		if self.rect.left <= 0:
+		if self.ballCenterFloat[0] - self.radius <= 0:
 			self.angleRadian = math.pi - self.angleRadian
 			if self.angleRadian > 2 * math.pi:
 				# if not done, angleRadian continue to increase, which corrupts the display of ball
@@ -96,7 +94,7 @@ class Ball():
 			self.bounceY = self.ballCenterFloat[1]
 			self.bounceMarkDirection = BOUNCE_ARROW_LEFT
 
-		if self.rect.top <= 0:
+		if self.ballCenterFloat[1] - self.radius <= 0:
 			self.angleRadian = -self.angleRadian
 			hit_bounds = True
 			
@@ -105,7 +103,7 @@ class Ball():
 			self.bounceY = 0
 			self.bounceMarkDirection = BOUNCE_ARROW_TOP
 
-		if self.rect.bottom >= self.screen.get_height():
+		if self.ballCenterFloat[1] + self.radius >= self.screen.get_height():
 			self.angleRadian = -self.angleRadian
 			hit_bounds = True
 			
@@ -116,8 +114,7 @@ class Ball():
 
 		for ball in self.allBalls:
 			if not hit_bounds and not ball is self and self.collideBall(ball):
-				#self.angleRadian = self.computeCollideAngleOpposite()
-				self.angleRadian = self.computeCollideAnglePhysic2(ball)
+				self.angleRadian = self.computeCollideAngleOpposite()
 				if self.angleRadian < (-2 * math.pi):
 					# if not done, angleRadian continue to increase, which corrupts the display of ball
 					# angle in degree
@@ -128,46 +125,24 @@ class Ball():
 
 	def computeCollideAngleOpposite(self):
 		return self.angleRadian - math.pi
-
-	def computeCollideAnglePhysic(self, collideBall):
-		x = collideBall.ballCenterFloat[0] - self.ballCenterFloat[0]
-		y = - collideBall.ballCenterFloat[1] + collideBall.ballCenterFloat[1]
-		tangentAngleRadian = math.acos(x / math.sqrt((x * x) + (y * y)))
-		epsilon = 2 * math.pi - self.angleRadian
-		newAngleRadian = (2 * tangentAngleRadian) + epsilon
-
-		oldAngleDegree = round(math.degrees(self.angleRadian))
-		newAngleDegree = round(newAngleRadian)
-		print(oldAngleDegree," ",newAngleDegree)
-
-		return newAngleRadian
-				
-	def computeCollideAnglePhysic2(self, collideBall):
-		x = collideBall.ballCenterFloat[0] - self.ballCenterFloat[0]
-		y = - collideBall.ballCenterFloat[1] + collideBall.ballCenterFloat[1]
-		tangentAngleRadian = math.acos(x / math.sqrt((x * x) + (y * y)))
-		newAngleRadian = (2 * tangentAngleRadian) - self.angleRadian
-
-		oldAngleDegree = round(math.degrees(self.angleRadian))
-		newAngleDegree = round(newAngleRadian)
-		print(oldAngleDegree," ",newAngleDegree)
-
-		return newAngleRadian
-
+		
 	def collideBall(self, ball):
-		xDiff = (self.rect.centerx - ball.rect.centerx)
-		yDiff = (self.rect.centery - ball.rect.centery)
+		xDiff = self.ballCenterFloat[0] - ball.ballCenterFloat[0]
+		yDiff = self.ballCenterFloat[1] - ball.ballCenterFloat[1]
 		hSquare = xDiff * xDiff + yDiff * yDiff
-		radiuses = self.rect.width / 2 + ball.rect.width / 2
+		radiuses = self.radius + ball.radius
 
 		return hSquare <= radiuses * radiuses
 
 	# Draw our ball to the screen
 	def draw(self):
-		pg.draw.circle(self.screen, self.color, self.rect.center, int(self.rect.width / 2))
+		if os.name == 'posix':
+			pg.draw.circle(self.screen, self.color, (self.ballCenterFloat[0], self.ballCenterFloat[1]), self.radius)
+		else:
+			pg.draw.circle(self.screen, self.color, (round(self.ballCenterFloat[0]), round(self.ballCenterFloat[1])), self.radius)
 
-		currentX = round(self.ballCenterFloat[0], 2)
-		currentY = round(self.ballCenterFloat[1], 2)
+		currentX = self.ballCenterFloat[0]
+		currentY = self.ballCenterFloat[1]
 
 		if (currentX - self.previousX) == 0 and (currentY - self.previousY) == 0:
 			# the case after double click to stop the balls
@@ -197,8 +172,8 @@ class Ball():
 				self.currentBounceTrajectIndex = MAX_BOUNCE_TRAJECTS - 1
 
 		# Writing information on the ball surface if the ball size is large enough
-		if self.textHorizontalSize <= self.rect.width:
-			self.blitTextOnBall(currentX, currentY, moveDown, moveRight)
+		if self.textHorizontalSize <= self.radius * 2:
+			self.blitTextOnBall(round(currentX, 2), round(currentY, 2), moveDown, moveRight)
 
 		# angleDegree = math.degrees(self.angle)
 		# x = 0
@@ -229,18 +204,19 @@ class Ball():
 
 		# handling ball traject tracing
 
-		x = self.rect.centerx
-		y = self.rect.centery
+		x = self.ballCenterFloat[0]
+		y = self.ballCenterFloat[1]
 
 		if abs(x - self.previousTraceX) > BALL_TRACING_STEP_SIZE or abs(y - self.previousTraceY) > BALL_TRACING_STEP_SIZE:
-			self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(x, y, 1, 1))
+			self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(round(x), round(y), 1, 1))
 			self.previousTraceX = x
 			self.previousTraceY = y
 
 		# handling ball bounce location tracing
 		if DRAW_BOUNCE_LOCATION:
 			if self.bounceMarkDirection != None:
-				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(self.bounceX, self.bounceY, self.bounceMarkDirection, self.bounceMarkDirection))
+				# we use the Rect.width (and height) to code the type of draw bounce mark type
+				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(pg.Rect(round(self.bounceX), round(self.bounceY), self.bounceMarkDirection, self.bounceMarkDirection))
 
 		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
 			for point in oneBouncesTrajectPointList:
@@ -284,8 +260,8 @@ class Ball():
 			textSurface = self.font.render(line, True, self.textColor)
 			self.images.append(textSurface)
 		for y, textSurface in enumerate(self.images):
-			if y * self.font_height + self.font_height > self.rect.h:
+			if y * self.font_height + self.font_height > (2 * self.radius):
 				# Don't blit below the rect area.
 				break
-			textCoordinatesTuple = (self.rect.x + self.textLeftMargin, self.rect.y + self.textTopMargin + y * self.font_height)
+			textCoordinatesTuple = (self.ballCenterFloat[0] - self.radius + self.textLeftMargin, self.ballCenterFloat[1] - self.radius + self.textTopMargin + y * self.font_height)
 			self.screen.blit(textSurface, textCoordinatesTuple)
