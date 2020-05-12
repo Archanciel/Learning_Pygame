@@ -3,16 +3,32 @@ import math
 import random
 from particle import Particle
 
-DIST_MIN = 10
+PN = 500
+DIST_MIN = 0
 
+def randomParticleParm():
+	radius = random.randint(10,40)
+	pos_x = random.randint(radius, w - radius)
+	pos_y = random.randint(radius, h - radius)
+	
+	return (radius, pos_x, pos_y)
+
+	
+def outsideCircle(circleX, circleY, radius, x, y):
+	if y < circleY:
+		return math.hypot(circleX - x, circleY - y) > circleR - radius - DIST_MIN
+	else:
+		return math.hypot(circleX - x, y - circleY) > circleR - radius - DIST_MIN
+	
 def overlap(my_particles, radius, x, y):
+	# Returns True if a new particle with values radius, x, y would
+	# overlap an existing particle referenced in the list my_particles
 	for particle in my_particles:
 		if math.hypot(particle.x - x, particle.y - y) < particle.radius + radius + DIST_MIN:
 			return True
 			
 	return False
 
-PN = 100
 background_colour = (255,255,255)
 (width, height) = (1300, 2000)
 screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
@@ -26,22 +42,17 @@ pygame.draw.circle(screen, (0, 0, 255), (circleX, circleY), circleR, 10)
 
 my_particles = []
 
-radius = random.randint(10,40)
-pos_x = random.randint(radius, w - radius)
-pos_y = random.randint(radius, h - radius)
+# initialising the new particle size and position values
+radius, pos_x, pos_y = randomParticleParm()
 
 for i in range(PN):
-	while math.hypot(circleX - pos_x, circleY - pos_y) > circleR - radius \
-			or overlap(my_particles, radius, pos_x, pos_y):
-		radius = random.randint(10,40)
-		pos_x = random.randint(radius, w - radius)
-		pos_y = random.randint(radius, h - radius)
+	while outsideCircle(circleX, circleY, radius, pos_x, pos_y) \
+		or overlap(my_particles, radius, pos_x, pos_y):
+		radius, pos_x, pos_y = randomParticleParm()
+
 	p = Particle(screen, pos_x, pos_y, radius)
 	my_particles.append(p)
-	radius = random.randint(10,40)
-	pos_x = random.randint(radius, w - radius)
-	pos_y = random.randint(radius, h - radius)
-
+	radius, pos_x, pos_y = randomParticleParm()
 	
 for p in my_particles:
 	p.display()
