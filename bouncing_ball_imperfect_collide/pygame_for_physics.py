@@ -1,25 +1,23 @@
 import pygame
 import math
 import random
+import os
 from particle import Particle
 
-PN = 500
-DIST_MIN = 0
+PN = 200
+DIST_MIN = 1
 
 def randomParticleParm():
 	radius = random.randint(10,40)
-	pos_x = random.randint(radius, w - radius)
-	pos_y = random.randint(radius, h - radius)
+	pos_x = random.randint(radius, w)
+	pos_y = random.randint(radius, h)
 	
 	return (radius, pos_x, pos_y)
 
 	
 def outsideCircle(circleX, circleY, radius, x, y):
-	if y < circleY:
-		return math.hypot(circleX - x, circleY - y) > circleR - radius - DIST_MIN
-	else:
-		return math.hypot(circleX - x, y - circleY) > circleR - radius - DIST_MIN
-	
+	return math.hypot(circleX - x, circleY - y) > circleR - radius - DIST_MIN
+
 def overlap(my_particles, radius, x, y):
 	# Returns True if a new particle with values radius, x, y would
 	# overlap an existing particle referenced in the list my_particles
@@ -30,15 +28,34 @@ def overlap(my_particles, radius, x, y):
 	return False
 
 background_colour = (255,255,255)
-(width, height) = (1300, 2000)
-screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+if os.name == 'posix':
+	(width, height) = (1300, 2000)
+else:
+	(width, height) = (800, 1000)
+
+if os.name == 'posix':
+	screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+else:
+	os.environ['SDL_VIDEO_WINDOW_POS'] = '100,15'
+	screen = pygame.display.set_mode((width, height))
+
 pygame.display.set_caption('Tutorial 1')
 screen.fill(background_colour)
-(h, w) = screen.get_size()
-circleX = h / 2
-circleY = w / 2
-circleR = (w / 3) - 100
-pygame.draw.circle(screen, (0, 0, 255), (circleX, circleY), circleR, 10)
+(w, h) = screen.get_size()
+
+if os.name == 'posix':
+	circleX = w / 2
+	circleY = h / 2
+	circleR = (h / 3) - 100
+else:
+	circleX = w / 2
+	circleY = w / 2
+	circleR = (h / 2) - 105
+
+if os.name == 'posix':
+	pygame.draw.circle(screen, (0, 0, 255), (circleX, circleY), circleR, 10)
+else:
+	pygame.draw.circle(screen, (0, 0, 255), (round(circleX), round(circleY)), round(circleR), 1)
 
 my_particles = []
 
@@ -46,14 +63,13 @@ my_particles = []
 radius, pos_x, pos_y = randomParticleParm()
 
 for i in range(PN):
-	while outsideCircle(circleX, circleY, radius, pos_x, pos_y) \
-		or overlap(my_particles, radius, pos_x, pos_y):
+	while outsideCircle(circleX, circleY, radius, pos_x, pos_y) or overlap(my_particles, radius, pos_x, pos_y):
 		radius, pos_x, pos_y = randomParticleParm()
 
 	p = Particle(screen, pos_x, pos_y, radius)
 	my_particles.append(p)
 	radius, pos_x, pos_y = randomParticleParm()
-	
+
 for p in my_particles:
 	p.display()
 		
@@ -62,8 +78,8 @@ pygame.display.flip()
 running = True
 
 while running:
-  for event in pygame.event.get():
-    if event.type == pygame.QUIT:
-      running = False
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			running = False
 
 pygame.quit()

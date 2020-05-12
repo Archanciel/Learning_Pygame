@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Particle:
     def __init__(self, screen, x, y, radius):
@@ -7,8 +8,11 @@ class Particle:
         self.y = y
         self.radius = radius
         self.colour = (0, 0, 255)
-        self.thickness = 3
+        self.thickness = 1
 
     def display(self):
-        pygame.draw.circle(self.screen, self.colour, (self.x, self.y), self.radius, self.thickness)
+        if os.name == 'posix':
+            pygame.draw.circle(self.screen, self.colour, (self.x, self.y), self.radius, self.thickness)
+        else:
+            pygame.draw.circle(self.screen, self.colour, (round(self.x), round(self.y)), self.radius, self.thickness)
 
