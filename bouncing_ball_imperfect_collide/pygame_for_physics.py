@@ -4,7 +4,6 @@ import random
 import os
 from particle import Particle
 
-PN = 200
 DIST_MIN = 1
 
 def randomParticleParm():
@@ -28,14 +27,16 @@ def overlap(my_particles, radius, x, y):
 	return False
 
 background_colour = (255,255,255)
-if os.name == 'posix':
-	(width, height) = (1300, 2000)
-else:
-	(width, height) = (800, 1000)
 
 if os.name == 'posix':
+	PN = 500
+	THICKNESS = 1
+	(width, height) = (1300, 2000)
 	screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 else:
+	PN = 200
+	THICKNESS = 1
+	(width, height) = (800, 1000)
 	os.environ['SDL_VIDEO_WINDOW_POS'] = '100,15'
 	screen = pygame.display.set_mode((width, height))
 
@@ -47,14 +48,11 @@ if os.name == 'posix':
 	circleX = w / 2
 	circleY = h / 2
 	circleR = (h / 3) - 100
+	pygame.draw.circle(screen, (0, 0, 255), (circleX, circleY), circleR, 10)
 else:
 	circleX = w / 2
 	circleY = w / 2
 	circleR = (h / 2) - 105
-
-if os.name == 'posix':
-	pygame.draw.circle(screen, (0, 0, 255), (circleX, circleY), circleR, 10)
-else:
 	pygame.draw.circle(screen, (0, 0, 255), (round(circleX), round(circleY)), round(circleR), 1)
 
 my_particles = []
@@ -66,7 +64,7 @@ for i in range(PN):
 	while outsideCircle(circleX, circleY, radius, pos_x, pos_y) or overlap(my_particles, radius, pos_x, pos_y):
 		radius, pos_x, pos_y = randomParticleParm()
 
-	p = Particle(screen, pos_x, pos_y, radius)
+	p = Particle(screen=screen, x=pos_x, y=pos_y, radius=radius, thickness=THICKNESS, angle=100, speed=2)
 	my_particles.append(p)
 	radius, pos_x, pos_y = randomParticleParm()
 
