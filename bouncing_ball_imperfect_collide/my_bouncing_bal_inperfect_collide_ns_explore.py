@@ -29,7 +29,12 @@ class Game:
         os.environ['SDL_VIDEO_WINDOW_POS'] = WINDOWS_LOCATION
 
         pg.init()
-        self.screen = pg.display.set_mode((TABLET_WIDTH, TABLET_HEIGHT))
+
+        if os.name == 'posix':
+            self.screen = pg.display.set_mode((TABLET_WIDTH, TABLET_HEIGHT))
+        else:
+            self.screen = pg.display.set_mode((PC_WIDTH, PC_HEIGHT))
+
         pg.display.set_caption(TITLE)
         self.playing = False
         self.running = True
@@ -48,17 +53,19 @@ class Game:
             colIdx = random.randrange(0, 4)
 
             if os.name == 'posix':
-                ball = Ball(screen=self.screen,
+                ball = Ball(game=self,
                             allBalls=self.allBalls,
                             color=COLORS[colIdx],
+							bouncePointColor=RED,
                             radius=200,
                             startX=i * 500,
                             startY= i * 650,
                             speed=6)
             else:
-                ball = Ball(screen=self.screen,
+                ball = Ball(game=self,
                             allBalls=self.allBalls,
                             color=COLORS[colIdx],
+							bouncePointColor=RED,
                             radius=100,
                             startX=i * 200,
                             startY=i * 100,
