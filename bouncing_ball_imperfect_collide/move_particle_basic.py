@@ -22,11 +22,13 @@ pygame.display.set_caption('Move particle basic')
 
 
 if os.name == 'posix':
-	my_particle_1 = Particle(screen = screen, x=100, y=300, radius=25, thickness=3, angle=100, speed=2)
-	my_particle_2 = Particle(screen = screen, x=100, y=300, radius=25, thickness=3, angle=90, speed=1)
+	my_particle_1 = Particle(screen = screen, x=400, y=1000, radius=25, thickness=3, angleDeg=100, speed=2)
+	my_particle_2 = Particle(screen = screen, x=400, y=1000, radius=25, thickness=3, angleDeg=90, speed=1)
+	my_particle_3 = Particle(screen = screen, x=400, y=1200, radius=25, thickness=3, angleDeg=90, speed=1)
 else:
-	my_particle_1 = Particle(screen = screen, x=100, y=300, radius=25, thickness=1, angle=100, speed=0.2)
-	my_particle_2 = Particle(screen = screen, x=100, y=300, radius=25, thickness=1, angle=90, speed=0.1)
+	my_particle_1 = Particle(screen = screen, x=100, y=300, radius=25, thickness=1, angleDeg=100, speed=0.2)
+	my_particle_2 = Particle(screen = screen, x=100, y=300, radius=25, thickness=1, angleDeg=90, speed=0.1)
+	my_particle_3 = Particle(screen = screen, x=100, y=500, radius=25, thickness=1, angleDeg=90, speed=0.1)
 
 
 
@@ -49,10 +51,13 @@ while running:
 		circleR = (h / 2) - 105
 		pygame.draw.circle(screen, (0, 0, 255), (round(circleX), round(circleY)), round(circleR), 1)
 	
-	my_particle_1.move(100)
+	my_particle_1.move(angleDeg=100)
+	my_particle_2.move(angleDeg=90)
+	my_particle_3.move_tuto(angleRad=math.pi / 2)
+
 	my_particle_1.display()
-	my_particle_2.move(90)
 	my_particle_2.display()
+	my_particle_3.display()
 
 	pygame.display.flip()
 pygame.quit()

@@ -3,22 +3,31 @@ import math
 import os
 
 class Particle:
-	def __init__(self, screen, x, y, radius, thickness, angle, speed):
+	def __init__(self, screen, x, y, radius, thickness, angleDeg, speed):
+		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
 		self.screen = screen
 		self.x = x
 		self.y = y
 		self.radius = radius
-		self.angle = math.radians(angle)
+		self.angleRad = math.radians(angleDeg)
 		self.speed = speed
 		self.colour = (0, 0, 255)
 		self.thickness = thickness
 
-	def move(self, angle):
-		angleRad = math.radians(angle) - math.pi / 2
+	def move(self, angleDeg):
+		# angleDeg is the clockwise angle with 0 deg corresponding to 12 o'clock'
+		angleRad = math.radians(angleDeg) - math.pi / 2
 		dx = self.speed * math.cos(angleRad)
 		dy = self.speed * math.sin(angleRad)
 		self.x += dx
 		self.y += dy
+
+	def move_tuto(self, angleRad):
+		# angleRad is the clockwise angle in radians with 0 rad corresponding to 12 o'clock'
+		dx = self.speed * math.sin(angleRad)
+		dy = self.speed * math.cos(angleRad)
+		self.x += dx
+		self.y -= dy
 
 	def display(self):
 		if os.name == 'posix':
