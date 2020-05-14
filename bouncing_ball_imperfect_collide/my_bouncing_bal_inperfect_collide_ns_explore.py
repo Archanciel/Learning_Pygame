@@ -6,7 +6,7 @@
 import pygame as pg
 import os, random
 
-from ball_no_sprite_explore import Ball
+from balldisplaypos import BallDisplayPos
 from settings import *
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW]
@@ -53,19 +53,19 @@ class Game:
             colIdx = random.randrange(0, 4)
 
             if os.name == 'posix':
-                ball = Ball(game=self,
+                ball = BallDisplayPos(game=self,
                             allBalls=self.allBalls,
                             color=COLORS[colIdx],
-							bouncePointColor=RED,
+							bouncePointColor=COLORS[colIdx],
                             radius=200,
                             startX=i * 500,
                             startY= i * 650,
                             speed=6)
             else:
-                ball = Ball(game=self,
+                ball = BallDisplayPos(game=self,
                             allBalls=self.allBalls,
                             color=COLORS[colIdx],
-							bouncePointColor=RED,
+							bouncePointColor=COLORS[colIdx],
                             radius=100,
                             startX=i * 200,
                             startY=i * 100,

@@ -6,7 +6,7 @@
 import pygame as pg
 import os, random
 
-from ball_no_sprite_explore import Ball
+from balldisplaypos import BallDisplayPos
 from settings import *
 import math
 
@@ -67,7 +67,7 @@ class Game:
 		if firstBall:
 
 			if os.name == 'posix':
-				ball = Ball(game=self,
+				ball = BallDisplayPos(game=self,
 							allBalls=self.allBalls,
 							color=YELLOW,
 							bouncePointColor=RED,
@@ -77,7 +77,7 @@ class Game:
 							speed=20,
 							angle=1)
 			else:
-				ball = Ball(game=self,
+				ball = BallDisplayPos(game=self,
 							allBalls=self.allBalls,
 							color=YELLOW,
 							bouncePointColor=RED,
@@ -93,7 +93,7 @@ class Game:
 
 		if secondBall:
 			if os.name == 'posix':
-				ball = Ball(game=self,
+				ball = BallDisplayPos(game=self,
 							allBalls=self.allBalls,
 							color=GREEN,
 							bouncePointColor=CYAN,
@@ -103,7 +103,7 @@ class Game:
 							speed=15,
 							angle=25)
 			else:
-				ball = Ball(game=self,
+				ball = BallDisplayPos(game=self,
 							allBalls=self.allBalls,
 							color=GREEN,
 							bouncePointColor=CYAN,

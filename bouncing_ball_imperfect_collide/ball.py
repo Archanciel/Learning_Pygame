@@ -1,61 +1,132 @@
 import pygame as pg
 import math
+from collections import deque
+import os
+import copy
+
 from settings import *
 
-class Ball(pg.sprite.Sprite):
-	def __init__(self, 
-	             screen, 
-	             spriteGroup, 
-	             color, 
-	             radius, 
-	             startX, 
-	             startY, 
-	             speed, 
-	             angle=-45):
-		super().__init__()
-		self.screen = screen
-		self.spriteGroup = spriteGroup
+class Ball():
+	def __init__(self,
+				 game,
+				 allBalls,
+				 color,
+				 radius,
+				 startX,
+				 startY,
+				 speed,
+				 angle=45):
+		self.game = game
+		self.screen = game.screen
+		self.allBalls = allBalls
 		self.color = color
-		rectSize = radius * 2
-		self.image = pg.Surface((rectSize, rectSize))
-		self.rect = self.image.get_rect()
-#		self.rect.left = startX
-#		self.rect.top = startY
+		self.radius = radius
+
+		# will store the exact baLl center float tuple. Pygame rect only stores
+		# integers
+		self.ballCenterFloat = (startX + radius, startY + radius)
+		
 		self.speed = speed
-		self.angle = math.radians(-angle)
-		pg.draw.circle(self.image, self.color, self.rect.center, int(self.rect.width / 2))
+		self.angleRadian = math.radians(angle)
+
+		self.previousX = 0
+		self.previousY = 0
+		self.previousMoveRight = None
+		self.previousMoveDown = None
 
 	def update(self):
-		delta_x = self.speed * math.cos(self.angle)
-		delta_y = self.speed * math.sin(self.angle)
-		self.rect = self.rect.move(delta_x, delta_y)
+		deltaX = self.speed * math.cos(self.angleRadian)
+		deltaY = self.speed * math.sin(self.angleRadian)
+
+		# minus deltaY since the y coordinate of screen top is 0 !
+		self.ballCenterFloat = (self.ballCenterFloat[0] + deltaX, self.ballCenterFloat[1] - deltaY)
+
 		hit_bounds = False
-		
-		if self.rect.right >= self.screen.get_width() or self.rect.left <= 0:
-			self.angle = math.pi - self.angle
+
+		if self.ballCenterFloat[0] + self.radius >= self.screen.get_width():
+			self.angleRadian = math.pi - self.angleRadian
+			if self.angleRadian > 2 * math.pi:
+				# if not done, angleRadian continue to increase, which corrupts the display of ball
+				# angle in degree
+				self.angleRadian = self.angleRadian - (2 * math.pi)
 			hit_bounds = True
-			
-		if self.rect.top <= 0 or self.rect.bottom >= self.screen.get_height():
-			self.angle = -self.angle
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(self.screen.get_width(), self.ballCenterFloat[1], BOUNCE_ARROW_RIGHT)
+
+		if self.ballCenterFloat[0] - self.radius <= 0:
+			self.angleRadian = math.pi - self.angleRadian
+			if self.angleRadian > 2 * math.pi:
+				# if not done, angleRadian continue to increase, which corrupts the display of ball
+				# angle in degree
+				self.angleRadian = self.angleRadian - (2 * math.pi)
 			hit_bounds = True
-				
-		for ball in self.spriteGroup.sprites():
-			if not hit_bounds and not ball is self and self.rect.colliderect(ball.rect):
-				self.angle = self.angle - math.pi
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(0, self.ballCenterFloat[1], BOUNCE_ARROW_LEFT)
+
+		if self.ballCenterFloat[1] - self.radius <= 0:
+			self.angleRadian = -self.angleRadian
+			hit_bounds = True
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(self.ballCenterFloat[0], 0, BOUNCE_ARROW_TOP)
+
+		if self.ballCenterFloat[1] + self.radius >= self.screen.get_height():
+			self.angleRadian = -self.angleRadian
+			hit_bounds = True
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(self.ballCenterFloat[0], self.screen.get_height(), BOUNCE_ARROW_BOTTOM)
+
+		for ball in self.allBalls:
+			if not hit_bounds and not ball is self and self.collideBall(ball):
+				self.angleRadian = self.computeCollideAngleOpposite()
+				if self.angleRadian < (-2 * math.pi):
+					# if not done, angleRadian continue to increase, which corrupts the display of ball
+					# angle in degree
+					self.angleRadian = self.angleRadian + (2 * math.pi)
+				if PAUSE_ON_COLLIDE:
+					self.game.pause = True
 				break
-				
-	# Draw our ball to the screen
-#	def draw(self): not used !
-#		pg.draw.circle(self.image, self.color, self.rect.center, int(self.rect.width / 2))
-				
-'''		
-		self.rect = self.rect.move(self.moveDir)
+
+	def storeBounceLocationData(self, bounceX, bounceY, bounceDirection):
+		# storing bounce mark location coordinates, implemented by sub classes
+		pass
+
+	def computeCollideAngleOpposite(self):
+		return self.angleRadian - math.pi
 		
-		if self.rect.top <= 0 or self.rect.bottom >= self.screen.get_height():
-			# inverting y direction
-			self.moveDir[1] = -self.moveDir[1] 
-			
-		if self.rect.left <= 0 or self.rect.right >= self.screen.get_width():
-			# inverting x direction
-			self.moveDir[0] = -self.moveDir[0] 
-'''
+	def collideBall(self, ball):
+		xDiff = self.ballCenterFloat[0] - ball.ballCenterFloat[0]
+		yDiff = self.ballCenterFloat[1] - ball.ballCenterFloat[1]
+		hSquare = xDiff * xDiff + yDiff * yDiff
+		radiuses = self.radius + ball.radius
+
+		return hSquare <= radiuses * radiuses
+
+	# Draw our ball to the screen
+	def draw(self):
+		if os.name == 'posix':
+			pg.draw.circle(self.screen, self.color, (self.ballCenterFloat[0], self.ballCenterFloat[1]), self.radius)
+		else:
+			pg.draw.circle(self.screen, self.color, (round(self.ballCenterFloat[0]), round(self.ballCenterFloat[1])), self.radius)
+
+		currentX = self.ballCenterFloat[0]
+		currentY = self.ballCenterFloat[1]
+
+		if (currentX - self.previousX) == 0 and (currentY - self.previousY) == 0:
+			# the case after double click to stop the balls
+			moveRight = self.previousMoveRight
+			moveDown = self.previousMoveDown
+		else:
+			moveRight = (currentX - self.previousX) > 0
+			moveDown = (currentY - self.previousY) > 0
+
+			self.previousX = currentX
+			self.previousY = currentY
+
+		if self.previousMoveRight != moveRight or self.previousMoveDown != moveDown:
+			# ball direction changed
+			self.previousMoveRight = moveRight
+			self.previousMoveDown = moveDown

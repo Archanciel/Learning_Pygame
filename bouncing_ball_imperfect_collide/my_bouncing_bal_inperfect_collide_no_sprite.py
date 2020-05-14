@@ -6,7 +6,7 @@
 import pygame as pg
 import os, random
 
-from ball_no_sprite import Ball
+from ball import Ball
 from settings import *
 
 COLORS = [WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, ORANGE]
@@ -67,7 +67,7 @@ class Game:
         for i in range(1, 10):
 
             if os.name == 'posix':
-                ball = Ball(screen=self.screen,
+                ball = Ball(game=self,
                             allBalls=self.allBalls,
                             color=self.getRandomColor(),
                             radius=min(i * 10, 70),
@@ -75,7 +75,7 @@ class Game:
                             startY= i * 140,
                             speed=min(i * 4, 8))
             else:
-                ball = Ball(screen=self.screen,
+                ball = Ball(game=self,
                             allBalls=self.allBalls,
                             color=self.getRandomColor(),
                             radius=max(i * 3, 10),
