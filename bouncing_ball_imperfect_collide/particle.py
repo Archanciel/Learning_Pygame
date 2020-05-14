@@ -9,12 +9,16 @@ class Particle:
 		self.x = x
 		self.y = y
 		self.radius = radius
+		self.angleDeg = angleDeg
 		self.angleRad = math.radians(angleDeg)
 		self.speed = speed
 		self.colour = (0, 0, 255)
 		self.thickness = thickness
 
-	def move(self, angleDeg):
+	def move(self, angleDeg=0):
+		if angleDeg == 0:
+			angleDeg = self.angleDeg
+			
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 o'clock'
 		angleRad = math.radians(angleDeg) - math.pi / 2
 		dx = self.speed * math.cos(angleRad)
@@ -22,7 +26,10 @@ class Particle:
 		self.x += dx
 		self.y += dy
 
-	def move_tuto(self, angleRad):
+	def move_tuto(self, angleRad = 0):
+		if angleRad == 0:
+			angleRad = self.angleRad
+			
 		# angleRad is the clockwise angle in radians with 0 rad corresponding to 12 o'clock'
 		dx = self.speed * math.sin(angleRad)
 		dy = self.speed * math.cos(angleRad)

@@ -20,17 +20,30 @@ else:
 pygame.display.set_caption('Move particle basic')
 (w, h) = screen.get_size()
 
+if os.name == 'posix':
+	circleX = w / 2
+	circleY = h / 2
+	circleR = (h / 3) - 100
+else:
+	circleX = w / 2
+	circleY = w / 2
+	circleR = (h / 2) - 105
+
+my_particles = []
+my_particles2 = []
+
+angleTwelth = 360 / 12
 
 if os.name == 'posix':
-	my_particle_1 = Particle(screen = screen, x=400, y=1000, radius=25, thickness=3, angleDeg=100, speed=2)
-	my_particle_2 = Particle(screen = screen, x=400, y=1000, radius=25, thickness=3, angleDeg=90, speed=1)
-	my_particle_3 = Particle(screen = screen, x=400, y=1200, radius=25, thickness=3, angleDeg=90, speed=1)
+	for i in range(1, 13):
+		angleDeg = i * angleTwelth
+		my_particles.append(Particle(screen = screen, x=circleX, y=circleY, radius=25, thickness=3, angleDeg=angleDeg, speed=2))
+		my_particles2.append(Particle(screen = screen, x=circleX, y=circleY, radius=15, thickness=3, angleDeg=angleDeg, speed=1))
 else:
-	my_particle_1 = Particle(screen = screen, x=100, y=300, radius=25, thickness=1, angleDeg=100, speed=0.2)
-	my_particle_2 = Particle(screen = screen, x=100, y=300, radius=25, thickness=1, angleDeg=90, speed=0.1)
-	my_particle_3 = Particle(screen = screen, x=100, y=500, radius=25, thickness=1, angleDeg=90, speed=0.1)
-
-
+	for i in range(1, 13):
+		angleDeg = i * angleTwelth
+		my_particles.append(Particle(screen = screen, x=circleX, y=circleY, radius=25, thickness=1, angleDeg=angleDeg, speed=0.2))
+		my_particles2.append(Particle(screen = screen, x=circleX, y=circleY, radius=15, thickness=1, angleDeg=angleDeg, speed=0.1))
 
 running = True
 
@@ -41,23 +54,18 @@ while running:
 	
 	screen.fill(background_colour)
 	if os.name == 'posix':
-		circleX = w / 2
-		circleY = h / 2
-		circleR = (h / 3) - 100
 		pygame.draw.circle(screen, (0, 0, 255), (circleX, circleY), circleR, 10)
 	else:
-		circleX = w / 2
-		circleY = w / 2
-		circleR = (h / 2) - 105
 		pygame.draw.circle(screen, (0, 0, 255), (round(circleX), round(circleY)), round(circleR), 1)
+
+	for particle in my_particles:
+		particle.move()
+		particle.display()	
+
+	for particle in my_particles2:
+		particle.move_tuto()
+		particle.display()	
+	#my_particle_3.move_tuto(angleRad=math.pi / 2)
 	
-	my_particle_1.move(angleDeg=100)
-	my_particle_2.move(angleDeg=90)
-	my_particle_3.move_tuto(angleRad=math.pi / 2)
-
-	my_particle_1.display()
-	my_particle_2.display()
-	my_particle_3.display()
-
 	pygame.display.flip()
 pygame.quit()
