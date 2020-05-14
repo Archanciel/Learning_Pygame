@@ -31,6 +31,7 @@ else:
 
 my_particles = []
 my_particles2 = []
+my_particles3 = []
 
 angleTwelth = 360 / 12
 
@@ -39,11 +40,13 @@ if os.name == 'posix':
 		angleDeg = i * angleTwelth
 		my_particles.append(Particle(screen = screen, x=circleX, y=circleY, radius=25, thickness=3, angleDeg=angleDeg, speed=2))
 		my_particles2.append(Particle(screen = screen, x=circleX, y=circleY, radius=15, thickness=3, angleDeg=angleDeg, speed=1))
+		my_particles3.append(Particle(screen = screen, x=circleX, y=circleY, radius=10, thickness=3, angleDeg=angleDeg, speed=0.8))
 else:
 	for i in range(1, 13):
 		angleDeg = i * angleTwelth
 		my_particles.append(Particle(screen = screen, x=circleX, y=circleY, radius=25, thickness=1, angleDeg=angleDeg, speed=0.2))
 		my_particles2.append(Particle(screen = screen, x=circleX, y=circleY, radius=15, thickness=1, angleDeg=angleDeg, speed=0.1))
+		my_particles3.append(Particle(screen = screen, x=circleX, y=circleY, radius=10, thickness=1, angleDeg=angleDeg, speed=0.08))
 
 running = True
 
@@ -65,7 +68,10 @@ while running:
 	for particle in my_particles2:
 		particle.move_tuto()
 		particle.display()	
-	#my_particle_3.move_tuto(angleRad=math.pi / 2)
+
+	for particle in my_particles3:
+		particle.my_move()
+		particle.display()	
 	
 	pygame.display.flip()
 pygame.quit()

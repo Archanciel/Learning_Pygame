@@ -36,6 +36,17 @@ class Particle:
 		self.x += dx
 		self.y -= dy
 
+	def my_move(self, angleDeg=0):
+		if angleDeg == 0:
+			angleDeg = self.angleDeg
+			
+		# angleDeg is the clockwise angle with 0 deg corresponding to 3 o'clock'
+		angleRad = math.radians(angleDeg)
+		dx = self.speed * math.cos(angleRad)
+		dy = self.speed * math.sin(angleRad)
+		self.x += dx
+		self.y += dy
+
 	def display(self):
 		if os.name == 'posix':
 			pygame.draw.circle(self.screen, self.colour, (self.x, self.y), self.radius, self.thickness)
