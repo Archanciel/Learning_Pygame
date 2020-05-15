@@ -119,14 +119,8 @@ class Ball():
 		self.currentX = self.ballCenterFloat[0]
 		self.currentY = self.ballCenterFloat[1]
 
-		self.currentMoveRight = self.previousMoveRight
 		self.currentMoveDown = (self.currentY - self.previousY) > 0
+		self.currentMoveRight = (self.currentX - self.previousX) > 0
 
-		if (self.currentX - self.previousX) == 0 and (self.currentY - self.previousY) == 0:
-			# the case after double click to stop the balls
-			self.currentMoveDown = self.previousMoveDown
-		else:
-			self.currentMoveRight = (self.currentX - self.previousX) > 0
-
-			self.previousX = self.currentX
-			self.previousY = self.currentY
+		self.previousX = self.currentX
+		self.previousY = self.currentY
