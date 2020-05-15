@@ -122,8 +122,39 @@ class BallDisplayPos(Ball):
 		# 	x = self.rect.centerx - a
 		# 	y = self.rect.centery + o
 
-		# storing ball traject tracing data
+		self.storeBallTrajectData()
 
+		# handling ball bounce location tracing
+
+		if DRAW_BOUNCE_LOCATION:
+			self.storeBallBounceMarkData()
+
+		self.drawBallTrajectAndBounceMark()
+
+	def drawBallTrajectAndBounceMark(self):
+		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
+			for point in oneBouncesTrajectPointList:
+				if point.width > 1:
+					# indicates that this point is a bounce mark location on the screen limits.
+					# The bounce mark direction is coded in the point.width !
+					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDirection=point.width)
+				else:
+					# ball traject is drawned using 1 pixel points, i.e circles
+					pg.draw.circle(self.screen, self.color, point.center, 1)
+
+	def storeBallBounceMarkData(self):
+		if self.bounceMarkDirection != None:
+			# we use the Rect.width (and height) property to code the type of draw bounce mark type
+			self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(
+				pg.Rect(round(self.bounceMarkX), round(self.bounceMarkY), self.bounceMarkDirection,
+						self.bounceMarkDirection))
+
+	def storeBallTrajectData(self):
+		'''
+		This method stores ball traject tracing data.
+
+		:return:
+		'''
 		x = self.ballCenterFloat[0]
 		y = self.ballCenterFloat[1]
 
@@ -133,24 +164,6 @@ class BallDisplayPos(Ball):
 				pg.Rect(round(x), round(y), 1, 1))
 			self.previousTraceX = x
 			self.previousTraceY = y
-
-		# handling ball bounce location tracing
-
-		if DRAW_BOUNCE_LOCATION:
-			if self.bounceMarkDirection != None:
-				# we use the Rect.width (and height) to code the type of draw bounce mark type
-				self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(
-					pg.Rect(round(self.bounceMarkX), round(self.bounceMarkY), self.bounceMarkDirection,
-							self.bounceMarkDirection))
-
-		for oneBouncesTrajectPointList in self.multipleBounceTrajectPointLists:
-			for point in oneBouncesTrajectPointList:
-				if point.width > 1:
-					# indicates that this point is a bounce mark location on the screen limits.
-					# The bounce mark direction is coded in the point.width !
-					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDirection=point.width)
-				else:
-					pg.draw.circle(self.screen, self.color, point.center, 1)
 
 	def drawBounceMark(self, bounceLocX, bounceLocY, bounceMarkDirection):
 		if bounceMarkDirection == BOUNCE_ARROW_TOP:
