@@ -26,6 +26,12 @@ class BallDisplayPos(Ball):
 				 startY,
 				 speed,
 				 angle)
+
+		self.previousX = 0
+		self.previousY = 0
+		self.previousMoveRight = None
+		self.previousMoveDown = None
+
 		self.bouncePointColor = bouncePointColor
 
 		# Position related instance variables
@@ -56,25 +62,23 @@ class BallDisplayPos(Ball):
 		self.bounceMarkY = bounceY
 		self.bounceMarkDirection = bounceDirection
 
-	def computeCollideAngleOpposite(self):
-		return self.angleRadian - math.pi
-
-	def collideBall(self, ball):
-		xDiff = self.ballCenterFloat[0] - ball.ballCenterFloat[0]
-		yDiff = self.ballCenterFloat[1] - ball.ballCenterFloat[1]
-		hSquare = xDiff * xDiff + yDiff * yDiff
-		radiuses = self.radius + ball.radius
-
-		return hSquare <= radiuses * radiuses
-
 	# Draw our ball to the screen
 	def draw(self):
 		super().draw()
 
-		if self.previousMoveRight != self.currentMoveRight or self.previousMoveDown != self.currentMoveDown:
+		currentX = self.ballCenterFloat[0]
+		currentY = self.ballCenterFloat[1]
+
+		currentMoveDown = (currentY - self.previousY) > 0
+		currentMoveRight = (currentX - self.previousX) > 0
+
+		self.previousX = currentX
+		self.previousY = currentY
+
+		if self.previousMoveRight != currentMoveRight or self.previousMoveDown != currentMoveDown:
 			# ball direction changed
-			self.previousMoveRight = self.currentMoveRight
-			self.previousMoveDown = self.currentMoveDown
+			self.previousMoveRight = currentMoveRight
+			self.previousMoveDown = currentMoveDown
 
 			# add a new traject point list to the deque. This will remove the oldest
 			# traject point list if the number of traject point list exceeds
@@ -89,7 +93,7 @@ class BallDisplayPos(Ball):
 
 		# Writing information on the ball surface if the ball size is large enough
 		if self.textHorizontalSize <= self.radius * 2:
-			self.blitTextOnBall(round(self.currentX, 2), round(self.currentY, 2), self.currentMoveDown, self.currentMoveRight)
+			self.blitTextOnBall(round(currentX, 2), round(currentY, 2), currentMoveDown, currentMoveRight)
 
 		# angleDegree = math.degrees(self.angle)
 		# x = 0
@@ -118,7 +122,7 @@ class BallDisplayPos(Ball):
 		# 	x = self.rect.centerx - a
 		# 	y = self.rect.centery + o
 
-		# handling ball traject tracing
+		# storing ball traject tracing data
 
 		x = self.ballCenterFloat[0]
 		y = self.ballCenterFloat[1]
@@ -131,6 +135,7 @@ class BallDisplayPos(Ball):
 			self.previousTraceY = y
 
 		# handling ball bounce location tracing
+
 		if DRAW_BOUNCE_LOCATION:
 			if self.bounceMarkDirection != None:
 				# we use the Rect.width (and height) to code the type of draw bounce mark type

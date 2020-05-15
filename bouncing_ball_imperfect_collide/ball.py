@@ -29,15 +29,6 @@ class Ball():
 		self.speed = speed
 		self.angleRadian = math.radians(angle)
 
-		self.currentX = 0
-		self.currentY = 0
-		self.previousX = 0
-		self.previousY = 0
-		self.currentMoveRight = None
-		self.currentMoveDown = None
-		self.previousMoveRight = None
-		self.previousMoveDown = None
-
 	def update(self):
 		deltaX = self.speed * math.cos(self.angleRadian)
 		deltaY = self.speed * math.sin(self.angleRadian)
@@ -115,12 +106,3 @@ class Ball():
 			pg.draw.circle(self.screen, self.color, (self.ballCenterFloat[0], self.ballCenterFloat[1]), self.radius)
 		else:
 			pg.draw.circle(self.screen, self.color, (round(self.ballCenterFloat[0]), round(self.ballCenterFloat[1])), self.radius)
-
-		self.currentX = self.ballCenterFloat[0]
-		self.currentY = self.ballCenterFloat[1]
-
-		self.currentMoveDown = (self.currentY - self.previousY) > 0
-		self.currentMoveRight = (self.currentX - self.previousX) > 0
-
-		self.previousX = self.currentX
-		self.previousY = self.currentY
