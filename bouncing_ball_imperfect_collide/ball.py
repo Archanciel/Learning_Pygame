@@ -29,8 +29,12 @@ class Ball():
 		self.speed = speed
 		self.angleRadian = math.radians(angle)
 
+		self.currentX = 0
+		self.currentY = 0
 		self.previousX = 0
 		self.previousY = 0
+		self.currentMoveRight = None
+		self.currentMoveDown = None
 		self.previousMoveRight = None
 		self.previousMoveDown = None
 
@@ -112,21 +116,17 @@ class Ball():
 		else:
 			pg.draw.circle(self.screen, self.color, (round(self.ballCenterFloat[0]), round(self.ballCenterFloat[1])), self.radius)
 
-		currentX = self.ballCenterFloat[0]
-		currentY = self.ballCenterFloat[1]
+		self.currentX = self.ballCenterFloat[0]
+		self.currentY = self.ballCenterFloat[1]
 
-		if (currentX - self.previousX) == 0 and (currentY - self.previousY) == 0:
+		self.currentMoveRight = self.previousMoveRight
+		self.currentMoveDown = (self.currentY - self.previousY) > 0
+
+		if (self.currentX - self.previousX) == 0 and (self.currentY - self.previousY) == 0:
 			# the case after double click to stop the balls
-			moveRight = self.previousMoveRight
-			moveDown = self.previousMoveDown
+			self.currentMoveDown = self.previousMoveDown
 		else:
-			moveRight = (currentX - self.previousX) > 0
-			moveDown = (currentY - self.previousY) > 0
+			self.currentMoveRight = (self.currentX - self.previousX) > 0
 
-			self.previousX = currentX
-			self.previousY = currentY
-
-		if self.previousMoveRight != moveRight or self.previousMoveDown != moveDown:
-			# ball direction changed
-			self.previousMoveRight = moveRight
-			self.previousMoveDown = moveDown
+			self.previousX = self.currentX
+			self.previousY = self.currentY

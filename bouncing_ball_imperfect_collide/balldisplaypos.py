@@ -69,30 +69,12 @@ class BallDisplayPos(Ball):
 
 	# Draw our ball to the screen
 	def draw(self):
-		if os.name == 'posix':
-			pg.draw.circle(self.screen, self.color, (self.ballCenterFloat[0], self.ballCenterFloat[1]), self.radius)
-		else:
-			pg.draw.circle(self.screen, self.color, (round(self.ballCenterFloat[0]), round(self.ballCenterFloat[1])),
-						   self.radius)
+		super().draw()
 
-		currentX = self.ballCenterFloat[0]
-		currentY = self.ballCenterFloat[1]
-
-		if (currentX - self.previousX) == 0 and (currentY - self.previousY) == 0:
-			# the case after double click to stop the balls
-			moveRight = self.previousMoveRight
-			moveDown = self.previousMoveDown
-		else:
-			moveRight = (currentX - self.previousX) > 0
-			moveDown = (currentY - self.previousY) > 0
-
-			self.previousX = currentX
-			self.previousY = currentY
-
-		if self.previousMoveRight != moveRight or self.previousMoveDown != moveDown:
+		if self.previousMoveRight != self.currentMoveRight or self.previousMoveDown != self.currentMoveDown:
 			# ball direction changed
-			self.previousMoveRight = moveRight
-			self.previousMoveDown = moveDown
+			self.previousMoveRight = self.currentMoveRight
+			self.previousMoveDown = self.currentMoveDown
 
 			# add a new traject point list to the deque. This will remove the oldest
 			# traject point list if the number of traject point list exceeds
@@ -107,7 +89,7 @@ class BallDisplayPos(Ball):
 
 		# Writing information on the ball surface if the ball size is large enough
 		if self.textHorizontalSize <= self.radius * 2:
-			self.blitTextOnBall(round(currentX, 2), round(currentY, 2), moveDown, moveRight)
+			self.blitTextOnBall(round(self.currentX, 2), round(self.currentY, 2), self.currentMoveDown, self.currentMoveRight)
 
 		# angleDegree = math.degrees(self.angle)
 		# x = 0
