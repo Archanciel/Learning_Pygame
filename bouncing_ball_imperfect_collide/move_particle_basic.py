@@ -8,6 +8,7 @@ PN = 500
 DIST_MIN = 1
 
 background_colour = (255,255,255)
+pygame.init()
 
 if os.name == 'posix':
 	(width, height) = (1300, 2000)
@@ -17,7 +18,6 @@ else:
 	os.environ['SDL_VIDEO_WINDOW_POS'] = '100,15'
 	screen = pygame.display.set_mode((width, height))
 
-pygame.init()
 pygame.display.set_caption('Move particle basic')
 (w, h) = screen.get_size()
 
