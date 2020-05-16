@@ -3,8 +3,9 @@ import math
 import random
 import os
 from particledisplaypos import ParticleDisplayPos
+from particle import Particle
 
-PN = 500
+PN = 30
 DIST_MIN = 1
 
 background_colour = (255,255,255)
@@ -30,25 +31,29 @@ else:
 	circleY = w / 2
 	circleR = (h / 2) - 105
 
-#my_particles = []
-#my_particles2 = []
-my_particles3 = []
+my_particles = []
+
 
 angleTwelth = 360 / 12
-
+'''
 if os.name == 'posix':
 	for i in range(1, 13):
 		angleDeg = i * angleTwelth
-#		my_particles.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=25, thickness=3, angleDeg=angleDeg, speed=2))
-#		my_particles2.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=15, thickness=3, angleDeg=angleDeg, speed=1))
-		my_particles3.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=100, thickness=3, angleDeg=angleDeg, speed=0.8))
+		my_particles.append(ParticleDisplayPos(screen=screen, x=circleX, y=circleY, radius=100, thickness=3, angleDeg=angleDeg, speed=0.8))
 else:
 	for i in range(1, 13):
 		angleDeg = i * angleTwelth
-#		my_particles.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=25, thickness=1, angleDeg=angleDeg, speed=0.2))
-#		my_particles2.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=15, thickness=1, angleDeg=angleDeg, speed=0.1))
-		my_particles3.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=70, thickness=1, angleDeg=angleDeg, speed=0.08))
-
+		my_particles.append(ParticleDisplayPos(screen=screen, x=circleX, y=circleY, radius=70, thickness=1, angleDeg=angleDeg, speed=0.08))
+'''
+for n in range(PN):
+    radius = random.randint(90, 110)
+    x = random.randint(radius, width - radius)
+    y = random.randint(radius, height - radius)
+    speed = random.random() * 3
+    angle = random.uniform(0, 360)
+    particle = ParticleDisplayPos(screen, x, y, radius, 3, angle, speed)
+    my_particles.append(particle)
+    
 running = True
 
 while running:
@@ -62,15 +67,8 @@ while running:
 	else:
 		pygame.draw.circle(screen, (0, 0, 255), (round(circleX), round(circleY)), round(circleR), 1)
 
-#	for particle in my_particles:
-#		particle.move()
-#		particle.display()	
 
-#	for particle in my_particles2:
-#		particle.move_tuto()
-#		particle.display()	
-
-	for particle in my_particles3:
+	for particle in my_particles:
 		particle.my_move()
 		#particle.move()
 		#particle.move_tuto()
