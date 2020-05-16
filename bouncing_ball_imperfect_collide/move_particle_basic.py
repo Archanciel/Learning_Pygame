@@ -72,6 +72,8 @@ while running:
 
 	for particle in my_particles3:
 		particle.my_move()
+		#particle.move()
+		#particle.move_tuto()
 		particle.display()	
 	
 	pygame.display.flip()
