@@ -37,12 +37,7 @@ class ParticleDisplayPos(Particle):
 		textLines[1] = 'y: ' + str(yValue)
 		
 		displayAngleRad = self.angleRad % (2 * math.pi)
-
-		if (self.angleRad < 0):
-			# negative degrees are nonsensical !
-			angleDegree = round(math.degrees(2 * math.pi + self.angleRad))
-		else:
-			angleDegree = round(math.degrees(displayAngleRad))
+		angleDegree = round(math.degrees(displayAngleRad))
 
 		textLines[2] = 'angle: ' + str(angleDegree)
 
