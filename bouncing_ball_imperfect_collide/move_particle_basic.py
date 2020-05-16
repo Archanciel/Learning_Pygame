@@ -47,7 +47,7 @@ else:
 		angleDeg = i * angleTwelth
 #		my_particles.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=25, thickness=1, angleDeg=angleDeg, speed=0.2))
 #		my_particles2.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=15, thickness=1, angleDeg=angleDeg, speed=0.1))
-		my_particles3.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=100, thickness=1, angleDeg=angleDeg, speed=0.08))
+		my_particles3.append(ParticleDisplayPos(screen = screen, x=circleX, y=circleY, radius=70, thickness=1, angleDeg=angleDeg, speed=0.08))
 
 running = True
 
