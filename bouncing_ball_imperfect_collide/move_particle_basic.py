@@ -51,23 +51,12 @@ angleTwelth = 360 / 12
 if os.name == 'posix':
 	for i in range(1, 13):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE, thickness=3, angleDeg=angleDeg, speed=0.8))
+		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE, thickness=3, angleDeg=angleDeg, speed=1.8))
 else:
 	for i in range(1, 13):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE, thickness=1, angleDeg=angleDeg, speed=0.08))
+		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE, thickness=1, angleDeg=angleDeg, speed=0.18))
 		
-'''
-for n in range(PN):
-    radius = random.randint(90, 110)
-    x = random.randint(radius, width - radius)
-    y = random.randint(radius, height - radius)
-    speed = random.random() * 3
-    angle = random.uniform(0, 360)
-    particle = ParticleDisplayPos(screen, x, y, radius, 3, angle, speed)
-    my_particles.append(particle)
-'''   
- 
 running = True
 
 while running:
@@ -83,9 +72,10 @@ while running:
 
 
 	for particle in my_particles:
-		particle.my_move()
+		#particle.my_move()
 		#particle.move()
-		#particle.move_tuto()
+		particle.move_tuto()
+		particle.bounce()
 		particle.display()	
 	
 	pygame.display.flip()

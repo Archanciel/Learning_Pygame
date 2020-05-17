@@ -53,3 +53,18 @@ class Particle:
 		else:
 			pygame.draw.circle(self.screen, self.colour, (round(self.x), round(self.y)), self.radius, self.thickness)
 
+	def bounce(self):
+		width, height = self.screen.get_size()
+		
+		if self.x > width - self.radius:
+			self.x = 2 * (width - self.radius) - self.x
+			self.angleRad = - self.angleRad
+		elif self.x < self.radius:
+			self.x = 2 * self.radius - self.x
+			self.angleRad = - self.angleRad
+		if self.y > height - self.radius:
+			self.y = 2 * (height - self.radius) - self.y
+			self.angleRad = math.pi - self.angleRad
+		elif self.y < self.radius:
+			self.y = 2 * self.radius - self.y
+			self.angleRad = math.pi - self.angleRad
