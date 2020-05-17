@@ -9,8 +9,9 @@ RED = (255, 0, 0)
 
 #bounce tracing constants
 
-MAX_BOUNCE_TRAJECTS = 1
-BALL_TRACING_STEP_SIZE = 10
+MAX_BOUNCE_TRAJECTS = 4 # number of ball trajects to display
+BALL_TRACING_POINT_SIZE = 2
+BALL_TRACING_STEP_SIZE = 10 # defines the number of pixels after which a tracing point is drawned on screen
 
 #bounce mark constants
 
@@ -66,7 +67,7 @@ class ParticleDisplayPosAndTraject(ParticleDisplayPos):
 					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDirection=point.width)
 				else:
 					# ball traject is drawned using 1 pixel points, i.e circles
-					pg.draw.circle(self.screen, self.colour, point.center, 1)
+					pg.draw.circle(self.screen, self.colour, point.center, BALL_TRACING_POINT_SIZE)
 
 	def storeBallBounceMarkData(self):
 		if self.bounceMarkDirection != None:
