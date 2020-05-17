@@ -115,7 +115,7 @@ class BallDisplayPos(Ball):
 					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDirection=point.width)
 				else:
 					# ball traject is drawned using 1 pixel points, i.e circles
-					pg.draw.circle(self.screen, self.color, point.center, 1)
+					pg.draw.circle(self.screen, self.color, point.center, BALL_TRACING_POINT_SIZE)
 
 	def storeBallBounceMarkData(self):
 		if self.bounceMarkDirection != None:

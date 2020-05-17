@@ -21,6 +21,8 @@ ORANGE = (255, 165, 0)
 # defines the number of pixels after which a tracing point is drawned on screen
 BALL_TRACING_STEP_SIZE = 10
 
+BALL_TRACING_POINT_SIZE = 1
+
 # number of ball trajects to display
 MAX_BOUNCE_TRAJECTS = 2
 
