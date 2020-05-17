@@ -3,12 +3,24 @@ import math
 import random
 import os
 from particledisplaypos import ParticleDisplayPos
+from particledisplayposandtraject import ParticleDisplayPosAndTraject
 from particle import Particle
 
 PN = 30
 DIST_MIN = 1
 
-background_colour = (255,255,255)
+# define colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+CYAN = (2, 255, 255)
+MAGENTA = (255, 0, 255)
+ORANGE = (255, 165, 0)
+
+background_colour = WHITE
 pygame.init()
 
 if os.name == 'posix':
@@ -35,15 +47,16 @@ my_particles = []
 
 
 angleTwelth = 360 / 12
-'''
+
 if os.name == 'posix':
 	for i in range(1, 13):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPos(screen=screen, x=circleX, y=circleY, radius=100, thickness=3, angleDeg=angleDeg, speed=0.8))
+		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE, thickness=3, angleDeg=angleDeg, speed=0.8))
 else:
 	for i in range(1, 13):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPos(screen=screen, x=circleX, y=circleY, radius=70, thickness=1, angleDeg=angleDeg, speed=0.08))
+		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE, thickness=1, angleDeg=angleDeg, speed=0.08))
+		
 '''
 for n in range(PN):
     radius = random.randint(90, 110)
@@ -53,7 +66,8 @@ for n in range(PN):
     angle = random.uniform(0, 360)
     particle = ParticleDisplayPos(screen, x, y, radius, 3, angle, speed)
     my_particles.append(particle)
-    
+'''   
+ 
 running = True
 
 while running:
@@ -63,9 +77,9 @@ while running:
 	
 	screen.fill(background_colour)
 	if os.name == 'posix':
-		pygame.draw.circle(screen, (0, 0, 255), (circleX, circleY), circleR, 10)
+		pygame.draw.circle(screen, BLUE, (circleX, circleY), circleR, 10)
 	else:
-		pygame.draw.circle(screen, (0, 0, 255), (round(circleX), round(circleY)), round(circleR), 1)
+		pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
 
 
 	for particle in my_particles:

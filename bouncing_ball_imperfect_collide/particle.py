@@ -3,7 +3,7 @@ import math
 import os
 
 class Particle:
-	def __init__(self, screen, x, y, radius, thickness, angleDeg, speed):
+	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
 		self.screen = screen
 		self.x = x
@@ -12,7 +12,7 @@ class Particle:
 		self.angleDeg = angleDeg
 		self.angleRad = math.radians(angleDeg)
 		self.speed = speed
-		self.colour = (0, 0, 255)
+		self.colour = colour
 		self.thickness = thickness
 
 	def move(self, angleDeg=0):

@@ -27,14 +27,7 @@ class BallDisplayPos(Ball):
 				 speed,
 				 angle)
 
-		self.previousX = 0
-		self.previousY = 0
-		self.previousMoveRight = None
-		self.previousMoveDown = None
-
-		self.bouncePointColor = bouncePointColor
-
-		# Position related instance variables
+		# Pos display related instance variables
 		self.font = pg.font.Font(None, 32)
 		self.font_height = self.font.get_linesize()
 
@@ -48,11 +41,18 @@ class BallDisplayPos(Ball):
 		self.textTopMargin = radius - (self.font_height * self.lineNumber / 2)
 		self.textColor = BLACK
 
+		# Traject tracing instance variables
+		self.previousX = 0
+		self.previousY = 0
+		self.previousMoveRight = None
+		self.previousMoveDown = None
 		self.multipleBounceTrajectPointLists = deque(maxlen=MAX_BOUNCE_TRAJECTS)
 		self.previousTraceX = 0
 		self.previousTraceY = 0
 		self.currentBounceTrajectIndex = -1
 
+		# Bounce mark instance variables
+		self.bouncePointColor = bouncePointColor
 		self.bounceMarkX = None
 		self.bounceMarkY = None
 		self.bounceMarkDirection = None
@@ -66,34 +66,11 @@ class BallDisplayPos(Ball):
 	def draw(self):
 		super().draw()
 
-		currentX = self.ballCenterFloat[0]
-		currentY = self.ballCenterFloat[1]
-
-		currentMoveDown = (currentY - self.previousY) > 0
-		currentMoveRight = (currentX - self.previousX) > 0
-
-		self.previousX = currentX
-		self.previousY = currentY
-
-		if self.previousMoveRight != currentMoveRight or self.previousMoveDown != currentMoveDown:
-			# ball direction changed
-			self.previousMoveRight = currentMoveRight
-			self.previousMoveDown = currentMoveDown
-
-			# add a new traject point list to the deque. This will remove the oldest
-			# traject point list if the number of traject point list exceeds
-			# MAX_BOUNCE_TRAJECTS
-			self.multipleBounceTrajectPointLists.append([])
-			self.currentBounceTrajectIndex += 1
-
-			if self.currentBounceTrajectIndex >= MAX_BOUNCE_TRAJECTS:
-				# since the new traject points list is added at the right of the deque,
-				# the currentBounceTrajectIndex must be set to the max deque size - 1
-				self.currentBounceTrajectIndex = MAX_BOUNCE_TRAJECTS - 1
+		currentMoveDown, currentMoveRight = self.storeBallTrajectData()
 
 		# Writing information on the ball surface if the ball size is large enough
 		if self.textHorizontalSize <= self.radius * 2:
-			self.blitTextOnBall(round(currentX, 2), round(currentY, 2), currentMoveDown, currentMoveRight)
+			self.blitTextOnBall(round(self.ballCenterFloat[0], 2), round(self.ballCenterFloat[1], 2), currentMoveDown, currentMoveRight)
 
 		# angleDegree = math.degrees(self.angle)
 		# x = 0
@@ -121,8 +98,6 @@ class BallDisplayPos(Ball):
 		# 	a = o * math.cos(angle) / math.sin(angle)
 		# 	x = self.rect.centerx - a
 		# 	y = self.rect.centery + o
-
-		self.storeBallTrajectData()
 
 		# handling ball bounce location tracing
 
@@ -155,15 +130,37 @@ class BallDisplayPos(Ball):
 
 		:return:
 		'''
-		x = self.ballCenterFloat[0]
-		y = self.ballCenterFloat[1]
 
-		if abs(x - self.previousTraceX) > BALL_TRACING_STEP_SIZE or abs(
-				y - self.previousTraceY) > BALL_TRACING_STEP_SIZE:
+		currentMoveDown = (self.ballCenterFloat[1] - self.previousY) > 0
+		currentMoveRight = (self.ballCenterFloat[0] - self.previousX) > 0
+
+		self.previousX = self.ballCenterFloat[0]
+		self.previousY = self.ballCenterFloat[1]
+
+		if self.previousMoveRight != currentMoveRight or self.previousMoveDown != currentMoveDown:
+			# ball direction changed
+			self.previousMoveRight = currentMoveRight
+			self.previousMoveDown = currentMoveDown
+
+			# add a new traject point list to the deque. This will remove the oldest
+			# traject point list if the number of traject point list exceeds
+			# MAX_BOUNCE_TRAJECTS
+			self.multipleBounceTrajectPointLists.append([])
+			self.currentBounceTrajectIndex += 1
+
+			if self.currentBounceTrajectIndex >= MAX_BOUNCE_TRAJECTS:
+				# since the new traject points list is added at the right of the deque,
+				# the currentBounceTrajectIndex must be set to the max deque size - 1
+				self.currentBounceTrajectIndex = MAX_BOUNCE_TRAJECTS - 1
+
+		if abs(self.ballCenterFloat[0] - self.previousTraceX) > BALL_TRACING_STEP_SIZE or abs(
+				self.ballCenterFloat[1] - self.previousTraceY) > BALL_TRACING_STEP_SIZE:
 			self.multipleBounceTrajectPointLists[self.currentBounceTrajectIndex].append(
-				pg.Rect(round(x), round(y), 1, 1))
-			self.previousTraceX = x
-			self.previousTraceY = y
+				pg.Rect(round(self.ballCenterFloat[0]), round(self.ballCenterFloat[1]), 1, 1))
+			self.previousTraceX = self.ballCenterFloat[0]
+			self.previousTraceY = self.ballCenterFloat[1]
+			
+		return currentMoveDown, currentMoveRight
 
 	def drawBounceMark(self, bounceLocX, bounceLocY, bounceMarkDirection):
 		if bounceMarkDirection == BOUNCE_ARROW_TOP:

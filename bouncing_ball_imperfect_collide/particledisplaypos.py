@@ -6,9 +6,9 @@ from particle import Particle
 BLACK = (0, 0, 0)
 
 class ParticleDisplayPos(Particle):
-	def __init__(self, screen, x, y, radius, thickness, angleDeg, speed):
+	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
-		super().__init__(screen, x, y, radius, thickness, angleDeg, speed)
+		super().__init__(screen, x, y, radius, colour, thickness, angleDeg, speed)
 		
 		# Position related instance variables
 		self.font = pg.font.Font(None, 32)
