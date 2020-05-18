@@ -60,7 +60,11 @@ class Particle:
 
 	def bounce(self):
 		width, height = self.screen.get_size()
-		
+
+		if self.angleRad > 2 * math.pi:
+			# avoid displaying a negative value for the angle in degree 
+			self.angleRad -= 2 * math.pi
+
 		if self.x > width - self.radius:
 			self.x = 2 * (width - self.radius) - self.x
 			self.angleRad = - self.angleRad
