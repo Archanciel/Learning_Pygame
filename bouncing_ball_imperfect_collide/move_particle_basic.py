@@ -23,6 +23,47 @@ ORANGE = (255, 165, 0)
 PARTICLE_FOR_ANGLE_START_NUMBER = 2
 PARTICLE_FOR_ANGLE_END_NUMBER = 3
 
+if os.name == 'posix':
+	FPS = 200
+else:
+	FPS = 100
+
+def handleDoubleClick():
+	global timerDC
+	global pause
+
+	if timerDC == 0:
+		timerDC = 0.01
+		# Click again before 0.1 seconds to double click.
+	elif timerDC < 0.1:
+		# Double click happened
+		if not pause:
+			pause = True
+		else:
+			pause = False
+		'''
+		if self.playing:
+			self.playing = False
+				
+		self.running = False
+		'''
+		
+def updateTimerForDoubleClick():
+	# Increase timerDC after mouse was pressed the first time.
+	global timerDC
+	global dt
+
+	if timerDC != 0:
+		timerDC += dt
+
+	# Reset after 0.5 seconds.
+	if timerDC >= 0.1:
+		timerDC = 0
+
+	# dt == time in seconds since last tick.
+	# / 1000 to convert milliseconds to 10th of seconds.
+	dt = clock.tick(FPS) / 10000
+
 background_colour = WHITE
 pygame.init()
 
@@ -45,7 +86,7 @@ else:
 	circleX = w / 2
 	circleY = w / 2
 	circleR = (h / 2) - 105
-
+	
 my_particles = []
 
 
@@ -58,28 +99,35 @@ if os.name == 'posix':
 else:
 	for i in range(PARTICLE_FOR_ANGLE_START_NUMBER, PARTICLE_FOR_ANGLE_END_NUMBER):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE, thickness=1, angleDeg=angleDeg, speed=0.18))
+		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE, thickness=1, angleDeg=angleDeg, speed=0.5))
 		
 running = True
+clock = pygame.time.Clock()
+timerDC = 0
+dt = 0
+pause = False
 
 while running:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
-	
-	screen.fill(background_colour)
-	if os.name == 'posix':
-		pygame.draw.circle(screen, BLUE, (circleX, circleY), circleR, 10)
-	else:
-		pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
+		elif event.type == pygame.MOUSEBUTTONDOWN: #on Android, tap the sreen to quit
+			handleDoubleClick()
 
+	if not pause:	
+		screen.fill(background_colour)
+		if os.name == 'posix':
+			pygame.draw.circle(screen, BLUE, (circleX, circleY), circleR, 10)
+		else:
+			pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
 
-	for particle in my_particles:
-		#particle.my_move()
-		#particle.move()
-		particle.move_tuto()
-		particle.bounce()
-		particle.display()	
+		for particle in my_particles:
+			#particle.my_move()
+			#particle.move()
+			particle.move_tuto()
+			particle.bounce()
+			particle.display()	
 	
-	pygame.display.flip()
+		pygame.display.flip()
+		
 pygame.quit()
