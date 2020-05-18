@@ -78,13 +78,13 @@ class Particle:
 			self.angleRad = math.pi - self.angleRad
 
 			# storing bounce mark location coordinates
-			self.storeBounceLocationData(self.x, 0, BOUNCE_ARROW_TOP)
+			self.storeBounceLocationData(self.x, height, BOUNCE_ARROW_BOTTOM)
 		elif self.y < self.radius:
 			self.y = 2 * self.radius - self.y
 			self.angleRad = math.pi - self.angleRad
 
 			# storing bounce mark location coordinates
-			self.storeBounceLocationData(self.x, height, BOUNCE_ARROW_BOTTOM)
+			self.storeBounceLocationData(self.x, 0, BOUNCE_ARROW_TOP)
 
 	def storeBounceLocationData(self, bounceX, bounceY, bounceDirection):
 		# storing bounce mark location coordinates, implemented by sub classes

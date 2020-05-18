@@ -23,7 +23,7 @@ BOUNCE_ARROW_LEFT = 5
 
 ARROW_DIM_1 = 7
 ARROW_DIM_2 = 14
-ARROW_WIDTH = 1
+ARROW_WIDTH = 3
 
 class ParticleDisplayPosAndTraject(ParticleDisplayPos):
 	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed, bouncePointColor=RED):
