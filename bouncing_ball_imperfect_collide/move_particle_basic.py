@@ -99,7 +99,7 @@ if os.name == 'posix':
 else:
 	for i in range(PARTICLE_FOR_ANGLE_START_NUMBER, PARTICLE_FOR_ANGLE_END_NUMBER):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE, thickness=1, angleDeg=angleDeg, speed=0.5))
+		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE, thickness=1, angleDeg=angleDeg, speed=1))
 		
 running = True
 clock = pygame.time.Clock()
