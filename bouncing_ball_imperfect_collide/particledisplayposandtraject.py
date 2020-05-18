@@ -15,7 +15,7 @@ BALL_TRACING_STEP_SIZE = 10 # defines the number of pixels after which a tracing
 
 #bounce mark constants
 
-DRAW_BOUNCE_LOCATION = False
+DRAW_BOUNCE_LOCATION = True
 BOUNCE_ARROW_TOP = 2
 BOUNCE_ARROW_RIGHT = 3
 BOUNCE_ARROW_BOTTOM = 4
@@ -110,6 +110,11 @@ class ParticleDisplayPosAndTraject(ParticleDisplayPos):
 				pg.Rect(round(self.x), round(self.y), 1, 1))
 			self.previousTraceX = self.x
 			self.previousTraceY = self.y
+
+	def storeBounceLocationData(self, bounceX, bounceY, bounceDirection):
+		self.bounceMarkX = bounceX
+		self.bounceMarkY = bounceY
+		self.bounceMarkDirection = bounceDirection
 
 	def drawBounceMark(self, bounceLocX, bounceLocY, bounceMarkDirection):
 		if bounceMarkDirection == BOUNCE_ARROW_TOP:

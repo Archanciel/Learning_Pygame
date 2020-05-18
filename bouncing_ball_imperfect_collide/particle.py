@@ -2,6 +2,11 @@ import pygame
 import math
 import os
 
+BOUNCE_ARROW_TOP = 2
+BOUNCE_ARROW_RIGHT = 3
+BOUNCE_ARROW_BOTTOM = 4
+BOUNCE_ARROW_LEFT = 5
+
 class Particle:
 	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
@@ -59,12 +64,28 @@ class Particle:
 		if self.x > width - self.radius:
 			self.x = 2 * (width - self.radius) - self.x
 			self.angleRad = - self.angleRad
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(width, self.y, BOUNCE_ARROW_RIGHT)
 		elif self.x < self.radius:
 			self.x = 2 * self.radius - self.x
 			self.angleRad = - self.angleRad
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(0, self.y, BOUNCE_ARROW_LEFT)
 		if self.y > height - self.radius:
 			self.y = 2 * (height - self.radius) - self.y
 			self.angleRad = math.pi - self.angleRad
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(self.x, 0, BOUNCE_ARROW_TOP)
 		elif self.y < self.radius:
 			self.y = 2 * self.radius - self.y
 			self.angleRad = math.pi - self.angleRad
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(self.x, height, BOUNCE_ARROW_BOTTOM)
+
+	def storeBounceLocationData(self, bounceX, bounceY, bounceDirection):
+		# storing bounce mark location coordinates, implemented by sub classes
+		pass
