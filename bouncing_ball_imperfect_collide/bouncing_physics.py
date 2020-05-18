@@ -20,11 +20,11 @@ class Game:
 		'''
 		Initializes game window, etc.
 		'''
-		# setting Pygame window position
 		self.clock = pg.time.Clock()
 		self.timerDC = 0
 		self.dt = 0
 
+		# setting Pygame window position
 		if os.name == 'posix':
 			self.fps = FPS
 		else:
