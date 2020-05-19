@@ -20,18 +20,7 @@ class Particle:
 		self.colour = colour
 		self.thickness = thickness
 
-	def move(self, angleDeg=0):
-		if angleDeg == 0:
-			angleDeg = self.angleDeg
-			
-		# angleDeg is the clockwise angle with 0 deg corresponding to 12 o'clock'
-		angleRad = math.radians(angleDeg) - math.pi / 2
-		dx = self.speed * math.cos(angleRad)
-		dy = self.speed * math.sin(angleRad)
-		self.x += dx
-		self.y += dy
-
-	def move_tuto(self, angleRad = 0):
+	def move(self, angleRad = 0):
 		if angleRad == 0:
 			angleRad = self.angleRad
 			
@@ -40,17 +29,6 @@ class Particle:
 		dy = self.speed * math.cos(angleRad)
 		self.x += dx
 		self.y -= dy
-
-	def my_move(self, angleDeg=0):
-		if angleDeg == 0:
-			angleDeg = self.angleDeg
-			
-		# angleDeg is the clockwise angle with 0 deg corresponding to 3 o'clock'
-		angleRad = math.radians(angleDeg)
-		dx = self.speed * math.cos(angleRad)
-		dy = self.speed * math.sin(angleRad)
-		self.x += dx
-		self.y += dy
 
 	def display(self):
 		if os.name == 'posix':
@@ -62,7 +40,8 @@ class Particle:
 		width, height = self.screen.get_size()
 
 		if self.angleRad > 2 * math.pi:
-			# avoid displaying a negative value for the angle in degree. Useful only if window height > window width !
+			# avoid displaying a negative value for the angle in degree. Useful only if window height > window width,
+			# at least om Windows !
 			self.angleRad -= 2 * math.pi
 
 		if self.x > width - self.radius:

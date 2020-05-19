@@ -95,7 +95,7 @@ angleTwelth = 360 / 12
 if os.name == 'posix':
 	for i in range(PARTICLE_FOR_ANGLE_START_NUMBER, PARTICLE_FOR_ANGLE_END_NUMBER):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE, thickness=3, angleDeg=angleDeg, speed=4))
+		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE, thickness=3, angleDeg=angleDeg, speed=6))
 else:
 	for i in range(PARTICLE_FOR_ANGLE_START_NUMBER, PARTICLE_FOR_ANGLE_END_NUMBER):
 		angleDeg = i * angleTwelth
@@ -122,9 +122,7 @@ while running:
 			pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
 
 		for particle in my_particles:
-			#particle.my_move()
-			#particle.move()
-			particle.move_tuto()
+			particle.move()
 			particle.bounce()
 			particle.display()	
 	
