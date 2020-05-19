@@ -5,6 +5,9 @@ from particle import Particle
 
 BLACK = (0, 0, 0)
 
+ANGLE_RAD_450_DEGREE = math.radians(450)
+TWO_PI = math.pi * 2
+
 class ParticleDisplayPos(Particle):
 	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
@@ -36,13 +39,13 @@ class ParticleDisplayPos(Particle):
 		textLines[0] = 'x: ' + str(xValue)
 		textLines[1] = 'y: ' + str(yValue)
 		
-		displayAngleRad = self.angleRad % (2 * math.pi)
+		#displayAngleRad = self.angleRad % (2 * math.pi)
+		displayAngleRad = abs(self.angleRad - ANGLE_RAD_450_DEGREE)
+		
+		if displayAngleRad >= TWO_PI:
+			displayAngleRad -= TWO_PI
 
-		if (self.angleRad < 0):
-			# negative degrees are nonsensical ! Happens after rebound.
-			angleDegree = round(math.degrees(2 * math.pi + self.angleRad))
-		else:
-			angleDegree = round(math.degrees(displayAngleRad))
+		angleDegree = round(math.degrees(displayAngleRad))
 
 		textLines[2] = 'angle: ' + str(angleDegree)
 
