@@ -62,7 +62,7 @@ class Particle:
 		width, height = self.screen.get_size()
 
 		if self.angleRad > 2 * math.pi:
-			# avoid displaying a negative value for the angle in degree 
+			# avoid displaying a negative value for the angle in degree. Useful only if window height > window width !
 			self.angleRad -= 2 * math.pi
 
 		if self.x > width - self.radius:
