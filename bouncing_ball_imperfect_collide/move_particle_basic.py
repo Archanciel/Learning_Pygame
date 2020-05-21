@@ -2,7 +2,8 @@ import pygame
 import math
 import random
 import os
-from particledisplaypos import ParticleDisplayPos
+from particledisplayposandtraject import ParticleDisplayPosAndTraject
+from particledisplayposandtrajectanglefromxaxis import ParticleDisplayPosAndTrajectAngleFromXAxis
 from particledisplayposandtraject import ParticleDisplayPosAndTraject
 from particle import Particle
 
@@ -20,8 +21,8 @@ CYAN = (2, 255, 255)
 MAGENTA = (255, 0, 255)
 ORANGE = (255, 165, 0)
 
-PARTICLE_FOR_ANGLE_START_NUMBER = 2
-PARTICLE_FOR_ANGLE_END_NUMBER = 3
+SECOND_PARTICLE_X_SHIFT = 150
+#SECOND_PARTICLE_X_SHIFT = 300 causes problem !!
 
 if os.name == 'posix':
 	FPS = 200
@@ -93,14 +94,29 @@ my_particles = []
 angleTwelth = 360 / 12
 
 if os.name == 'posix':
-	for i in range(PARTICLE_FOR_ANGLE_START_NUMBER, PARTICLE_FOR_ANGLE_END_NUMBER):
+	for i in range(2, 3):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE, thickness=3, angleDeg=angleDeg, speed=6))
+		my_particles.append(
+			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE,
+													   thickness=3, angleDeg=angleDeg, speed=6))
+	for i in range(1, 2):
+		angleDeg = i * angleTwelth
+		my_particles.append(
+			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=100, colour=MAGENTA,
+													   thickness=3, angleDeg=angleDeg, speed=6))
 else:
-	for i in range(PARTICLE_FOR_ANGLE_START_NUMBER, PARTICLE_FOR_ANGLE_END_NUMBER):
+	for i in range(2, 3):
 		angleDeg = i * angleTwelth
-		my_particles.append(ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE, thickness=1, angleDeg=angleDeg, speed=1))
-		
+		my_particles.append(
+			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE,
+													   thickness=1, angleDeg=angleDeg, speed=1))
+	for i in range(1, 2):
+		angleDeg = i * angleTwelth
+		my_particles.append(
+			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, colour=MAGENTA,
+													   thickness=1, angleDeg=angleDeg, speed=1))
+
+
 running = True
 clock = pygame.time.Clock()
 timerDC = 0

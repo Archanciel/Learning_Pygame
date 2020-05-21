@@ -5,7 +5,6 @@ from particle import Particle
 
 BLACK = (0, 0, 0)
 
-ANGLE_RAD_90_DEGREE_CORRECTION = math.pi / 2
 TWO_PI = math.pi * 2
 
 class ParticleDisplayPos(Particle):
@@ -26,6 +25,8 @@ class ParticleDisplayPos(Particle):
 		self.lineNumber = 3
 		self.textTopMargin = radius - (self.font_height * self.lineNumber / 2)
 		self.textColor = BLACK
+		
+		self.angleRadCorrection = math.pi / 2
 
 	def display(self):
 		super().display()
@@ -38,10 +39,8 @@ class ParticleDisplayPos(Particle):
 		textLines = [None] * self.lineNumber
 		textLines[0] = 'x: ' + str(xValue)
 		textLines[1] = 'y: ' + str(yValue)
-
-		# correcting displayed angleRad due to angle based not on X axis but
-		# on Y axis.
-		displayAngleRad = abs(self.angleRad - ANGLE_RAD_90_DEGREE_CORRECTION)
+		
+		displayAngleRad = abs(self.angleRad - self.angleRadCorrection)
 		
 		if displayAngleRad >= TWO_PI:
 			displayAngleRad -= TWO_PI

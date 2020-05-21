@@ -16,6 +16,8 @@ BALL_TRACING_STEP_SIZE = 10 # defines the number of pixels after which a tracing
 #bounce mark constants
 
 DRAW_BOUNCE_LOCATION = True
+
+# Bounce mark inheritable constants
 BOUNCE_ARROW_TOP = 2
 BOUNCE_ARROW_RIGHT = 3
 BOUNCE_ARROW_BOTTOM = 4
@@ -25,7 +27,8 @@ ARROW_DIM_1 = 7
 ARROW_DIM_2 = 14
 ARROW_WIDTH = 3
 
-class ParticleDisplayPosAndTraject(ParticleDisplayPos):
+class ParticleDisplayPosAndTraject(ParticleDisplayPos):			
+	
 	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed, bouncePointColor=RED):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
 		super().__init__(screen, x, y, radius, colour, thickness, angleDeg, speed)
@@ -39,7 +42,7 @@ class ParticleDisplayPosAndTraject(ParticleDisplayPos):
 		self.previousTraceX = 0
 		self.previousTraceY = 0
 		self.currentBounceTrajectIndex = -1
-
+		
 		# Bounce mark instance variables
 		self.bouncePointColor = bouncePointColor
 		self.bounceMarkX = None
