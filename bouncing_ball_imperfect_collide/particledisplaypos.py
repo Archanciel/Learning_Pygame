@@ -5,7 +5,7 @@ from particle import Particle
 
 BLACK = (0, 0, 0)
 
-ANGLE_RAD_450_DEGREE = math.radians(450)
+ANGLE_RAD_90_DEGREE_CORRECTION = math.pi / 2
 TWO_PI = math.pi * 2
 
 class ParticleDisplayPos(Particle):
@@ -38,9 +38,10 @@ class ParticleDisplayPos(Particle):
 		textLines = [None] * self.lineNumber
 		textLines[0] = 'x: ' + str(xValue)
 		textLines[1] = 'y: ' + str(yValue)
-		
-		#displayAngleRad = self.angleRad % (2 * math.pi)
-		displayAngleRad = abs(self.angleRad - ANGLE_RAD_450_DEGREE)
+
+		# correcting displayed angleRad due to angle based not on X axis but
+		# on Y axis.
+		displayAngleRad = abs(self.angleRad - ANGLE_RAD_90_DEGREE_CORRECTION)
 		
 		if displayAngleRad >= TWO_PI:
 			displayAngleRad -= TWO_PI
