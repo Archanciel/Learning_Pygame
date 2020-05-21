@@ -14,7 +14,6 @@ class Particle:
 		self.x = x
 		self.y = y
 		self.radius = radius
-		self.angleDeg = angleDeg
 		self.angleRad = math.radians(angleDeg)
 		self.speed = speed
 		self.colour = colour
@@ -46,13 +45,13 @@ class Particle:
 
 		if self.x > width - self.radius:
 			self.x = 2 * (width - self.radius) - self.x
-			self.angleRad = - self.angleRad
+			self.angleRad = -self.angleRad
 
 			# storing bounce mark location coordinates
 			self.storeBounceLocationData(width, self.y, BOUNCE_ARROW_RIGHT)
 		elif self.x < self.radius:
 			self.x = 2 * self.radius - self.x
-			self.angleRad = - self.angleRad
+			self.angleRad = -self.angleRad
 
 			# storing bounce mark location coordinates
 			self.storeBounceLocationData(0, self.y, BOUNCE_ARROW_LEFT)
