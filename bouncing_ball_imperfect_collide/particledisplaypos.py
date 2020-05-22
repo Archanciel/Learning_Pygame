@@ -6,6 +6,7 @@ from particle import Particle
 BLACK = (0, 0, 0)
 
 TWO_PI = math.pi * 2
+DISPLAY_ANGLE_RAD_450_DEGREE_CORRECTION = math.radians(450)
 
 class ParticleDisplayPos(Particle):
 	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
@@ -25,8 +26,6 @@ class ParticleDisplayPos(Particle):
 		self.lineNumber = 3
 		self.textTopMargin = radius - (self.font_height * self.lineNumber / 2)
 		self.textColor = BLACK
-		
-		self.angleRadCorrection = math.radians(450)
 
 	def display(self):
 		super().display()
@@ -40,7 +39,7 @@ class ParticleDisplayPos(Particle):
 		textLines[0] = 'x: ' + str(xValue)
 		textLines[1] = 'y: ' + str(yValue)
 		
-		displayAngleRad = abs(self.angleRad - self.angleRadCorrection)
+		displayAngleRad = self.computeDisplayAngleRad()
 		
 		if displayAngleRad >= TWO_PI:
 			displayAngleRad -= TWO_PI
@@ -61,3 +60,8 @@ class ParticleDisplayPos(Particle):
 			textCoordinatesTuple = (self.x - self.radius + self.textLeftMargin,
 									self.y - self.radius + self.textTopMargin + y * self.font_height)
 			self.screen.blit(textSurface, textCoordinatesTuple)
+
+	def computeDisplayAngleRad(self):
+		# computing display angle radians if the Y axis is the reference
+		# for defining the particle angle.
+		return abs(self.angleRad - DISPLAY_ANGLE_RAD_450_DEGREE_CORRECTION)

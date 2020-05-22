@@ -3,13 +3,13 @@ import math
 
 from particledisplayposandtraject import * # using * imports constants aswell !
 
+TWO_PI = math.pi * 2
+
 class ParticleDisplayPosAndTrajectAngleFromXAxis(ParticleDisplayPosAndTraject):
 	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
 		super().__init__(screen, x, y, radius, colour, thickness, angleDeg, speed)
 
-		self.angleRadCorrection = 0
-		
 	def move(self, angleRad = 0):
 		if angleRad == 0:
 			angleRad = self.angleRad
@@ -52,3 +52,11 @@ class ParticleDisplayPosAndTrajectAngleFromXAxis(ParticleDisplayPosAndTraject):
 
 			# storing bounce mark location coordinates
 			self.storeBounceLocationData(self.x, 0, BOUNCE_ARROW_TOP)
+
+	def computeDisplayAngleRad(self):
+		# computing display angle radians if the X axis is the reference
+		# for defining the particle angle.
+		if self.angleRad < 0:
+			return TWO_PI + self.angleRad
+		else:
+			return self.angleRad
