@@ -26,7 +26,7 @@ class ParticleDisplayPos(Particle):
 		self.textTopMargin = radius - (self.font_height * self.lineNumber / 2)
 		self.textColor = BLACK
 		
-		self.angleRadCorrection = math.pi / 2
+		self.angleRadCorrection = math.radians(450)
 
 	def display(self):
 		super().display()
