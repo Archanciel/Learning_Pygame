@@ -1,13 +1,7 @@
 import pygame as pg
 import math
 
-# Bounce mark inheritable constants
-BOUNCE_ARROW_TOP = 2
-BOUNCE_ARROW_RIGHT = 3
-BOUNCE_ARROW_BOTTOM = 4
-BOUNCE_ARROW_LEFT = 5
-
-from particledisplayposandtraject import ParticleDisplayPosAndTraject
+from particledisplayposandtraject import * # using * imports constants aswell !
 
 class ParticleDisplayPosAndTrajectAngleFromXAxis(ParticleDisplayPosAndTraject):
 	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
