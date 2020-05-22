@@ -21,7 +21,7 @@ CYAN = (2, 255, 255)
 MAGENTA = (255, 0, 255)
 ORANGE = (255, 165, 0)
 
-SECOND_PARTICLE_X_SHIFT = 150
+SECOND_PARTICLE_X_SHIFT = 180
 #SECOND_PARTICLE_X_SHIFT = 300 causes problem !!
 
 if os.name == 'posix':
@@ -98,12 +98,12 @@ if os.name == 'posix':
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE,
-													   thickness=3, angleDeg=angleDeg, speed=6))
+													   thickness=3, angleDeg=angleDeg, speed=10))
 	for i in range(1, 2):
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=100, colour=MAGENTA,
-													   thickness=3, angleDeg=angleDeg, speed=6))
+													   thickness=3, angleDeg=angleDeg, speed=10))
 else:
 	for i in range(2, 3):
 		angleDeg = i * angleTwelth
@@ -114,8 +114,15 @@ else:
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, colour=MAGENTA,
-													   thickness=1, angleDeg=angleDeg, speed=1))
-
+																   thickness=1, angleDeg=angleDeg, speed=1))
+#if os.name == 'posix':
+#	for i in range(1, 13):
+#		angleDeg = i * angleTwelth
+#		my_particles.append(ParticleDisplayPosAndTrajectAngleFromXAxis(screen = screen, x=circleX, y=circleY, radius=100, colour=MAGENTA, thickness=3, angleDeg=angleDeg, speed=2))
+#else:
+#	for i in range(1, 13):
+#		angleDeg = i * angleTwelth
+#		my_particles.append(ParticleDisplayPosAndTrajectAngleFromXAxis(screen = screen, x=circleX, y=circleY, radius=100, colour=MAGENTA, thickness=1, angleDeg=angleDeg, speed=0.2))
 
 running = True
 clock = pygame.time.Clock()
