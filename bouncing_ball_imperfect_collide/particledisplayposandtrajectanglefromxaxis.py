@@ -6,15 +6,16 @@ from particledisplayposandtraject import * # using * imports constants aswell !
 TWO_PI = math.pi * 2
 
 class ParticleDisplayPosAndTrajectAngleFromXAxis(ParticleDisplayPosAndTraject):
-	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
+	def __init__(self, screen, x, y, radius, color, thickness, angleDeg, speed, bouncePointColor=None):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
-		super().__init__(screen, x, y, radius, colour, thickness, angleDeg, speed)
+		super().__init__(screen, x, y, radius, color, thickness, angleDeg, speed, bouncePointColor)
 
 	def move(self, angleRad = 0):
 		if angleRad == 0:
 			angleRad = self.angleRad
 			
-		# angleRad is the clockwise angle in radians with 0 rad corresponding to 12 o'clock'
+		# angleRad is the clockwise angle in radians with 0 rad corresponding 
+		# to 3 o'clock'
 		dx = self.speed * math.cos(angleRad)
 		dy = self.speed * math.sin(angleRad)
 		self.x += dx

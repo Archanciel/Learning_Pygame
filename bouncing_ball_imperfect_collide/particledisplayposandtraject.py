@@ -29,9 +29,9 @@ ARROW_WIDTH = 3
 
 class ParticleDisplayPosAndTraject(ParticleDisplayPos):			
 	
-	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed, bouncePointColor=RED):
+	def __init__(self, screen, x, y, radius, color, thickness, angleDeg, speed, bouncePointColor=None):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
-		super().__init__(screen, x, y, radius, colour, thickness, angleDeg, speed)
+		super().__init__(screen, x, y, radius, color, thickness, angleDeg, speed)
 
 		# Traject tracing instance variables
 		self.previousX = 0
@@ -44,7 +44,11 @@ class ParticleDisplayPosAndTraject(ParticleDisplayPos):
 		self.currentBounceTrajectIndex = -1
 		
 		# Bounce mark instance variables
-		self.bouncePointColor = bouncePointColor
+		if bouncePointColor == None:
+			self.bouncePointColor = color
+		else:
+			self.bouncePointColor = bouncePointColor
+			
 		self.bounceMarkX = None
 		self.bounceMarkY = None
 		self.bounceMarkDirection = None
@@ -70,7 +74,7 @@ class ParticleDisplayPosAndTraject(ParticleDisplayPos):
 					self.drawBounceMark(bounceLocX=point.x, bounceLocY=point.y, bounceMarkDirection=point.width)
 				else:
 					# ball traject is drawned using 1 pixel points, i.e circles
-					pg.draw.circle(self.screen, self.colour, point.center, BALL_TRACING_POINT_SIZE)
+					pg.draw.circle(self.screen, self.color, point.center, BALL_TRACING_POINT_SIZE)
 
 	def storeBallBounceMarkData(self):
 		if self.bounceMarkDirection != None:
