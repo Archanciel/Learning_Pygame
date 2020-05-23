@@ -41,7 +41,7 @@ class ParticleDisplayPos(Particle):
 		
 		displayAngleRad = self.computeDisplayAngleRad()
 		
-		if displayAngleRad >= TWO_PI:
+		while displayAngleRad >= TWO_PI:
 			displayAngleRad -= TWO_PI
 
 		angleDegree = round(math.degrees(displayAngleRad))
