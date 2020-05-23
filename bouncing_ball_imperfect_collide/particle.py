@@ -8,7 +8,7 @@ BOUNCE_ARROW_BOTTOM = 4
 BOUNCE_ARROW_LEFT = 5
 
 class Particle:
-	def __init__(self, screen, x, y, radius, colour, thickness, angleDeg, speed):
+	def __init__(self, screen, x, y, radius, color, thickness, angleDeg, speed):
 		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
 		self.screen = screen
 		self.x = x
@@ -16,24 +16,19 @@ class Particle:
 		self.radius = radius
 		self.angleRad = math.radians(angleDeg)
 		self.speed = speed
-		self.colour = colour
+		self.color = color
 		self.thickness = thickness
 
 	def move(self, angleRad = 0):
 		if angleRad == 0:
 			angleRad = self.angleRad
 			
-		# angleRad is the clockwise angle in radians with 0 rad corresponding to 12 o'clock'
+		# angleRad is the clockwise angle in radians with 0 rad corresponding
+		# to 12 o'clock'
 		dx = self.speed * math.sin(angleRad)
 		dy = self.speed * math.cos(angleRad)
 		self.x += dx
 		self.y -= dy
-
-	def display(self):
-		if os.name == 'posix':
-			pygame.draw.circle(self.screen, self.colour, (self.x, self.y), self.radius, self.thickness)
-		else:
-			pygame.draw.circle(self.screen, self.colour, (round(self.x), round(self.y)), self.radius, self.thickness)
 
 	def bounce(self):
 		width, height = self.screen.get_size()
@@ -71,3 +66,9 @@ class Particle:
 	def storeBounceLocationData(self, bounceX, bounceY, bounceDirection):
 		# storing bounce mark location coordinates, implemented by sub classes
 		pass
+
+	def display(self):
+		if os.name == 'posix':
+			pygame.draw.circle(self.screen, self.color, (self.x, self.y), self.radius, self.thickness)
+		else:
+			pygame.draw.circle(self.screen, self.color, (round(self.x), round(self.y)), self.radius, self.thickness)

@@ -65,7 +65,7 @@ def updateTimerForDoubleClick():
 	# / 1000 to convert milliseconds to 10th of seconds.
 	dt = clock.tick(FPS) / 10000
 
-background_colour = WHITE
+background_color = WHITE
 pygame.init()
 
 if os.name == 'posix':
@@ -94,19 +94,19 @@ my_particles = []
 angleTwelth = 360 / 12
 
 if os.name == 'posix':
-	for i in range(7, 8):
+	for i in range(2, 3):
 		# example: angle of 60 degrees Y axis based (i = 2) corresponds to 
 		# angle of 30 degrees X axis based (i = 1)
 		angleDeg = i * angleTwelth
 		my_particles.append(
-			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, colour=BLUE,
+			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, color=BLUE,
 													   thickness=3, angleDeg=angleDeg, speed=10))
-	for i in range(8, 9):
+	for i in range(1, 2):
 		# example: angle of 30 degrees X axis based (i = 1) corresponds to 
 		# angle of 60 degrees Y axis based (i = 2)
 		angleDeg = i * angleTwelth
 		my_particles.append(
-			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=100, colour=MAGENTA,
+			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=100, color=MAGENTA,
 													   thickness=3, angleDeg=angleDeg, speed=10))
 else:
 	for i in range(7, 8):
@@ -114,23 +114,23 @@ else:
 		# angle of 30 degrees X axis based (i = 1)
 		angleDeg = i * angleTwelth
 		my_particles.append(
-			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, colour=BLUE,
+			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, color=BLUE,
 													   thickness=1, angleDeg=angleDeg, speed=1))
 	for i in range(8, 9):
 		# example: angle of 30 degrees X axis based (i = 1) corresponds to
 		# angle of 60 degrees Y axis based (i = 2)
 		angleDeg = i * angleTwelth
 		my_particles.append(
-			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, colour=MAGENTA,
+			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, color=MAGENTA,
 																   thickness=1, angleDeg=angleDeg, speed=1))
 #if os.name == 'posix':
 #	for i in range(1, 13):
 #		angleDeg = i * angleTwelth
-#		my_particles.append(ParticleDisplayPosAndTrajectAngleFromXAxis(screen = screen, x=circleX, y=circleY, radius=100, colour=MAGENTA, thickness=3, angleDeg=angleDeg, speed=2))
+#		my_particles.append(ParticleDisplayPosAndTrajectAngleFromXAxis(screen = screen, x=circleX, y=circleY, radius=100, color=MAGENTA, thickness=3, angleDeg=angleDeg, speed=2))
 #else:
 #	for i in range(1, 13):
 #		angleDeg = i * angleTwelth
-#		my_particles.append(ParticleDisplayPosAndTrajectAngleFromXAxis(screen = screen, x=circleX, y=circleY, radius=100, colour=MAGENTA, thickness=1, angleDeg=angleDeg, speed=0.2))
+#		my_particles.append(ParticleDisplayPosAndTrajectAngleFromXAxis(screen = screen, x=circleX, y=circleY, radius=100, color=MAGENTA, thickness=1, angleDeg=angleDeg, speed=0.2))
 
 running = True
 clock = pygame.time.Clock()
@@ -146,7 +146,7 @@ while running:
 			handleDoubleClick()
 
 	if not pause:	
-		screen.fill(background_colour)
+		screen.fill(background_color)
 		if os.name == 'posix':
 			pygame.draw.circle(screen, BLUE, (circleX, circleY), circleR, 10)
 		else:
