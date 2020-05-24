@@ -119,7 +119,7 @@ else:
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY / 2, radius=70, color=BLUE,
-													   thickness=1, angleDeg=angleDeg, speed=5))
+													   thickness=1, angleDeg=angleDeg, speed=1))
 	for i in range(8, 9):
 		# example: angle of 30 degrees X axis based (i = 1) corresponds to
 		# angle of 60 degrees Y axis based (i = 2)
