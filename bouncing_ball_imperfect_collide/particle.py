@@ -7,7 +7,11 @@ BOUNCE_ARROW_RIGHT = 3
 BOUNCE_ARROW_BOTTOM = 4
 BOUNCE_ARROW_LEFT = 5
 
-GRAVITY = (math.pi, 0.02)
+if os.name == 'posix':
+	GRAVITY = (math.pi, 0.8) # ok on Android
+else:
+	GRAVITY = (math.pi, 0.02) # ok on Windows
+
 DRAG = 0.999
 ELASTICITY = 0.75
 

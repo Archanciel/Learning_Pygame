@@ -100,7 +100,7 @@ if os.name == 'posix':
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY/2
-			, radius=100, color=BLUE, thickness=3, angleDeg=angleDeg, speed=10))
+			, radius=100, color=BLUE, thickness=3, angleDeg=angleDeg, speed=4))
 #		my_particles.append(
 #			Particle(screen=screen, x=circleX, y=circleY, radius=100, color=RED,
 #													   thickness=3, angleDeg=angleDeg, speed=10))
