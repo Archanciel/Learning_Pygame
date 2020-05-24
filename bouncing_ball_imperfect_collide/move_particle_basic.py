@@ -72,7 +72,7 @@ if os.name == 'posix':
 	(width, height) = (1300, 2000)
 	screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 else:
-	(width, height) = (800, 1000)
+	(width, height) = (800, 800)
 	os.environ['SDL_VIDEO_WINDOW_POS'] = '100,15'
 	screen = pygame.display.set_mode((width, height))
 
@@ -94,35 +94,40 @@ my_particles = []
 angleTwelth = 360 / 12
 
 if os.name == 'posix':
-	for i in range(2, 3):
+	for i in range(5, 6):
 		# example: angle of 60 degrees Y axis based (i = 2) corresponds to 
 		# angle of 30 degrees X axis based (i = 1)
 		angleDeg = i * angleTwelth
 		my_particles.append(
-			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=100, color=BLUE,
-													   thickness=3, angleDeg=angleDeg, speed=10))
+			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY/2
+			, radius=100, color=BLUE, thickness=3, angleDeg=angleDeg, speed=10))
+#		my_particles.append(
+#			Particle(screen=screen, x=circleX, y=circleY, radius=100, color=RED,
+#													   thickness=3, angleDeg=angleDeg, speed=10))
 	for i in range(1, 2):
-		# example: angle of 30 degrees X axis based (i = 1) corresponds to 
-		# angle of 60 degrees Y axis based (i = 2)
-		angleDeg = i * angleTwelth
-		my_particles.append(
-			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=100, color=MAGENTA,
-													   thickness=3, angleDeg=angleDeg, speed=10))
+		pass
+#		# example: angle of 30 degrees X axis based (i = 1) corresponds to 
+#		# angle of 60 degrees Y axis based (i = 2)
+#		angleDeg = i * angleTwelth
+#		my_particles.append(
+#			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=100, color=MAGENTA,
+#													   thickness=3, angleDeg=angleDeg, speed=10))
 else:
 	for i in range(7, 8):
 		# example: angle of 60 degrees Y axis based (i = 2) corresponds to
 		# angle of 30 degrees X axis based (i = 1)
 		angleDeg = i * angleTwelth
 		my_particles.append(
-			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, color=BLUE,
-													   thickness=1, angleDeg=angleDeg, speed=1))
+			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY / 2, radius=70, color=BLUE,
+													   thickness=1, angleDeg=angleDeg, speed=5))
 	for i in range(8, 9):
 		# example: angle of 30 degrees X axis based (i = 1) corresponds to
 		# angle of 60 degrees Y axis based (i = 2)
-		angleDeg = i * angleTwelth
-		my_particles.append(
-			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, color=MAGENTA,
-																   thickness=1, angleDeg=angleDeg, speed=1))
+		pass
+		# angleDeg = i * angleTwelth
+		# my_particles.append(
+		# 	ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, color=MAGENTA,
+		# 														   thickness=1, angleDeg=angleDeg, speed=1))
 #if os.name == 'posix':
 #	for i in range(1, 13):
 #		angleDeg = i * angleTwelth
@@ -153,8 +158,8 @@ while running:
 			pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
 
 		for particle in my_particles:
-			particle.move()
-			particle.bounce()
+			particle.moveGravity()
+			particle.bounceElasticity()
 			particle.display()	
 	
 		pygame.display.flip()

@@ -9,7 +9,7 @@ RED = (255, 0, 0)
 
 #bounce tracing constants
 
-MAX_BOUNCE_TRAJECTS = 4 # number of ball trajects to display
+MAX_BOUNCE_TRAJECTS = 10 # number of ball trajects to display
 BALL_TRACING_POINT_SIZE = 2
 BALL_TRACING_STEP_SIZE = 10 # defines the number of pixels after which a tracing point is drawned on screen
 
