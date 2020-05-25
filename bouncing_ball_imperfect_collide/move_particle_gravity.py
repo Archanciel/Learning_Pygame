@@ -2,6 +2,7 @@ import pygame
 import math
 import random
 import os
+import time
 from particledisplayposandtraject import ParticleDisplayPosAndTraject
 from particledisplayposandtrajectanglefromxaxis import ParticleDisplayPosAndTrajectAngleFromXAxis
 from particledisplayposandtraject import ParticleDisplayPosAndTraject
@@ -27,8 +28,8 @@ SECOND_PARTICLE_X_SHIFT = 180
 # modification while experimenting
 
 if os.name == 'posix':
-	FPS = 200
-	GRAVITY = (3 * math.pi / 2, 0.8) # ok on Android
+	FPS = 1
+	GRAVITY = (3 * math.pi / 2, 1) # ok on Android
 else:
 	FPS = 100
 	GRAVITY = (3 * math.pi / 2, 0.02) # ok on Windows
@@ -149,7 +150,12 @@ timerDC = 0
 dt = 0
 pause = False
 
+if os.name == 'posix':
+	# gives me time to hide Messagease keyboard
+	time.sleep(2)
+
 while running:
+	clock.tick(FPS)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
@@ -170,5 +176,6 @@ while running:
 			particle.display()	
 	
 		pygame.display.flip()
+
 		
 pygame.quit()
