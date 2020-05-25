@@ -28,10 +28,10 @@ SECOND_PARTICLE_X_SHIFT = 180
 
 if os.name == 'posix':
 	FPS = 200
-	GRAVITY = (math.pi, 0.8) # ok on Android
+	GRAVITY = (3 * math.pi / 2, 0.8) # ok on Android
 else:
 	FPS = 100
-	GRAVITY = (math.pi, 0.02) # ok on Windows
+	GRAVITY = (3 * math.pi / 2, 0.02) # ok on Windows
 
 DRAG = 0.999
 ELASTICITY = 0.75
@@ -79,7 +79,7 @@ if os.name == 'posix':
 	(width, height) = (1300, 2000)
 	screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 else:
-	(width, height) = (800, 1000)
+	(width, height) = (800, 800)
 	os.environ['SDL_VIDEO_WINDOW_POS'] = '100,15'
 	screen = pygame.display.set_mode((width, height))
 
@@ -119,20 +119,21 @@ if os.name == 'posix':
 #			ParticleDisplayPosAndTraject(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=100, color=MAGENTA,
 #													   thickness=3, angleDeg=angleDeg, speed=10))
 else:
-	for i in range(7, 8):
+	radius = 70
+	for i in range(9, 10):
 		# example: angle of 60 degrees Y axis based (i = 2) corresponds to
 		# angle of 30 degrees X axis based (i = 1)
 		angleDeg = i * angleTwelth
 		my_particles.append(
-			ParticleDisplayPosAndTraject(screen=screen, x=circleX, y=circleY, radius=70, color=BLUE,
+			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX, y=radius, radius=radius, color=BLUE,
 													   thickness=1, angleDeg=angleDeg, speed=1))
-	for i in range(8, 9):
-		# example: angle of 30 degrees X axis based (i = 1) corresponds to
-		# angle of 60 degrees Y axis based (i = 2)
-		angleDeg = i * angleTwelth
-		my_particles.append(
-			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, color=MAGENTA,
-																   thickness=1, angleDeg=angleDeg, speed=1))
+	# for i in range(9, 10):
+	# 	# example: angle of 30 degrees X axis based (i = 1) corresponds to
+	# 	# angle of 60 degrees Y axis based (i = 2)
+	# 	angleDeg = i * angleTwelth
+	# 	my_particles.append(
+	# 		ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, color=MAGENTA,
+	# 															   thickness=1, angleDeg=angleDeg, speed=1))
 #if os.name == 'posix':
 #	for i in range(1, 13):
 #		angleDeg = i * angleTwelth
