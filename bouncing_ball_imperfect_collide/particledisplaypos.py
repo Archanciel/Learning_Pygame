@@ -23,7 +23,7 @@ class ParticleDisplayPos(Particle):
 		self.textLeftMargin = (rectSize - self.textHorizontalSize) / 2
 
 		# Calculating the top margin based on the number of text lines
-		self.lineNumber = 3
+		self.lineNumber = 4
 		self.textTopMargin = radius - (self.font_height * self.lineNumber / 2)
 		self.textColor = BLACK
 
@@ -47,6 +47,7 @@ class ParticleDisplayPos(Particle):
 		angleDegree = round(math.degrees(displayAngleRad))
 
 		textLines[2] = 'angle: ' + str(angleDegree)
+		textLines[3] = 'speed: ' + str(self.speed)
 
 		self.images = []  # The text surfaces.
 
