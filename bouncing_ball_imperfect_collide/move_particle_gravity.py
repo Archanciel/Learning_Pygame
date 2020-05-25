@@ -107,7 +107,7 @@ if os.name == 'posix':
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX, y=radius
-			, radius=radius, color=BLUE, thickness=3, angleDeg=angleDeg, speed=1))
+			, radius=radius, color=BLUE, thickness=3, angleDeg=angleDeg, speed=0))
 #		my_particles.append(
 #			Particle(screen=screen, x=circleX, y=circleY, radius=100, color=RED,
 #													   thickness=3, angleDeg=angleDeg, speed=10))
@@ -127,7 +127,7 @@ else:
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX, y=radius, radius=radius, color=BLUE,
-													   thickness=1, angleDeg=angleDeg, speed=1))
+													   thickness=1, angleDeg=angleDeg, speed=0))
 	# for i in range(9, 10):
 	# 	# example: angle of 30 degrees X axis based (i = 1) corresponds to
 	# 	# angle of 60 degrees Y axis based (i = 2)
@@ -148,11 +148,22 @@ running = True
 clock = pygame.time.Clock()
 timerDC = 0
 dt = 0
-pause = False
+pause = True
 
+screen.fill(background_color)
 if os.name == 'posix':
-	# gives me time to hide Messagease keyboard
-	time.sleep(2)
+	pygame.draw.circle(screen, BLUE, (circleX, circleY), circleR, 10)
+else:
+	pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
+
+for particle in my_particles:
+	#particle.moveGravity()
+	#particle.bounce()
+	# if particle.bounce():
+	# 	pause = True
+	particle.display()
+	
+pygame.display.flip()
 
 while running:
 	if os.name == 'posix':
