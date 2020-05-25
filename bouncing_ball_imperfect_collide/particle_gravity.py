@@ -10,7 +10,7 @@ if os.name == 'posix':
 	(width, height) = (1300, 2000)
 	screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 else:
-	(width, height) = (800, 800)
+	(width, height) = (800, 1000)
 	os.environ['SDL_VIDEO_WINDOW_POS'] = '100,15'
 	screen = pygame.display.set_mode((width, height))
 
@@ -19,6 +19,8 @@ pygame.display.set_caption('Move particle basic')
 
 drag = 0.999
 elasticity = 0.75
+#drag = 1
+#elasticity = 1
 gravity = (math.pi, 0.002)
 
 def addVectors(v1, v2):
