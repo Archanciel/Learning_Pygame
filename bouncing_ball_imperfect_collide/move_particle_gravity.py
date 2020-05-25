@@ -31,8 +31,8 @@ if os.name == 'posix':
 	FPS = 1
 	GRAVITY = (3 * math.pi / 2, 1) # ok on Android
 else:
-	FPS = 10
-	GRAVITY = (3 * math.pi / 2, 0.02) # ok on Windows
+	FPS = 1
+	GRAVITY = (3 * math.pi / 2, 1) # ok on Windows
 
 DRAG = 0.999
 ELASTICITY = 0.75
@@ -175,9 +175,10 @@ while running:
 
 		for particle in my_particles:
 			particle.moveGravity()
-			if particle.bounce():
-				pause = True
-			particle.display()	
+			particle.bounce()
+			# if particle.bounce():
+			# 	pause = True
+			particle.display()
 	
 		pygame.display.flip()
 
