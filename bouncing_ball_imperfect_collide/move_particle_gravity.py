@@ -31,7 +31,7 @@ if os.name == 'posix':
 	FPS = 1
 	GRAVITY = (3 * math.pi / 2, 1) # ok on Android
 else:
-	FPS = 100
+	FPS = 10
 	GRAVITY = (3 * math.pi / 2, 0.02) # ok on Windows
 
 DRAG = 0.999
@@ -155,7 +155,11 @@ if os.name == 'posix':
 	time.sleep(2)
 
 while running:
-	clock.tick(FPS)
+	if os.name == 'posix':
+		clock.tick_busy_loop(FPS)
+	else:
+		clock.tick(FPS)
+		
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			running = False
