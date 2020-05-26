@@ -71,6 +71,54 @@ class ParticleDisplayPosAndTrajectAngleFromXAxis(ParticleDisplayPosAndTraject):
 			
 		return bounced
 
+	def bounceElasticity(self):
+		# gravity related constants are defined here simply to facilitate their 
+		# modification while experimenting
+		from move_particle_gravity import ELASTICITY
+		
+		bounced = False
+		width, height = self.screen.get_size()
+
+		if self.angleRad > 2 * math.pi:
+			# avoid displaying a negative value for the angle in degree. Useful only if window height > window width,
+			# at least om Windows !
+			self.angleRad -= 2 * math.pi
+
+		if self.x > width - self.radius:
+			bounced = True
+			self.x = 2 * (width - self.radius) - self.x
+			self.angleRad = math.pi - self.angleRad
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(width, self.y, BOUNCE_ARROW_RIGHT)
+			self.speed *= ELASTICITY
+		elif self.x < self.radius:
+			bounced = True
+			self.x = 2 * self.radius - self.x
+			self.angleRad = math.pi - self.angleRad
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(0, self.y, BOUNCE_ARROW_LEFT)
+			self.speed *= ELASTICITY
+		if self.y > height - self.radius:
+			bounced = True
+			self.y = 2 * (height - self.radius) - self.y
+			self.angleRad = -self.angleRad
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(self.x, height, BOUNCE_ARROW_BOTTOM)
+			self.speed *= ELASTICITY
+		elif self.y < self.radius:
+			bounced = True
+			self.y = 2 * self.radius - self.y
+			self.angleRad = -self.angleRad
+
+			# storing bounce mark location coordinates
+			self.storeBounceLocationData(self.x, 0, BOUNCE_ARROW_TOP)
+			self.speed *= ELASTICITY
+			
+		return bounced
+
 	def computeDisplayAngleRad(self):
 		# computing display angle radians if the X axis is the reference
 		# for defining the particle angle.
