@@ -28,14 +28,14 @@ SECOND_PARTICLE_X_SHIFT = 180
 # modification while experimenting
 
 if os.name == 'posix':
-	FPS = 1
+	FPS = 60
 	GRAVITY = (3 * math.pi / 2, 1) # ok on Android
 else:
 	FPS = 1
 	GRAVITY = (3 * math.pi / 2, 1) # ok on Windows
 
 DRAG = 0.999
-ELASTICITY = 0.75
+ELASTICITY = 0.85
 
 def handleDoubleClick():
 	global timerDC
@@ -77,7 +77,7 @@ background_color = WHITE
 pygame.init()
 
 if os.name == 'posix':
-	(width, height) = (1300, 2000)
+	(width, height) = (1600, 2560)
 	screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 else:
 	(width, height) = (800, 800)
@@ -107,18 +107,7 @@ if os.name == 'posix':
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX, y=radius
-			, radius=radius, color=BLUE, thickness=3, angleDeg=angleDeg, speed=0))
-#		my_particles.append(
-#			Particle(screen=screen, x=circleX, y=circleY, radius=100, color=RED,
-#													   thickness=3, angleDeg=angleDeg, speed=10))
-#	for i in range(1, 2):
-#		pass
-#		# example: angle of 30 degrees X axis based (i = 1) corresponds to 
-#		# angle of 60 degrees Y axis based (i = 2)
-#		angleDeg = i * angleTwelth
-#		my_particles.append(
-#			ParticleDisplayPosAndTraject(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=100, color=MAGENTA,
-#													   thickness=3, angleDeg=angleDeg, speed=10))
+			, radius=radius, color=BLUE, thickness=3, angleDeg=angleDeg, speed=1))
 else:
 	radius = 70
 	for i in range(9, 10):
@@ -127,28 +116,13 @@ else:
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX, y=radius, radius=radius, color=BLUE,
-													   thickness=1, angleDeg=angleDeg, speed=0))
-	# for i in range(9, 10):
-	# 	# example: angle of 30 degrees X axis based (i = 1) corresponds to
-	# 	# angle of 60 degrees Y axis based (i = 2)
-	# 	angleDeg = i * angleTwelth
-	# 	my_particles.append(
-	# 		ParticleDisplayPosAndTrajectAngleFromXAxis(screen=screen, x=circleX - SECOND_PARTICLE_X_SHIFT, y=circleY, radius=70, color=MAGENTA,
-	# 															   thickness=1, angleDeg=angleDeg, speed=1))
-#if os.name == 'posix':
-#	for i in range(1, 13):
-#		angleDeg = i * angleTwelth
-#		my_particles.append(ParticleDisplayPosAndTrajectAngleFromXAxis(screen = screen, x=circleX, y=circleY, radius=100, color=MAGENTA, thickness=3, angleDeg=angleDeg, speed=2))
-#else:
-#	for i in range(1, 13):
-#		angleDeg = i * angleTwelth
-#		my_particles.append(ParticleDisplayPosAndTrajectAngleFromXAxis(screen = screen, x=circleX, y=circleY, radius=100, color=MAGENTA, thickness=1, angleDeg=angleDeg, speed=0.2))
+													   thickness=1, angleDeg=angleDeg, speed=1))
 
 running = True
 clock = pygame.time.Clock()
 timerDC = 0
 dt = 0
-pause = True
+pause = True # if True, starts by pausing the particle at screen top
 
 screen.fill(background_color)
 if os.name == 'posix':
@@ -156,11 +130,9 @@ if os.name == 'posix':
 else:
 	pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
 
+# if pause == True, display the particle at screen top before looping without
+# moving the particle
 for particle in my_particles:
-	#particle.moveGravity()
-	#particle.bounce()
-	# if particle.bounce():
-	# 	pause = True
 	particle.display()
 	
 pygame.display.flip()
@@ -186,9 +158,9 @@ while running:
 
 		for particle in my_particles:
 			particle.moveGravity()
-			particle.bounce()
-			# if particle.bounce():
-			# 	pause = True
+			particle.bounceElasticity()
+#			if particle.bounce():
+#				pause = True
 			particle.display()
 	
 		pygame.display.flip()
