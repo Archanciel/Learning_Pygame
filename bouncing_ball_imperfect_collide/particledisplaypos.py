@@ -47,7 +47,7 @@ class ParticleDisplayPos(Particle):
 		angleDegree = round(math.degrees(displayAngleRad))
 
 		textLines[2] = 'angle: ' + str(angleDegree)
-		textLines[3] = 'speed: ' + str(self.speed)
+		textLines[3] = 'speed: ' + str(round(self.speed, 2))
 
 		self.images = []  # The text surfaces.
 
