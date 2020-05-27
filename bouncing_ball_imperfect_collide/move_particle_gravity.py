@@ -159,8 +159,8 @@ while running:
 		for particle in my_particles:
 			particle.moveGravity()
 			particle.bounceElasticity()
-#			if particle.bounce():
-#				pause = True
+			if particle.bounce():
+				pause = True
 			particle.display()
 	
 		pygame.display.flip()
