@@ -7,7 +7,7 @@ TWO_PI = math.pi * 2
 
 class ParticleDisplayPosAndTrajectAngleFromXAxis(ParticleDisplayPosAndTraject):
 	def __init__(self, screen, x, y, radius, color, thickness, angleDeg, speed, bouncePointColor=None):
-		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
+		# angleDeg is the counterclockwise angle with 0 deg corresponding to 3 o'clock
 		super().__init__(screen, x, y, radius, color, thickness, angleDeg, speed, bouncePointColor)
 
 	def move(self, angleRad = 0):
@@ -19,7 +19,10 @@ class ParticleDisplayPosAndTrajectAngleFromXAxis(ParticleDisplayPosAndTraject):
 		dx = self.speed * math.cos(angleRad)
 		dy = self.speed * math.sin(angleRad)
 		self.x += dx
-		self.y -= dy
+		self.y -= dy	# minus since y at screen top == 0. If angle is 90 degree for example,
+						# sin(angle) == 1 and dy is positive. So, the particule is moing up.
+						# On the contrary, if angle is 270 degrees, then sin(angle) == -1 and
+						# and dy is negative. So, the particule is moing down.
 
 	def moveGravity(self):
 		# gravity related constants are defined here simply to facilitate their 
@@ -143,6 +146,8 @@ class ParticleDisplayPosAndTrajectAngleFromXAxis(ParticleDisplayPosAndTraject):
 		return (angleSum, speedSum) 
 		
 	def addAngleSpeedVector(self, vector1, vector2):
+		# Computes the X axis based (angle, speed) vector resulting from adding the X axis based
+		# vector1 and vector2
 		angle1 = vector1[0]
 		length1 = vector1[1]		
 		angle2 = vector2[0]
