@@ -17,7 +17,7 @@ ELASTICITY = 0.75
 
 class Particle:
 	def __init__(self, screen, x, y, radius, color, thickness, angleDeg, speed):
-		# angleDeg is the clockwise angle with 0 deg corresponding to 12 hour
+		# angleDeg is the clockwise angle with 0 deg corresponding to 12 o'clock
 		self.screen = screen
 		self.x = x
 		self.y = y
@@ -129,16 +129,17 @@ class Particle:
 			pygame.draw.circle(self.screen, self.color, (round(self.x), round(self.y)), self.radius, self.thickness)
 	
 	def addAngleSpeedVector(self, vector1, vector2):
-	
-		x1 = math.sin(vector1[0]) * vector1[1]
-		y1 = math.cos(vector1[0]) * vector1[1]
-	
-		x2 = math.sin(vector2[0]) * vector2[1]
-		y2 = math.cos(vector2[0]) * vector2[1]
-	
-		xSum = x1 + x2
-		ySum = y1 + y2
-		speedSum = math.hypot(xSum, ySum)
-		angleSum = (math.pi / 2) - math.atan2(ySum, xSum)
-		
-		return (angleSum, speedSum) 
+		# Computes the Y axis based (angle, speed) vector resulting from adding the Y axis based
+		# vector1 and vector2
+		angle1 = vector1[0]
+		length1 = vector1[1]
+		angle2 = vector2[0]
+		length2 = vector2[1]
+
+		x = math.sin(angle1) * length1 + math.sin(angle2) * length2
+		y = math.cos(angle1) * length1 + math.cos(angle2) * length2
+
+		length = math.hypot(x, y)
+		angle = (math.pi / 2) - math.atan2(y, x)
+
+		return (angle, length)
