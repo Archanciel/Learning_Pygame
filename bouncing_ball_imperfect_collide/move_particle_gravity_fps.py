@@ -151,7 +151,8 @@ while running:
 	if os.name == 'posix':
 		tick = clock.tick_busy_loop(FPS)
 	else:
-		tick = clock.tick(FPS)
+		tick = clock.tick_busy_loop(FPS)
+#		tick = clock.tick(FPS)
 		
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -166,11 +167,12 @@ while running:
 		else:
 			pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
 
-		if tick >= 0: # previousTick:
-		    my_particle.move()
-		    previousTick = tick
-		    angleRad, fps = addAngleSpeedVector((my_particle.angleRad, fps), GRAVITY)
-		    FPS = fps
+		if tick != 0: # previousTick:
+			print("tick ", tick, " prev tick ", previousTick, " FPS ", FPS)
+			my_particle.move()
+			previousTick = tick
+			angleRad, fps = addAngleSpeedVector((my_particle.angleRad, fps), GRAVITY)
+			FPS = fps
 #		my_particle.bounce()
 #		my_particle.bounceElasticity()
 		if my_particle.bounce():
