@@ -28,7 +28,7 @@ SECOND_PARTICLE_X_SHIFT = 180
 # modification while experimenting
 
 if os.name == 'posix':
-	FPS = 60
+	FPS = 1
 	GRAVITY = (3 * math.pi / 2, 1) # ok on Android
 else:
 	FPS = 1
@@ -126,7 +126,7 @@ pause = True # if True, starts by pausing the particle at screen top
 
 screen.fill(background_color)
 if os.name == 'posix':
-	pygame.draw.circle(screen, BLUE, (circleX, circleY), circleR, 10)
+	pygame.draw.circle(screen, BLUE, (circleX, circleY), circleR, 1)
 else:
 	pygame.draw.circle(screen, BLUE, (round(circleX), round(circleY)), round(circleR), 1)
 
