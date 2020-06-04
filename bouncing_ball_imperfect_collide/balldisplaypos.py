@@ -57,6 +57,11 @@ class BallDisplayPos(Ball):
 		self.bounceMarkY = None
 		self.bounceMarkDirection = None
 
+	def storeBounceLocationData(self, bounceX, bounceY, bounceDirection):
+		self.bounceMarkX = bounceX
+		self.bounceMarkY = bounceY
+		self.bounceMarkDirection = bounceDirection
+
 	# Draw our ball to the screen
 	def draw(self):
 		super().draw()
@@ -156,11 +161,6 @@ class BallDisplayPos(Ball):
 			self.previousTraceY = self.ballCenterFloat[1]
 			
 		return currentMoveDown, currentMoveRight
-
-	def storeBounceLocationData(self, bounceX, bounceY, bounceDirection):
-		self.bounceMarkX = bounceX
-		self.bounceMarkY = bounceY
-		self.bounceMarkDirection = bounceDirection
 
 	def drawBounceMark(self, bounceLocX, bounceLocY, bounceMarkDirection):
 		if bounceMarkDirection == BOUNCE_ARROW_TOP:

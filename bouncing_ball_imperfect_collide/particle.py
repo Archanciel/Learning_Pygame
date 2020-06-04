@@ -90,6 +90,7 @@ class Particle:
 			self.angleRad -= 2 * math.pi
 
 		if self.x > width - self.radius:
+			bounced = True
 			self.x = 2 * (width - self.radius) - self.x
 			self.angleRad = -self.angleRad
 
@@ -97,6 +98,7 @@ class Particle:
 			self.storeBounceLocationData(width, self.y, BOUNCE_ARROW_RIGHT)
 			self.speed *= ELASTICITY
 		elif self.x < self.radius:
+			bounced = True
 			self.x = 2 * self.radius - self.x
 			self.angleRad = -self.angleRad
 
@@ -104,6 +106,7 @@ class Particle:
 			self.storeBounceLocationData(0, self.y, BOUNCE_ARROW_LEFT)
 			self.speed *= ELASTICITY
 		if self.y > height - self.radius:
+			bounced = True
 			self.y = 2 * (height - self.radius) - self.y
 			self.angleRad = math.pi - self.angleRad
 
@@ -111,12 +114,15 @@ class Particle:
 			self.storeBounceLocationData(self.x, height, BOUNCE_ARROW_BOTTOM)
 			self.speed *= ELASTICITY
 		elif self.y < self.radius:
+			bounced = True
 			self.y = 2 * self.radius - self.y
 			self.angleRad = math.pi - self.angleRad
 
 			# storing bounce mark location coordinates
 			self.storeBounceLocationData(self.x, 0, BOUNCE_ARROW_TOP)
 			self.speed *= ELASTICITY
+			
+		return bounced
 
 	def storeBounceLocationData(self, bounceX, bounceY, bounceDirection):
 		# storing bounce mark location coordinates, implemented by sub classes
