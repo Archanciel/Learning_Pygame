@@ -34,9 +34,10 @@ if os.name == 'posix':
 	GRAVITY = (3 * math.pi / 2, 9.80665) # ok on Android
 else:
 	FPS = 1
-	GRAVITY = (3 * math.pi / 2, 1) # ok on Windows
+	GRAVITY = (3 * math.pi / 2, 9.80665) # ok on Windows
 
-DRAG = 0.999
+#DRAG = 0.999
+DRAG = 1
 ELASTICITY = 0.85
 
 def handleDoubleClick():
@@ -123,7 +124,7 @@ else:
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosFromXAxis(screen=screen, x=circleX, y=radius, radius=radius, color=BLUE,
-													   thickness=1, angleDeg=angleDeg, speed=1))
+													   thickness=1, angleDeg=angleDeg, speed=0))
 
 running = True
 clock = pygame.time.Clock()
@@ -154,8 +155,8 @@ if os.name == 'posix':
 	textOnScreen = TextOnScreen(screen, 1100, 120, [])
 	textOnScreenBounce = TextOnScreen(screen, 1100, 2450, [])
 else:
-	textOnScreen = TextOnScreen(screen, 1100, 120, [])
-	textOnScreenBounce = TextOnScreen(screen, 1100, 2450, [])
+	textOnScreen = TextOnScreen(screen, 550, 20, [])
+	textOnScreenBounce = TextOnScreen(screen, 550, 750, [])
 
 while running:
 	if os.name == 'posix':
@@ -183,19 +184,16 @@ while running:
 		#particle.bounce()
 		if particle.bounceElasticity():
 			#pause = True
-			"""
 			t1 = time.time()
 			total = t1-t0
 			timingText = "Fall time: " + "{:.2f}".format(total) + " s"
 			textLines = [timingText]
-			textOnScreenBounce = TextOnScreen(screen, 1200, 2450, textLines)
+			textOnScreenBounce.addTextLines(textLines)
 			t0 = t1
-			"""
-			pass
 				
 		tt1 = time.time()
 		elapsedTime = tt1-tt0 + 1
-		timingText = "{:.1f}".format(elapsedTime) + " s / {:.2f}".format(particle.speed) + " m/s / {:.2f}".format(particle.y - particle.radius) + " m"
+		timingText = "{:.1f}".format(elapsedTime) + " s / {:.2f}".format(particle.speed) + " m/s / {:.2f}".format(particle.y - radius) + " m"
 		textOnScreen.addTextLine(timingText)
 		particle.display()
 		textOnScreen.display()
