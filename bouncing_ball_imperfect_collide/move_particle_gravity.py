@@ -29,16 +29,21 @@ SECOND_PARTICLE_X_SHIFT = 180
 # gravity related constants are defined here simply to facilitate their 
 # modification while experimenting
 
+GRAVITY_VALUE = 9.80665
+
 if os.name == 'posix':
 	FPS = 1
-	GRAVITY = (3 * math.pi / 2, 9.80665) # ok on Android
+	GRAVITY_VALUE_BY_FPS = GRAVITY_VALUE / FPS
+	GRAVITY = (3 * math.pi / 2, GRAVITY_VALUE_BY_FPS) # ok on Android
 else:
 	FPS = 1
-	GRAVITY = (3 * math.pi / 2, 9.80665) # ok on Windows
+	GRAVITY_VALUE_BY_FPS = GRAVITY_VALUE / FPS
+	GRAVITY = (3 * math.pi / 2, GRAVITY_VALUE_BY_FPS) # ok on Windows
 
 #DRAG = 0.999
 DRAG = 1
 ELASTICITY = 0.85
+HALF_GRAVITY_BY_FPS = GRAVITY_VALUE_BY_FPS / 2
 
 def handleDoubleClick():
 	global timerDC
@@ -115,7 +120,7 @@ if os.name == 'posix':
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosFromXAxis(screen=screen, x=circleX, y=radius
-			, radius=radius, color=BLUE, thickness=3, angleDeg=angleDeg, speed=0))
+			, radius=radius, color=BLUE, thickness=3, angleDeg=angleDeg, speed=-HALF_GRAVITY_BY_FPS))
 else:
 	radius = 70
 	for i in range(9, 10):
@@ -124,7 +129,7 @@ else:
 		angleDeg = i * angleTwelth
 		my_particles.append(
 			ParticleDisplayPosFromXAxis(screen=screen, x=circleX, y=radius, radius=radius, color=BLUE,
-													   thickness=1, angleDeg=angleDeg, speed=0))
+													   thickness=1, angleDeg=angleDeg, speed=-HALF_GRAVITY_BY_FPS))
 
 running = True
 clock = pygame.time.Clock()
@@ -183,7 +188,7 @@ while running:
 		particle.moveGravity()
 		#particle.bounce()
 		if particle.bounceElasticity():
-			#pause = True
+			pause = True
 			t1 = time.time()
 			total = t1-t0
 			timingText = "Fall time: " + "{:.2f}".format(total) + " s"
@@ -192,8 +197,8 @@ while running:
 			t0 = t1
 				
 		tt1 = time.time()
-		elapsedTime = tt1-tt0 + 1
-		timingText = "{:.1f}".format(elapsedTime) + " s / {:.2f}".format(particle.speed) + " m/s / {:.2f}".format(particle.y - radius) + " m"
+		elapsedTime = tt1-tt0 + 1 / FPS
+		timingText = "{:.1f}".format(elapsedTime) + " s / {:.2f}".format(particle.speed + HALF_GRAVITY_BY_FPS) + " m/s / {:.2f}".format(particle.y - radius) + " m"
 		textOnScreen.addTextLine(timingText)
 		particle.display()
 		textOnScreen.display()

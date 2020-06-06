@@ -32,9 +32,6 @@ class ParticleDisplayPosFromXAxis(ParticleDisplayPos):
 		
 		self.angleRad, self.speed = self.addAngleSpeedVector((self.angleRad, self.speed), GRAVITY)
 
-		if self.speed == 9.80665: # the case after 1 second of vertical fall
-			self.speed = 9.80665 / 2
-
 		self.move()	
 		self.speed *= DRAG
 
