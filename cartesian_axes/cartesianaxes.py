@@ -25,12 +25,18 @@ class CartesianAxes():
 		self.yStep = math.floor(yLength / (yRange[0] - yRange[1]))
 		
 		if xRange[0] < 0:
-			self.xAxisCoordStart = (origin[0] - abs(xRange[0] * self.xStep), origin[1])
+			if xRange[1] < 0:
+				self.xAxisCoordStart = (origin[0] - xLength, origin[1])
+			else:
+				self.xAxisCoordStart = (origin[0] - abs(xRange[0] * self.xStep), origin[1])
 		else:
 			self.xAxisCoordStart = (origin[0], origin[1])
 
 		if yRange[0] > 0:
-			self.yAxisCoordStart = (origin[0], origin[1] - yRange[0] * self.yStep)
+			if yRange[1] > 0:
+				self.yAxisCoordStart = (origin[0], origin[1] - yLength)
+			else:
+				self.yAxisCoordStart = (origin[0], origin[1] - yRange[0] * self.yStep)
 		else:
 			self.yAxisCoordStart = (origin[0], origin[1])
 			 

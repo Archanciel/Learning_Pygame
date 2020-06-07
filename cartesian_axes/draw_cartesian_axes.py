@@ -64,18 +64,20 @@ timerDC = 0
 dt = 0
 
 screen.fill(background_color)
+cartesianAxesLst = []
 
 if os.name == 'posix':
-	cartesianAxis_1 = CartesianAxes(screen=screen, origin=(300,1000), xLength=600, yLength=1000, xRange=(-5, 15), yRange=(50, -3))
-	cartesianAxis_2 = CartesianAxes(screen=screen, origin=(1000,1000), xLength=600, yLength=1000, xRange=(-5, 15), yRange=(50, -3), xLabel='Time', yLabel='Speed')
-	cartesianAxis_3 = CartesianAxes(screen=screen, origin=(220,2100), xLength=600, yLength=1000, xRange=(25, 55), yRange=(50, -3))
-	cartesianAxis_4 = CartesianAxes(screen=screen, origin=(900,2100), xLength=600, yLength=1000, xRange=(0, 15), yRange=(50, 3))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(100,500), xLength=200, yLength=500, xRange=(-5, 15), yRange=(50, -3)))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(400,500), xLength=200, yLength=500, xRange=(-5, 15), yRange=(20, -50), xLabel='Time', yLabel='Speed'))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(120,1100), xLength=200, yLength=500, xRange=(25, 55), yRange=(50, -3)))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(420,1100), xLength=200, yLength=500, xRange=(-55, -5), yRange=(50, -3)))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(780,1100), xLength=200, yLength=500, xRange=(0, 15), yRange=(50, 3)))
 #origin, xLength, yLength, xRange, yRange, xLabel='X', yLabel='Y', color=BLACK, thickness=2, leftMargin=0, topMargin=0):
 else:
-	cartesianAxis_1 = CartesianAxes(screen=screen, origin=(80,300), xLength=200, yLength=300, xRange=(-5, 15), yRange=(50, -3))
-	cartesianAxis_2 = CartesianAxes(screen=screen, origin=(500,300), xLength=200, yLength=300, xRange=(-5, 15), yRange=(50, -3), xLabel='Time', yLabel='Speed')
-	cartesianAxis_3 = CartesianAxes(screen=screen, origin=(40,700), xLength=200, yLength=300, xRange=(25, 55), yRange=(50, -3))
-	cartesianAxis_4 = CartesianAxes(screen=screen, origin=(550,720), xLength=200, yLength=300, xRange=(0, 15), yRange=(50, 9))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(80,300), xLength=200, yLength=300, xRange=(-5, 15), yRange=(50, -3)))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(500,300), xLength=200, yLength=300, xRange=(-5, 15), yRange=(50, -3), xLabel='Time', yLabel='Speed'))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(40,700), xLength=200, yLength=300, xRange=(25, 55), yRange=(50, -3)))
+	cartesianAxesLst.append(CartesianAxes(screen=screen, origin=(550,720), xLength=200, yLength=300, xRange=(0, 15), yRange=(50, 9)))
 
 while running:
 	clock.tick(FPS)
@@ -87,10 +89,9 @@ while running:
 			handleDoubleClick()
 
 	screen.fill(background_color)
-	cartesianAxis_1.draw()
-	cartesianAxis_2.draw()
-	cartesianAxis_3.draw()
-	cartesianAxis_4.draw()
+	
+	for cartesianAxes in cartesianAxesLst:
+		cartesianAxes.draw()
 	
 	pg.display.flip()
 
