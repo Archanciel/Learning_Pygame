@@ -13,14 +13,6 @@ class TextOnScreen():
 		# Position related instance variables
 		self.font = pg.font.Font(None, 25)
 		self.font_height = self.font.get_linesize()
-
-		# Calculating the left margin based on longest possible text
-		self.textHorizontalSize = self.computeMaxTextLength()
-		#self.textLeftMargin = (rectSize - self.textHorizontalSize) / 2
-
-		# Calculating the top margin based on the number of text lines
-		self.lineNumber = len(textLineLst)
-		# self.textTopMargin = radius - (self.font_height * self.lineNumber / 2)
 		self.textColor = BLACK
 		
 		# The text surfaces ...
